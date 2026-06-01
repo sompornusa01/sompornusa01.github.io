@@ -181,7 +181,8 @@
   .fb-opt{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 16px;background:rgba(255,255,255,.05);border:1.5px solid var(--line);border-radius:13px;color:#fff;cursor:pointer;transition:.18s;font-family:inherit;font-weight:600;font-size:14px;text-align:center}
   .fb-opt:hover{border-color:#36d96b;background:rgba(54,217,107,.09);transform:translateY(-2px)}
   .fb-opt.chosen{background:rgba(54,217,107,.18);border-color:#36d96b}
-  .fb-opt .fb-ck{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);color:transparent;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;transition:.18s}
+  .fb-opt .fb-ck{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);color:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;transition:.18s}
+  .fb-opt:hover .fb-ck{color:#fff;background:rgba(54,217,107,.18)}
   .fb-opt.chosen .fb-ck{background:#36d96b;color:#0a2d18}
   .fb-opt .fb-lbl{flex:1;line-height:1.4}
   .fb-opt .fb-cnt{font-family:var(--font-head);font-weight:800;font-size:18px;color:#a8ebbf}
@@ -239,6 +240,49 @@
   .gd-body{color:var(--ink-dim);font-size:13.5px;line-height:1.7;margin:0 0 14px}
   .gd-example{font-size:12.5px;line-height:1.65;color:var(--ink-mute);margin:0}
   .gd-example b{color:#36d96b;font-weight:700}
+
+  /* ---- album sets (1-12 image groupings) ---- */
+  .album-wrap{display:flex;flex-direction:column;gap:18px;margin-bottom:24px}
+  .album-card{background:rgba(54,217,107,.05);border:1.5px dashed rgba(54,217,107,.32);border-radius:14px;padding:16px 16px 14px;position:relative}
+  .album-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+  .album-title{font-family:var(--font-head);font-weight:800;color:#fff;font-size:13.5px;display:flex;align-items:center;gap:9px;flex:1;min-width:0}
+  .album-title .album-badge{background:#36d96b;color:#0a2d18;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;flex:none}
+  .album-del{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);color:#fff;border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+  .album-del:hover{background:#e6398b}
+  .album-grid{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:8px}
+  .album-slot{aspect-ratio:1/1;border-radius:10px;background:rgba(255,255,255,.03);border:1.5px dashed rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:.15s;cursor:default}
+  body.manage-on .album-slot:not(.filled){border-color:rgba(54,217,107,.42);background:rgba(54,217,107,.05)}
+  .album-slot.over{background:rgba(54,217,107,.2)!important;border-color:#36d96b!important}
+  .album-slot img{width:100%;height:100%;object-fit:cover;display:block}
+  .album-slot .slot-empty{color:rgba(255,255,255,.28);font-size:30px;font-weight:300;line-height:1}
+  body.manage-on .album-slot .slot-empty{color:rgba(54,217,107,.5)}
+  .album-slot .slot-x{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.78);color:#fff;font-size:11px;display:none;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:2}
+  body.manage-on .album-slot.filled .slot-x{display:flex}
+  .album-slot .slot-x:hover{background:#e6398b}
+  .add-album-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:11px 16px;border-radius:12px;background:rgba(54,217,107,.14);color:#36d96b;border:1.5px dashed rgba(54,217,107,.55);cursor:pointer;font-family:inherit}
+  .add-album-btn:hover{background:rgba(54,217,107,.24)}
+  html.viewonly .add-album-btn,html.viewonly .album-del{display:none!important}
+  html.viewonly .album-slot{cursor:default}
+
+  /* ---- Work History Photos (free-aspect masonry) ---- */
+  .history-section{padding:70px 0}
+  .history-section .section-head{margin-bottom:26px}
+  .hp-controls{display:flex;justify-content:center;gap:10px;margin-bottom:26px;flex-wrap:wrap}
+  .hp-upload-btn{padding:11px 18px;border-radius:12px;background:#36d96b;color:#0a2d18;border:none;cursor:pointer;font-weight:800;font-size:14px;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+  .hp-upload-btn:hover{background:#5ce88a;transform:translateY(-1px)}
+  html.viewonly .hp-controls{display:none}
+  .hp-grid{column-count:4;column-gap:14px;max-width:1240px;margin:0 auto}
+  @media(max-width:1100px){.hp-grid{column-count:3}}
+  @media(max-width:760px){.hp-grid{column-count:2}}
+  @media(max-width:480px){.hp-grid{column-count:1}}
+  .hp-item{position:relative;break-inside:avoid;margin-bottom:14px;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:.2s}
+  .hp-item:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.45)}
+  .hp-item img{width:100%;height:auto;display:block}
+  .hp-del{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.78);color:#fff;border:none;cursor:pointer;font-size:13px;display:none;align-items:center;justify-content:center;z-index:2}
+  body.edit-on .hp-del,body.manage-on .hp-del{display:flex}
+  .hp-del:hover{background:#e6398b}
+  html.viewonly .hp-del{display:none!important}
+  .hp-empty{color:var(--ink-mute);text-align:center;padding:60px 20px;border:2px dashed var(--line);border-radius:14px;font-size:14px;max-width:600px;margin:0 auto;line-height:1.6}
   .add-btn{padding:11px 16px;border-radius:12px;font-weight:700;font-size:14px;background:var(--pink);color:#fff;border:1px solid var(--pink);display:flex;align-items:center;gap:7px}
   .add-btn:hover{background:var(--pink-bright);border-color:var(--pink-bright)}
   .manage-btn{padding:11px 16px;border-radius:12px;font-weight:700;font-size:14px;background:var(--glass-2);color:#fff;border:1px solid var(--line)}
@@ -492,26 +536,6 @@
   </div>
 </section>
 
-<section class="gd-section" id="graphic-design">
-  <div class="container">
-    <div class="gd-grid">
-      <div class="gd-head">
-        <span class="gd-kicker">GRAPHIC DESIGN</span>
-        <h2 class="gd-title">WHAT IS<br><span class="gd-accent">Graphic Design?</span></h2>
-        <p class="gd-intro">คำว่า "งานกราฟิก" (Graphic Design) เป็นงานออกแบบที่สื่อสาร "ข้อความ" หรือ "แนวคิด" ผ่านภาพ ตัวอักษร สี รูปร่าง และองค์ประกอบต่างๆ เพื่อให้คนดูเข้าใจง่าย และจดจำได้ชัดเจน ภายในงานกราฟิกมีคำศัพท์เฉพาะหลายคำที่นักออกแบบหรือฝ่ายการตลาดมักใช้บ่อย เช่น</p>
-      </div>
-      <div class="gd-cards">
-        <div class="gd-card"><span class="gd-num">1</span><h3>Key Visual (KV)</h3><p class="gd-sub">"ภาพหลักของแคมเปญ"</p><p class="gd-body">คือภาพหรือองค์ประกอบหลักที่ใช้สื่อสารแนวคิดของแบรนด์หรือแคมเปญโฆษณา เป็นตัวกำหนดโทน สี อารมณ์ และสไตล์ของงานทั้งหมดใช้ในหลายสื่อ เช่น โปสเตอร์, ป้ายโฆษณา, โพสต์โซเชียล, สื่อสิ่งพิมพ์ ฯลฯ</p><p class="gd-example"><b>ตัวอย่าง:</b> แคมเปญโคล่าล่าสุดของ Coca-Cola มี Art Direction โทนสีแดง-ขาว อบอุ่น และบรรยากาศครอบครัว</p></div>
-        <div class="gd-card"><span class="gd-num">2</span><h3>CI (Corporate Identity)</h3><p class="gd-sub">"เอกลักษณ์องค์กร"</p><p class="gd-body">เป็นชุดแนวทางการออกแบบที่กำหนดรูปลักษณ์ขององค์กร ครอบคลุมโลโก้ สีประจำองค์กร ฟอนต์ ลักษณะการวางเลย์เอาท์ การใช้ภาพ ฯลฯ เพื่อให้แบรนด์ดูมีมาตรฐานและจดจำได้ง่ายในทุกช่องทาง</p><p class="gd-example"><b>ตัวอย่าง:</b> โลโก้ SCB ต้องใช้สีม่วงเฉพาะ ไม่ใช้ฟอนต์อื่นนอกจากที่ระบุไว้ใน CI</p></div>
-        <div class="gd-card"><span class="gd-num">3</span><h3>Branding</h3><p class="gd-sub">"ภาพลักษณ์ของแบรนด์"</p><p class="gd-body">คือการสร้าง "ตัวตน" ของแบรนด์ให้ผู้คนรู้จักและรู้สึกบางอย่างเมื่อเห็น ไม่ใช่แค่โลโก้ แต่รวมถึงโทนเสียงการสื่อสาร (Tone of Voice), อารมณ์, เรื่องราว, ความรู้สึกของลูกค้า</p><p class="gd-example"><b>ตัวอย่าง:</b> Apple มี Branding ที่ชัดเจน = เรียบ หรู มินิมอล ทันสมัย</p></div>
-        <div class="gd-card"><span class="gd-num">4</span><h3>Brand Identity</h3><p class="gd-sub">"อัตลักษณ์แบรนด์"</p><p class="gd-body">เป็นสิ่งที่แบรนด์ "สร้างขึ้น" เพื่อบอกคนอื่นว่า "เราเป็นใคร" รวมโลโก้ สี ฟอนต์ Key Visual โทนการพูด และจุดยืนของแบรนด์ เป็นส่วนหนึ่งของ Branding แต่เน้นที่ "สิ่งที่จับต้องได้" เช่น งานออกแบบจริง</p><p class="gd-example"><b>ตัวอย่าง:</b> สัญลักษณ์ Facebook, เส้นสายเรียบง่าย, การใช้ตัวพิมพ์เล็ก — ทั้งหมดคือ Brand Identity</p></div>
-        <div class="gd-card"><span class="gd-num">5</span><h3>Visual Guideline</h3><p class="gd-sub">"ระบบภาพของแบรนด์"</p><p class="gd-body">คือคู่มือที่บอกว่าโลโก้ควรวางอย่างไร ขนาดเท่าไหร่ ใช้สื่ออะไรได้บ้าง ห้ามใช้อย่างไร เพื่อให้ทุกคนที่ทำงานกับแบรนด์ ออกแบบไปในทิศทางเดียวกัน</p><p class="gd-example"><b>ตัวอย่าง:</b> คู่มือ CI ของแบรนด์ Starbucks กำหนดระยะห่างรอบโลโก้ ขนาดขั้นต่ำ สีประจำแบรนด์ ฯลฯ</p></div>
-        <div class="gd-card"><span class="gd-num">6</span><h3>Art Direction</h3><p class="gd-sub">"ทิศทางทางศิลป์"</p><p class="gd-body">เป็นแนวทางภาพรวมของการออกแบบทั้งหมดในโปรเจกต์หนึ่ง เช่น โทนแสง สี ฟอนต์ มู้ดภาพ ทุกอย่างถูกกำหนดโดย Art Director และทีมสร้างสรรค์</p><p class="gd-example"><b>ตัวอย่าง:</b> แคมเปญโคล่าล่าสุดของ Coca-Cola มี Art Direction โทนสีแดง-ขาว อบอุ่น และบรรยากาศครอบครัว</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="exp-section" id="experience">
   <div class="container">
     <div class="section-head"><span class="kicker">Experience</span><h2><span class="bi"><span class="en" data-k="expTitleEn">Work Experience</span><span class="th" data-k="expTitle">ประสบการณ์ทำงาน</span></span></h2><p class="desc"><span class="bi"><span class="en" data-k="expDescEn">10+ years across graphic design, creative direction, and Visual Content production.</span><span class="th" data-k="expDesc">ประสบการณ์ในสายงานกราฟิก ครีเอทีฟ และ Visual Content กว่า 10 ปี</span></span></p></div>
@@ -535,8 +559,8 @@
   <div class="container">
     <div class="section-head"><span class="kicker">Skills & Expertise</span><h2><span class="bi"><span class="en" data-k="skillTitleEn">Skills &amp; Expertise</span><span class="th" data-k="skillTitle">ทักษะและความเชี่ยวชาญ</span></span></h2><p class="desc"><span class="bi"><span class="en" data-k="skillDescEn">Design, creative direction, and tools I work with confidently.</span><span class="th" data-k="skillDesc">ทักษะการออกแบบ ครีเอทีฟ และเครื่องมือที่ใช้งานได้คล่อง</span></span></p></div>
     <div class="skill-grid" id="mlSkills">
-      <div class="skill"><span class="num">01</span><h4 data-k="s1h">Graphic Design</h4><p data-k="s1p">Key Visual, Campaign, Print, Digital, OOH</p></div>
-      <div class="skill"><span class="num">02</span><h4 data-k="s2h">Sport & Football Design</h4><p data-k="s2p">Key Visual กีฬา, Matchday, Jersey, Teamwear</p></div>
+      <div class="skill"><span class="num">01</span><h4 data-k="s1h">Graphic Design</h4><p data-k="s1p">Key Visual, Campaign, Print, Digital, OOH, Sport/Football, Matchday, Jersey, Teamwear</p></div>
+      <div class="skill"><span class="num">02</span><h4 data-k="s2h">AI Tools Expertise</h4><p data-k="s2p">ความเชี่ยวชาญด้าน AI — ใช้ Midjourney, ChatGPT, Gemini สร้าง Visual และไอเดียงานออกแบบ</p></div>
       <div class="skill"><span class="num">03</span><h4 data-k="s3h">Video Editing / Motion</h4><p data-k="s3p">ตัดต่อวิดีโอ, Motion Graphic, Color Grading</p></div>
       <div class="skill"><span class="num">04</span><h4 data-k="s4h">Shooting / Photography</h4><p data-k="s4p">ถ่ายวิดีโอและภาพนิ่ง — DSLR และมือถือ</p></div>
       <div class="skill"><span class="num">05</span><h4 data-k="s5h">Content Creation</h4><p data-k="s5p">ผลิตคอนเทนต์ Online และ Offline ครบวงจร</p></div>
@@ -554,7 +578,27 @@
     <div class="tools" id="mlAI">
       <span class="tool-tag">ChatGPT</span><span class="tool-tag">Gemini</span><span class="tool-tag">Claude</span>
       <span class="tool-tag">Copilot</span><span class="tool-tag">Midjourney</span><span class="tool-tag">Kling AI</span>
-      <span class="tool-tag">Heygen</span><span class="tool-tag">Suno AI</span><span class="tool-tag">Canva</span><span class="tool-tag">CapCut</span>
+      <span class="tool-tag">Heygen</span><span class="tool-tag">Suno AI</span><span class="tool-tag">Canva</span><span class="tool-tag">CapCut</span><span class="tool-tag">Google AI Studio</span><span class="tool-tag">Google Flow</span>
+    </div>
+  </div>
+</section>
+
+<section class="gd-section" id="graphic-design">
+  <div class="container">
+    <div class="gd-grid">
+      <div class="gd-head">
+        <span class="gd-kicker">GRAPHIC DESIGN</span>
+        <h2 class="gd-title">WHAT IS<br><span class="gd-accent">Graphic Design?</span></h2>
+        <p class="gd-intro">คำว่า "งานกราฟิก" (Graphic Design) เป็นงานออกแบบที่สื่อสาร "ข้อความ" หรือ "แนวคิด" ผ่านภาพ ตัวอักษร สี รูปร่าง และองค์ประกอบต่างๆ เพื่อให้คนดูเข้าใจง่าย และจดจำได้ชัดเจน ภายในงานกราฟิกมีคำศัพท์เฉพาะหลายคำที่นักออกแบบหรือฝ่ายการตลาดมักใช้บ่อย เช่น</p>
+      </div>
+      <div class="gd-cards">
+        <div class="gd-card"><span class="gd-num">1</span><h3>Key Visual (KV)</h3><p class="gd-sub">"ภาพหลักของแคมเปญ"</p><p class="gd-body">คือภาพหรือองค์ประกอบหลักที่ใช้สื่อสารแนวคิดของแบรนด์หรือแคมเปญโฆษณา เป็นตัวกำหนดโทน สี อารมณ์ และสไตล์ของงานทั้งหมดใช้ในหลายสื่อ เช่น โปสเตอร์, ป้ายโฆษณา, โพสต์โซเชียล, สื่อสิ่งพิมพ์ ฯลฯ</p><p class="gd-example"><b>ตัวอย่าง:</b> แคมเปญโคล่าล่าสุดของ Coca-Cola มี Art Direction โทนสีแดง-ขาว อบอุ่น และบรรยากาศครอบครัว</p></div>
+        <div class="gd-card"><span class="gd-num">2</span><h3>CI (Corporate Identity)</h3><p class="gd-sub">"เอกลักษณ์องค์กร"</p><p class="gd-body">เป็นชุดแนวทางการออกแบบที่กำหนดรูปลักษณ์ขององค์กร ครอบคลุมโลโก้ สีประจำองค์กร ฟอนต์ ลักษณะการวางเลย์เอาท์ การใช้ภาพ ฯลฯ เพื่อให้แบรนด์ดูมีมาตรฐานและจดจำได้ง่ายในทุกช่องทาง</p><p class="gd-example"><b>ตัวอย่าง:</b> โลโก้ SCB ต้องใช้สีม่วงเฉพาะ ไม่ใช้ฟอนต์อื่นนอกจากที่ระบุไว้ใน CI</p></div>
+        <div class="gd-card"><span class="gd-num">3</span><h3>Branding</h3><p class="gd-sub">"ภาพลักษณ์ของแบรนด์"</p><p class="gd-body">คือการสร้าง "ตัวตน" ของแบรนด์ให้ผู้คนรู้จักและรู้สึกบางอย่างเมื่อเห็น ไม่ใช่แค่โลโก้ แต่รวมถึงโทนเสียงการสื่อสาร (Tone of Voice), อารมณ์, เรื่องราว, ความรู้สึกของลูกค้า</p><p class="gd-example"><b>ตัวอย่าง:</b> Apple มี Branding ที่ชัดเจน = เรียบ หรู มินิมอล ทันสมัย</p></div>
+        <div class="gd-card"><span class="gd-num">4</span><h3>Brand Identity</h3><p class="gd-sub">"อัตลักษณ์แบรนด์"</p><p class="gd-body">เป็นสิ่งที่แบรนด์ "สร้างขึ้น" เพื่อบอกคนอื่นว่า "เราเป็นใคร" รวมโลโก้ สี ฟอนต์ Key Visual โทนการพูด และจุดยืนของแบรนด์ เป็นส่วนหนึ่งของ Branding แต่เน้นที่ "สิ่งที่จับต้องได้" เช่น งานออกแบบจริง</p><p class="gd-example"><b>ตัวอย่าง:</b> สัญลักษณ์ Facebook, เส้นสายเรียบง่าย, การใช้ตัวพิมพ์เล็ก — ทั้งหมดคือ Brand Identity</p></div>
+        <div class="gd-card"><span class="gd-num">5</span><h3>Visual Guideline</h3><p class="gd-sub">"ระบบภาพของแบรนด์"</p><p class="gd-body">คือคู่มือที่บอกว่าโลโก้ควรวางอย่างไร ขนาดเท่าไหร่ ใช้สื่ออะไรได้บ้าง ห้ามใช้อย่างไร เพื่อให้ทุกคนที่ทำงานกับแบรนด์ ออกแบบไปในทิศทางเดียวกัน</p><p class="gd-example"><b>ตัวอย่าง:</b> คู่มือ CI ของแบรนด์ Starbucks กำหนดระยะห่างรอบโลโก้ ขนาดขั้นต่ำ สีประจำแบรนด์ ฯลฯ</p></div>
+        <div class="gd-card"><span class="gd-num">6</span><h3>Art Direction</h3><p class="gd-sub">"ทิศทางทางศิลป์"</p><p class="gd-body">เป็นแนวทางภาพรวมของการออกแบบทั้งหมดในโปรเจกต์หนึ่ง เช่น โทนแสง สี ฟอนต์ มู้ดภาพ ทุกอย่างถูกกำหนดโดย Art Director และทีมสร้างสรรค์</p><p class="gd-example"><b>ตัวอย่าง:</b> แคมเปญโคล่าล่าสุดของ Coca-Cola มี Art Direction โทนสีแดง-ขาว อบอุ่น และบรรยากาศครอบครัว</p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -582,6 +626,7 @@
       </div>
       <button class="add-btn" onclick="document.getElementById('addInput').click()">+ Add · เพิ่มรูป</button>
       <button class="manage-btn" id="manageBtn" onclick="toggleManage()">⚙ Manage · จัดการรูป</button>
+      <button class="add-album-btn" onclick="createAlbum()">+ Album · สร้างอัลบั้ม</button>
       <input type="file" id="addInput" accept="image/*" multiple hidden onchange="addFiles(event.target.files)">
     </div>
     <div class="dropzone" id="dropzone">
@@ -636,6 +681,21 @@
         <button class="fb-opt" data-fb="no"><span class="fb-ck">✓</span><span class="fb-lbl"><span class="bi"><span class="en">Not Yet</span><span class="th">ยังไม่สนใจ</span></span></span><span class="fb-cnt" id="fbCntNo">0</span></button>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="history-section" id="work-history">
+  <div class="container">
+    <div class="section-head" style="text-align:center">
+      <span class="kicker">Work History · Behind the Scenes</span>
+      <h2><span class="bi"><span class="en" data-k="hpTitleEn">Work History Photos</span><span class="th" data-k="hpTitle">ภาพประวัติการทำงาน</span></span></h2>
+      <p class="desc"><span class="bi"><span class="en" data-k="hpDescEn">Real moments from my work journey — events, collaborations, and behind-the-scenes.</span><span class="th" data-k="hpDesc">ภาพถ่ายจริงระหว่างเส้นทางการทำงาน — งานอีเวนต์ ทีม และเบื้องหลัง</span></span></p>
+    </div>
+    <div class="hp-controls">
+      <button class="hp-upload-btn" onclick="document.getElementById('hpInput').click()">+ Upload Photos · เพิ่มรูปภาพ</button>
+      <input type="file" id="hpInput" accept="image/*" multiple hidden onchange="hpAdd(event.target.files)">
+    </div>
+    <div class="hp-grid" id="hpGrid"></div>
   </div>
 </section>
 
@@ -1000,12 +1060,101 @@ const GROUPS=[
   {s:3,label:'แนวตั้งยาว · Tall / A4'},
   {s:9,label:'กำลังโหลดรูป…'}
 ];
+/* ---- album sets (1-12 image groupings) ---- */
+const ALBUM_KEY='boom_albums_v1';
+function getAlbums(){ try{return JSON.parse(localStorage.getItem(ALBUM_KEY)||'[]');}catch(e){return [];} }
+function saveAlbums(a){ try{localStorage.setItem(ALBUM_KEY,JSON.stringify(a));}catch(e){alert('พื้นที่เก็บเต็ม — อัลบั้มอาจไม่ถูกบันทึก');} }
+function getClaimedKeys(){
+  const claimed=new Set();
+  getAlbums().forEach(a=>a.slots.forEach(s=>{ if(s) claimed.add(s); }));
+  return claimed;
+}
+function keyToSrc(key){
+  if(!key) return '';
+  if(key.indexOf('u')===0){ const a=getAdded().find(x=>x.uid===key); return a?a.u:''; }
+  if(key.indexOf('v_')===0||key.indexOf('m_')===0){ return 'https://i.ytimg.com/vi/'+key.slice(2)+'/mqdefault.jpg'; }
+  return imgUrl(key,500);
+}
+function createAlbum(){
+  const raw=prompt('สร้างอัลบั้มใหม่ · Create New Album\nต้องการกี่ภาพในเซ็ต? (1–12)\nHow many images in this set? (1–12)','9');
+  if(raw===null) return;
+  const size=parseInt(raw,10);
+  if(!size||size<1||size>12){ alert('กรุณาใส่ตัวเลข 1–12'); return; }
+  const albums=getAlbums();
+  albums.push({id:'al_'+Date.now(),size:size,slots:new Array(size).fill(null)});
+  saveAlbums(albums); layout();
+  if(!manageMode){ alert('สร้างอัลบั้ม '+size+' ช่องแล้ว!\nกด "⚙ Manage · จัดการรูป" เพื่อเข้าโหมดลากรูปเข้าช่องอัลบั้ม'); }
+}
+function deleteAlbum(albumId){
+  if(!confirm('ลบอัลบั้มนี้?\nรูปที่อยู่ในอัลบั้มจะกลับไปอยู่ในแกลเลอรีรวม\n(Delete this album? Images return to the main gallery)')) return;
+  saveAlbums(getAlbums().filter(a=>a.id!==albumId)); layout();
+}
+function removeFromSlot(albumId,slotIdx){
+  const albums=getAlbums();
+  const a=albums.find(x=>x.id===albumId); if(!a) return;
+  a.slots[slotIdx]=null; saveAlbums(albums); layout();
+}
+function addToSlot(albumId,slotIdx,itemKey){
+  const albums=getAlbums();
+  albums.forEach(a=>{ for(let i=0;i<a.slots.length;i++) if(a.slots[i]===itemKey) a.slots[i]=null; });
+  const a=albums.find(x=>x.id===albumId); if(!a) return;
+  a.slots[slotIdx]=itemKey; saveAlbums(albums); layout();
+}
+const ALBUM_COLS={1:1,2:2,3:3,4:2,5:5,6:3,7:4,8:4,9:3,10:5,11:4,12:4};
+function renderAlbums(container){
+  const albums=getAlbums();
+  if(!albums.length) return;
+  const wrap=document.createElement('div'); wrap.className='album-wrap';
+  albums.forEach(function(album,ai){
+    const card=document.createElement('div'); card.className='album-card';
+    const head=document.createElement('div'); head.className='album-head';
+    const filled=album.slots.filter(function(s){return !!s;}).length;
+    head.innerHTML='<div class="album-title">📁 Album #'+(ai+1)+' · อัลบั้ม <span class="album-badge">'+filled+' / '+album.size+'</span></div>';
+    const del=document.createElement('button'); del.className='album-del'; del.title='ลบอัลบั้ม / Delete'; del.textContent='✕';
+    del.onclick=function(){ deleteAlbum(album.id); };
+    head.appendChild(del);
+    card.appendChild(head);
+    const grid=document.createElement('div'); grid.className='album-grid';
+    grid.style.setProperty('--cols',ALBUM_COLS[album.size]||3);
+    album.slots.forEach(function(key,idx){
+      const slot=document.createElement('div'); slot.className='album-slot';
+      slot.dataset.albumId=album.id; slot.dataset.slotIdx=idx;
+      if(key){
+        slot.classList.add('filled');
+        const img=document.createElement('img'); img.src=keyToSrc(key); img.draggable=false; img.alt='';
+        slot.appendChild(img);
+        const x=document.createElement('button'); x.className='slot-x'; x.textContent='✕'; x.title='เอาออกจากอัลบั้ม';
+        x.onclick=function(e){ e.stopPropagation(); removeFromSlot(album.id,idx); };
+        slot.appendChild(x);
+      } else {
+        const empty=document.createElement('span'); empty.className='slot-empty'; empty.textContent='+';
+        slot.appendChild(empty);
+      }
+      slot.addEventListener('dragover',function(e){ if(manageMode&&dragKey){ e.preventDefault(); slot.classList.add('over'); } });
+      slot.addEventListener('dragleave',function(){ slot.classList.remove('over'); });
+      slot.addEventListener('drop',function(e){
+        slot.classList.remove('over');
+        if(!manageMode||!dragKey) return;
+        e.preventDefault();
+        addToSlot(album.id,idx,dragKey); dragKey=null;
+      });
+      grid.appendChild(slot);
+    });
+    card.appendChild(grid);
+    wrap.appendChild(card);
+  });
+  container.appendChild(wrap);
+}
+
 function doLayout(){
   const N=colCount(), gap=14;
   gallery.innerHTML='';
-  const order=visibleOrdered();
+  renderAlbums(gallery);
+  const claimed=getClaimedKeys();
+  const visibleAll=visibleOrdered();
+  const order=visibleAll.filter(d=>!claimed.has(d._key));
   const colW=(gallery.clientWidth-gap*(N-1))/N;
-  let total=0;
+  let total=visibleAll.filter(d=>claimed.has(d._key)).length;
   GROUPS.forEach(G=>{
     const gi=order.filter(d=>(d.dataset.arsort===''?9:parseInt(d.dataset.arsort))===G.s);
     if(!gi.length) return;
@@ -1397,7 +1546,9 @@ const AI_INFO={
   'Heygen':{u:'https://www.heygen.com',d:'heygen.com'},
   'Suno AI':{u:'https://suno.com',d:'suno.com'},
   'Canva':{u:'https://www.canva.com',d:'canva.com'},
-  'CapCut':{u:'https://www.capcut.com',d:'capcut.com'}
+  'CapCut':{u:'https://www.capcut.com',d:'capcut.com'},
+  'Google AI Studio':{u:'https://aistudio.google.com/generate-speech',d:'aistudio.google.com'},
+  'Google Flow':{u:'https://labs.google/fx/th/tools/flow',d:'labs.google'}
 };
 const ADOBE_LOGO={
   'Adobe Illustrator':{bg:'#FF9A00',txt:'Ai',dk:'#330000'},
@@ -1475,6 +1626,18 @@ function initManagedLists(){
     if(cfg.key==='boom_ml_adobe' && !cfg.items.some(x=>x.t==='Adobe After Effects')){
       cfg.items.push({t:'Adobe After Effects'}); mlSave(cfg);
     }
+    if(cfg.key==='boom_ml_ai'){
+      let changed=false;
+      if(!cfg.items.some(x=>x.t==='Google AI Studio')){ cfg.items.push({t:'Google AI Studio'}); changed=true; }
+      if(!cfg.items.some(x=>x.t==='Google Flow')){ cfg.items.push({t:'Google Flow'}); changed=true; }
+      if(changed) mlSave(cfg);
+    }
+    if(cfg.key==='boom_ml_skills' && cfg.items[1] && cfg.items[1].h==='Sport & Football Design'){
+      cfg.items[0].p='Key Visual, Campaign, Print, Digital, OOH, Sport/Football, Matchday, Jersey, Teamwear';
+      cfg.items[1].h='AI Tools Expertise';
+      cfg.items[1].p='ความเชี่ยวชาญด้าน AI — ใช้ Midjourney, ChatGPT, Gemini สร้าง Visual และไอเดียงานออกแบบ';
+      mlSave(cfg);
+    }
     mlBind(cfg);
     mlRender(cfg);
   });
@@ -1524,7 +1687,43 @@ document.querySelectorAll('.contact-card').forEach(function(card){
   });
 });
 
-window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); applyAllSB(); updateRatios(); fbRender();
+/* ---- work history photos (free-aspect uploads) ---- */
+const HP_KEY='boom_history_v1';
+function hpGet(){ try{return JSON.parse(localStorage.getItem(HP_KEY)||'[]');}catch(e){return [];} }
+function hpSave(a){ try{localStorage.setItem(HP_KEY,JSON.stringify(a));}catch(e){alert('พื้นที่เก็บเต็ม — รูปอาจไม่ถูกบันทึก ลองลดจำนวนรูป');} }
+function hpAdd(files){
+  if(!files||!files.length) return;
+  const arr=hpGet();
+  let pending=files.length;
+  Array.from(files).forEach(function(f){
+    if(!f.type.startsWith('image/')){ pending--; if(!pending){hpSave(arr);hpRender();} return; }
+    const r=new FileReader();
+    r.onload=function(e){
+      arr.push({id:'hp_'+Date.now()+Math.random().toString(36).slice(2,6),u:e.target.result});
+      pending--;
+      if(!pending){ hpSave(arr); hpRender(); }
+    };
+    r.readAsDataURL(f);
+  });
+  document.getElementById('hpInput').value='';
+}
+function hpRemove(id){
+  if(!confirm('ลบรูปนี้?\nDelete this photo?')) return;
+  hpSave(hpGet().filter(function(x){return x.id!==id;}));
+  hpRender();
+}
+function hpRender(){
+  const grid=document.getElementById('hpGrid'); if(!grid) return;
+  const arr=hpGet();
+  if(!arr.length){
+    if(document.documentElement.classList.contains('viewonly')){ grid.innerHTML=''; return; }
+    grid.innerHTML='<div class="hp-empty">ยังไม่มีรูปในส่วนนี้ — กดปุ่ม "+ Upload Photos" ด้านบนเพื่อเพิ่มภาพถ่ายประวัติการทำงาน<br><span style="font-size:.88em;opacity:.7">No photos yet — click the upload button above to add work history photos</span></div>';
+    return;
+  }
+  grid.innerHTML=arr.map(function(x){ return '<div class="hp-item"><img src="'+x.u+'" loading="lazy" alt=""><button class="hp-del" onclick="hpRemove(\''+x.id+'\')" title="ลบ">✕</button></div>'; }).join('');
+}
+
+window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); applyAllSB(); updateRatios(); fbRender(); hpRender();
 </script>
 </body>
 </html>
