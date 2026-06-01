@@ -185,7 +185,7 @@
   .fb-opt:hover .fb-ck{color:#fff;background:rgba(54,217,107,.18)}
   .fb-opt.chosen .fb-ck{background:#36d96b;color:#0a2d18}
   .fb-opt .fb-lbl{flex:1;line-height:1.4}
-  .fb-opt .fb-cnt{font-family:var(--font-head);font-weight:800;font-size:18px;color:#a8ebbf}
+  .fb-opt .fb-cnt{display:none}
 
   /* ---- company logos ---- */
   .logos-section{padding:60px 0}
@@ -608,7 +608,7 @@
     <div class="work-top">
       <div>
         <span class="kicker">Portfolio</span>
-        <h2><span class="bi"><span class="en" data-k="workTitleEn">All Works</span><span class="th" data-k="workTitle">ผลงานทั้งหมด</span></span></h2>
+        <h2><span class="bi"><span class="en" data-k="workTitleEn">Design Work</span><span class="th" data-k="workTitle">งานออกแบบ</span></span></h2>
         <p class="desc"><span class="bi"><span class="en" data-k="workDescEn">Design works pulled from Google Drive — switch to Football mode, filter by aspect ratio and color tone, add/remove images freely.</span><span class="th" data-k="workDesc">รวมผลงานออกแบบจาก Google Drive — สลับโหมดฟุตบอล แยกหมวดตามสัดส่วนและโทนสี เพิ่ม/ลบรูปได้</span></span></p>
       </div>
       <span class="count-pill">● <span id="countNum">558</span> Works · ผลงาน</span>
@@ -618,7 +618,7 @@
     </div>
     <div class="work-controls">
       <div class="mode-switch">
-        <button class="mode-btn active" id="modeAll" onclick="setMode('all')">▦ <span class="bi"><span class="en">All Works</span><span class="th">ผลงานทั้งหมด</span></span></button>
+        <button class="mode-btn active" id="modeAll" onclick="setMode('all')">▦ <span class="bi"><span class="en">Design Work</span><span class="th">งานออกแบบ</span></span></button>
         <button class="mode-btn fb" id="modeFb" onclick="setMode('fb')">⚽ <span class="bi"><span class="en">Football</span><span class="th">โหมดฟุตบอล</span></span></button>
         <button class="mode-btn pt" id="modePortrait" onclick="setMode('portrait')">👤 <span class="bi"><span class="en">History Photos</span><span class="th">ภาพประวัติบางส่วน</span></span></button>
         <button class="mode-btn vd" id="modeVideo" onclick="setMode('video')">▶ <span class="bi"><span class="en">Video Editing</span><span class="th">ตัดต่อวิดีโอ</span></span></button>
@@ -644,6 +644,17 @@
       </div>
     </div>
     <div class="gallery" id="gallery"></div>
+  </div>
+</section>
+
+<section class="history-section" id="history-gallery">
+  <div class="container">
+    <div class="section-head" style="text-align:center">
+      <span class="kicker">History · Behind the Scenes</span>
+      <h2><span class="bi"><span class="en" data-k="hgTitleEn">History Photo Gallery</span><span class="th" data-k="hgTitle">แกลเลอรีรูปประวัติ</span></span></h2>
+      <p class="desc"><span class="bi"><span class="en" data-k="hgDescEn">Real moments from my work journey — events, collaborations, and personal milestones.</span><span class="th" data-k="hgDesc">ภาพถ่ายจริงระหว่างเส้นทางการทำงาน — งานอีเวนต์ ทีมงาน และเหตุการณ์สำคัญ</span></span></p>
+    </div>
+    <div class="hp-grid" id="hpGrid"></div>
   </div>
 </section>
 
@@ -681,21 +692,6 @@
         <button class="fb-opt" data-fb="no"><span class="fb-ck">✓</span><span class="fb-lbl"><span class="bi"><span class="en">Not Yet</span><span class="th">ยังไม่สนใจ</span></span></span><span class="fb-cnt" id="fbCntNo">0</span></button>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="history-section" id="work-history">
-  <div class="container">
-    <div class="section-head" style="text-align:center">
-      <span class="kicker">Work History · Behind the Scenes</span>
-      <h2><span class="bi"><span class="en" data-k="hpTitleEn">Work History Photos</span><span class="th" data-k="hpTitle">ภาพประวัติการทำงาน</span></span></h2>
-      <p class="desc"><span class="bi"><span class="en" data-k="hpDescEn">Real moments from my work journey — events, collaborations, and behind-the-scenes.</span><span class="th" data-k="hpDesc">ภาพถ่ายจริงระหว่างเส้นทางการทำงาน — งานอีเวนต์ ทีม และเบื้องหลัง</span></span></p>
-    </div>
-    <div class="hp-controls">
-      <button class="hp-upload-btn" onclick="document.getElementById('hpInput').click()">+ Upload Photos · เพิ่มรูปภาพ</button>
-      <input type="file" id="hpInput" accept="image/*" multiple hidden onchange="hpAdd(event.target.files)">
-    </div>
-    <div class="hp-grid" id="hpGrid"></div>
   </div>
 </section>
 
@@ -852,17 +848,51 @@ const PORTRAIT_IMAGES=[
   {id:'1reDpletkEQb1UwafHb96MQyT_eqfebPJ'},{id:'1tOgvfbcgLqPi6rEbVFftO4imb-sQrjNm'}
 ];
 const PORTRAIT_IDS=new Set(PORTRAIT_IMAGES.map(x=>x.id));
+/* ---- football works (separate Drive folder; not shown in Design Work mode) ---- */
+const FOOTBALL_IMAGES=[
+  {id:'1ZQNOP-c3LJPIanyWQGEbppNNGwOhEKdy'},{id:'126F8A8kCBqkLYDWbrAE0UUQAYhQR64Fq'},
+  {id:'1uzZHCkmPQd8V2njnuID_5Inv178lD4li'},{id:'1nqmbPelFiyfX7WrIs2F0JSocnsl5t8Qx'},
+  {id:'1WVoO8ZI6hVpZ2DQ8oImSVNSdy8rgx564'},{id:'1AFvGFyACE5qOmQwsFFHweksLl4aY_lfj'},
+  {id:'1OLtml0ueYT34mMghEVw3dcUJI6_UcWF2'},{id:'1WqgqxqbnjuWyDWhiZev1bWrOJEgmeYNc'},
+  {id:'1jUTYEqIbfSZ_Sd8_HG6-waIwENQrqAzV'},{id:'1Xm8I85xp0rLMmxTWQlBNVAVGZqWF0BW0'},
+  {id:'1IcTOPeDI7X3EUyfJw4FDhHFiWLKljAsG'},{id:'19V64qrmCqjwHzpFQulVvfBXzaNwx_Iva'},
+  {id:'1kw1suniEv5h7iFtth3asKkv0nUficu04'},{id:'1_KxAh9c86_qBcoinDmVbeFm7hAxWN_Cf'},
+  {id:'1oLitLrETUm6M4A7KSqTxlkttJidxgVd2'},{id:'1Us8E9FPpgjwsa5-GwYIvJJ_G9BjHahZM'},
+  {id:'1JKQdA67l79_11Bt7_ar4OMkb7yn90lIe'},{id:'1f4clK7p9ECFBw7HOhScKpVbIot1giRNI'},
+  {id:'1XnRzT9wFRwDHngP_thymd9PpRTNPDeAP'},{id:'1RoPhI04KsoEgQD3hLXph2JhKw1QGxvQo'},
+  {id:'1MRiiXgz9wD-5QSUQVMa55ShbVBt3aMgo'},{id:'1zVtyMbN7wTB4hQmWOkLgTQ3S8qebx1XJ'},
+  {id:'1PJddY0II4LbxMCydhmCVhBypywTGVnV5'},{id:'1NCHjp2XO_s2qTCz0xV93PL1zW288eMzz'},
+  {id:'1kxxF13tC44WljUYNJZgH03y73lwksgtk'},{id:'1NRHkwPtDgA_eF8sJewe_0mYIZEJzAYf5'},
+  {id:'16znXkuN7cBifsCLbKqoLO7ztyV4gRxz_'},{id:'1JxdEpGgOab5vytLAWG4YV0f-npdhCekY'},
+  {id:'1wv2HcFlW2nqhwecHDI3NvHIECgOQg0M5'},{id:'1KTJoWbt-IlsK5cmm1Q04xAU_ye9kNF2c'},
+  {id:'1e7d_UI5L3IV8ALiTClqspFMcGdISRs8L'},{id:'1v4_8Qlh8zGiChQJACRr2EKduTq34oLCV'},
+  {id:'1FPMHbrUpEQz44lGYhBkUL1PmzZh2XUxf'},{id:'10IPo4ggzCkejYlyVaD7lLdNylDDkutdI'},
+  {id:'1RCSQ_OWL-zJOeZPVtNjXY-Obd66kuVDo'},{id:'1TvSry8d5MpAnkW0wi5qD1vqEwuNWUzF7'},
+  {id:'1XbK2uq5-2kk3lgnfujQSa7fkTB4l7l3s'},{id:'1_EF4P9abDOUadk5yfIG7AyquD3vxbjF9'},
+  {id:'1B1GiAA4ZeEvmjFrmB3Vagk9Zu_uwJIOn'},{id:'1GU2ChDA4J4464A8B_8_I4ROaHfrt-zQT'},
+  {id:'1A412z8t4UM6VE6ozJa_Q75PgmCA2e3oj'},{id:'1pawZKAaYZdF5aB2L333V_WcAZa66jS-f'},
+  {id:'1mivvdyQd17AI-V9jwOmrURCq6f87JstH'},{id:'1R-xxbndYKYUAUjSjafFQNVklVHWhPoK-'},
+  {id:'1_jvfZufcEpIm3i2_r63_i-AOGEUrryM-'},{id:'1xfH7u3E3lazlEBAe2xpn0pmLLlGRL_5j'},
+  {id:'1lSO54geVatEZFTazsyCqwGkZNmW3G32p'},{id:'1cLyacbhkdn_654xa2zapppJPJoaEJsMC'},
+  {id:'1_qsPlTJXhDSnZb9WVIZKMLsxiTa2aXyO'},{id:'1xhccVBjXbe8hr00n_rCbbJkgUFVaM9T0'},
+  {id:'1RB3zNAWqwYNUN-ll3DDVNqG-PZ7c-AA6'},{id:'1LVrqsL_fnOvIQHWmpv1epYjJeK-b9iPg'},
+  {id:'1RG3k3cyUM3o2S7pY2uN51YrRThKSHmLK'},{id:'1dhRvHNZOkeg5iNHC8dJg5_lGnS5ATm7T'},
+  {id:'16frUPUm84amGmRiUed2zvkx-YEjXXEBa'},{id:'1crM0jctRxVdducTtZrMneehjOGoMgRRU'},
+  {id:'1KztaHfYEg7rDBe4emR0HjNeMhatRyqBi'},{id:'1BuDFfYx7sc6cpdFKL68fPLeh7wv7L53X'}
+];
+const FOOTBALL_IDS=new Set(FOOTBALL_IMAGES.map(x=>x.id));
 const VIDEO_ITEMS=['vjxMEy1Sq9E','6yMiInVlMkk','WO-lwOrNrDw','0Quf9193IVA','Drc05awHmzU','c2O5eS_DK3s'].map(y=>({yt:y,id:'v_'+y}));
 const MOTION_ITEMS=['oHBhQBEvhww','UKjwWesKNAw'].map(y=>({yt:y,id:'m_'+y}));
 function buildData(){
   const removed=getRemoved();
   const removedP=getRemovedP();
   const added=getAdded();
-  const base=BASE_IMAGES.filter(x=>!removed.has(x.id)&&!PORTRAIT_IDS.has(x.id));
+  const base=BASE_IMAGES.filter(x=>!removed.has(x.id)&&!PORTRAIT_IDS.has(x.id)&&!FOOTBALL_IDS.has(x.id)&&!x.fb);
   const portraits=PORTRAIT_IMAGES.filter(x=>!removedP.has(x.id)).map(x=>({id:x.id,cat:'portrait'}));
+  const footballs=FOOTBALL_IMAGES.filter(x=>!removed.has(x.id)).map(x=>({id:x.id,cat:'football'}));
   const videos=VIDEO_ITEMS.map(x=>({id:x.id,yt:x.yt,cat:'video'}));
   const motions=MOTION_ITEMS.map(x=>({id:x.id,yt:x.yt,cat:'motion'}));
-  return added.concat(base,portraits,videos,motions);
+  return added.concat(base,portraits,footballs,videos,motions);
 }
 
 const ORDER_KEY='boom_order_v1';
@@ -1026,9 +1056,8 @@ function buildChips(){
 
 function pool(){
   if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion') return items.filter(d=>d.dataset.cat===viewMode);
-  let p=items.filter(d=>d.dataset.cat!=='portrait'&&d.dataset.cat!=='video'&&d.dataset.cat!=='motion');
-  if(viewMode==='fb') p=p.filter(d=>d.dataset.fb==='1');
-  return p;
+  if(viewMode==='fb') return items.filter(d=>d.dataset.cat==='football');
+  return items.filter(d=>d.dataset.cat!=='portrait'&&d.dataset.cat!=='football'&&d.dataset.cat!=='video'&&d.dataset.cat!=='motion');
 }
 function refreshCounts(){
   const P=pool();
@@ -1040,9 +1069,10 @@ function refreshCounts(){
 }
 function matchItem(d){
   const cat=d.dataset.cat;
-  const special=cat==='portrait'||cat==='video'||cat==='motion';
+  const special=cat==='portrait'||cat==='video'||cat==='motion'||cat==='football';
   if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion'){ if(cat!==viewMode) return false; }
-  else { if(special) return false; if(viewMode==='fb'&&d.dataset.fb!=='1') return false; }
+  else if(viewMode==='fb'){ if(cat!=='football') return false; }
+  else { if(special) return false; }
   const okAr=activeAr==='all'||d.dataset.ar===activeAr;
   const okTone=activeTone==='all'||d.dataset.tone===activeTone;
   return okAr&&okTone;
@@ -1215,7 +1245,7 @@ function addFiles(files){
     if(!f.type.startsWith('image/')){ pending--; return; }
     const r=new FileReader();
     r.onload=ev=>{
-      const item={uid:'u'+Date.now()+Math.random().toString(36).slice(2,7),u:ev.target.result,fb:viewMode==='fb'?1:0,cat:viewMode==='portrait'?'portrait':'work'};
+      const item={uid:'u'+Date.now()+Math.random().toString(36).slice(2,7),u:ev.target.result,cat:viewMode==='portrait'?'portrait':viewMode==='fb'?'football':'work'};
       added.unshift(item);
       const d=makeItem(item,0);
       items.unshift(d);
@@ -1687,40 +1717,13 @@ document.querySelectorAll('.contact-card').forEach(function(card){
   });
 });
 
-/* ---- work history photos (free-aspect uploads) ---- */
-const HP_KEY='boom_history_v1';
-function hpGet(){ try{return JSON.parse(localStorage.getItem(HP_KEY)||'[]');}catch(e){return [];} }
-function hpSave(a){ try{localStorage.setItem(HP_KEY,JSON.stringify(a));}catch(e){alert('พื้นที่เก็บเต็ม — รูปอาจไม่ถูกบันทึก ลองลดจำนวนรูป');} }
-function hpAdd(files){
-  if(!files||!files.length) return;
-  const arr=hpGet();
-  let pending=files.length;
-  Array.from(files).forEach(function(f){
-    if(!f.type.startsWith('image/')){ pending--; if(!pending){hpSave(arr);hpRender();} return; }
-    const r=new FileReader();
-    r.onload=function(e){
-      arr.push({id:'hp_'+Date.now()+Math.random().toString(36).slice(2,6),u:e.target.result});
-      pending--;
-      if(!pending){ hpSave(arr); hpRender(); }
-    };
-    r.readAsDataURL(f);
-  });
-  document.getElementById('hpInput').value='';
-}
-function hpRemove(id){
-  if(!confirm('ลบรูปนี้?\nDelete this photo?')) return;
-  hpSave(hpGet().filter(function(x){return x.id!==id;}));
-  hpRender();
-}
+/* ---- history photo gallery (auto-loads from PORTRAIT_IMAGES Drive folder) ---- */
 function hpRender(){
   const grid=document.getElementById('hpGrid'); if(!grid) return;
-  const arr=hpGet();
-  if(!arr.length){
-    if(document.documentElement.classList.contains('viewonly')){ grid.innerHTML=''; return; }
-    grid.innerHTML='<div class="hp-empty">ยังไม่มีรูปในส่วนนี้ — กดปุ่ม "+ Upload Photos" ด้านบนเพื่อเพิ่มภาพถ่ายประวัติการทำงาน<br><span style="font-size:.88em;opacity:.7">No photos yet — click the upload button above to add work history photos</span></div>';
-    return;
-  }
-  grid.innerHTML=arr.map(function(x){ return '<div class="hp-item"><img src="'+x.u+'" loading="lazy" alt=""><button class="hp-del" onclick="hpRemove(\''+x.id+'\')" title="ลบ">✕</button></div>'; }).join('');
+  if(typeof PORTRAIT_IMAGES==='undefined' || !PORTRAIT_IMAGES.length){ grid.innerHTML=''; return; }
+  const removed=(typeof getRemovedP==='function')?getRemovedP():new Set();
+  const list=PORTRAIT_IMAGES.filter(function(x){return !removed.has(x.id);});
+  grid.innerHTML=list.map(function(x){ return '<div class="hp-item"><img src="'+imgUrl(x.id,500)+'" loading="lazy" alt=""></div>'; }).join('');
 }
 
 window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); applyAllSB(); updateRatios(); fbRender(); hpRender();
