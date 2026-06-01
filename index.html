@@ -195,6 +195,50 @@
   .logo-card{background:#fff;border-radius:14px;padding:18px;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;transition:.2s;box-shadow:0 6px 20px rgba(0,0,0,.2)}
   .logo-card:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.36)}
   .logo-card img{max-width:100%;max-height:100%;object-fit:contain}
+
+  /* ---- bilingual text: English primary, Thai underneath ---- */
+  .bi{display:block}
+  .bi .en{display:block;color:inherit;font-weight:inherit;line-height:1.2}
+  .bi .th{display:block;color:var(--ink-mute);font-weight:500;line-height:1.35;margin-top:3px;font-size:.65em}
+  h1 .bi .th{font-size:.42em;font-weight:700;letter-spacing:1px;margin-top:8px}
+  h2 .bi .th{font-size:.48em;font-weight:700;letter-spacing:1px;margin-top:6px}
+  h3 .bi .th,h4 .bi .th{font-size:.62em;font-weight:600;margin-top:4px}
+  .lead .bi .th,p .bi .th,.desc .bi .th,.fb-sub .bi .th{font-size:.88em;font-weight:400;margin-top:7px;line-height:1.6}
+  .status .bi,.role-tag .bi,.tool-tag .bi{display:inline-block;vertical-align:middle}
+  .status .bi .th,.role-tag .bi .th,.tool-tag .bi .th{font-size:.78em;margin-top:0;line-height:1.1}
+  nav .bi{line-height:1.1}
+  nav .bi .th{font-size:.7em;margin-top:1px;font-weight:500}
+  .mode-btn .bi{display:inline-block;line-height:1.15}
+  .mode-btn .bi .th{font-size:.74em;margin-top:1px;font-weight:500}
+  .lbl .bi .th,.flabel .bi .th{font-size:.92em;margin-top:0;font-weight:600;text-transform:none;letter-spacing:0}
+  .row .bi .th{font-size:.88em;margin-top:1px}
+  .quote .bi .th{font-size:.55em;font-weight:700;margin-top:8px}
+  .lang-block{margin-bottom:0}
+  .lang-block.en-block p{margin-bottom:14px}
+  .lang-block.en-block p:last-child{margin-bottom:0}
+  .lang-block.th-block{margin-top:22px;padding-top:20px;border-top:1px dashed var(--line-2)}
+  .lang-block.th-block p{color:var(--ink-mute);font-size:14.5px;line-height:1.7;margin-bottom:12px}
+  .lang-block.th-block p:last-child{margin-bottom:0}
+
+  /* ---- What is Graphic Design? section ---- */
+  .gd-section{padding:90px 0;background:linear-gradient(140deg,#1a5234 0%,#0e2e1c 60%,#08200f 100%)}
+  .gd-grid{display:grid;grid-template-columns:1fr;gap:38px}
+  @media(min-width:1000px){.gd-grid{grid-template-columns:340px 1fr;gap:52px;align-items:start}}
+  .gd-head{position:relative}
+  .gd-kicker{color:#fff;font-weight:800;letter-spacing:2.5px;font-size:11px;display:block;margin-bottom:22px;opacity:.85}
+  .gd-title{font-family:var(--font-head);font-size:clamp(38px,5.4vw,62px);font-weight:800;line-height:1;margin:0 0 24px;color:#fff;letter-spacing:-1.5px}
+  .gd-title .gd-accent{color:#36d96b;display:inline-block}
+  .gd-intro{color:rgba(255,255,255,.88);line-height:1.7;font-size:15px;max-width:380px}
+  .gd-cards{display:grid;grid-template-columns:1fr;gap:24px 22px}
+  @media(min-width:600px){.gd-cards{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:1000px){.gd-cards{grid-template-columns:repeat(3,1fr)}}
+  .gd-card{background:#0c241a;border-radius:16px;padding:30px 22px 24px;position:relative;border:1px solid rgba(54,217,107,.18);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .gd-num{position:absolute;top:-14px;left:22px;width:32px;height:32px;background:#36d96b;color:#0a2d18;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;border-radius:8px;font-family:var(--font-head);box-shadow:0 4px 14px rgba(54,217,107,.4)}
+  .gd-card h3{font-size:17px;color:#fff;margin:6px 0 4px;font-weight:700;letter-spacing:-.2px}
+  .gd-sub{color:#a8ebbf;font-size:13px;font-style:italic;margin:0 0 16px;font-weight:500}
+  .gd-body{color:var(--ink-dim);font-size:13.5px;line-height:1.7;margin:0 0 14px}
+  .gd-example{font-size:12.5px;line-height:1.65;color:var(--ink-mute);margin:0}
+  .gd-example b{color:#36d96b;font-weight:700}
   .add-btn{padding:11px 16px;border-radius:12px;font-weight:700;font-size:14px;background:var(--pink);color:#fff;border:1px solid var(--pink);display:flex;align-items:center;gap:7px}
   .add-btn:hover{background:var(--pink-bright);border-color:var(--pink-bright)}
   .manage-btn{padding:11px 16px;border-radius:12px;font-weight:700;font-size:14px;background:var(--glass-2);color:#fff;border:1px solid var(--line)}
@@ -375,13 +419,13 @@
     <a class="brand" href="#home"><span class="logo">B</span><span>Somporn<span style="color:#a8ebbf">.</span>Boom</span></a>
     <div style="display:flex;align-items:center;gap:14px">
       <ul id="navList">
-        <li><a href="#about">About</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#work">Work</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#about"><span class="bi"><span class="en">About</span><span class="th">เกี่ยวกับ</span></span></a></li>
+        <li><a href="#experience"><span class="bi"><span class="en">Experience</span><span class="th">ประสบการณ์</span></span></a></li>
+        <li><a href="#skills"><span class="bi"><span class="en">Skills</span><span class="th">ทักษะ</span></span></a></li>
+        <li><a href="#work"><span class="bi"><span class="en">Work</span><span class="th">ผลงาน</span></span></a></li>
+        <li><a href="#contact"><span class="bi"><span class="en">Contact</span><span class="th">ติดต่อ</span></span></a></li>
       </ul>
-      <a class="btn" href="#contact">Hire me</a>
+      <a class="btn" href="#contact"><span class="bi"><span class="en">Hire me</span><span class="th">จ้างผม</span></span></a>
       <button class="menu-toggle" onclick="document.getElementById('navList').classList.toggle('show')" aria-label="menu">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -393,7 +437,7 @@
   <div class="container">
     <div class="hero-grid">
       <div>
-        <span class="status"><span class="dot"></span> <span data-k="status">เปิดรับโอกาสร่วมงานเต็มเวลา</span></span>
+        <span class="status"><span class="dot"></span> <span class="bi"><span class="en" data-k="statusEn">Open to Full-Time Opportunities</span><span class="th" data-k="status">เปิดรับโอกาสร่วมงานเต็มเวลา</span></span></span>
         <div class="hero-name" data-k="heroName">Somporn Usaphanich · "Boom"</div>
         <h1 class="title"><span data-k="t1">Graphic Designer</span><br/><span data-k="t2">เล่าเรื่องผ่าน</span><span class="accent" data-k="t3">งานภาพ</span></h1>
         <div class="role-tags" id="mlRoles">
@@ -404,10 +448,10 @@
           <span class="role-tag" data-k="role5">Motion Graphic</span>
           <span class="role-tag" data-k="role6">AI Image Generator</span>
         </div>
-        <p class="lead" data-k="lead">Senior Graphic Designer ที่ Warrix Sport Public Company Limited ประสบการณ์งานออกแบบกว่า 10 ปี ครอบคลุมงาน Key Visual, Branding, Sport Campaign, Video Editing และ AI Visual ทำงานเป็นทีมได้ดี พร้อมเรียนรู้สิ่งใหม่อยู่เสมอ</p>
+        <p class="lead"><span class="bi"><span class="en" data-k="leadEn">Senior Graphic Designer at Warrix Sport Public Company Limited with 10+ years of design experience covering Key Visual, Branding, Sport Campaigns, Video Editing, and AI Visual. Strong team player who continuously learns new tools and approaches.</span><span class="th" data-k="lead">Senior Graphic Designer ที่ Warrix Sport Public Company Limited ประสบการณ์งานออกแบบกว่า 10 ปี ครอบคลุมงาน Key Visual, Branding, Sport Campaign, Video Editing และ AI Visual ทำงานเป็นทีมได้ดี พร้อมเรียนรู้สิ่งใหม่อยู่เสมอ</span></span></p>
         <div class="hero-cta">
-          <a class="btn solid" href="#work">ดูผลงาน</a>
-          <a class="btn ghost" href="#contact">ติดต่อ</a>
+          <a class="btn solid" href="#work"><span class="bi"><span class="en">View Work</span><span class="th">ดูผลงาน</span></span></a>
+          <a class="btn ghost" href="#contact"><span class="bi"><span class="en">Contact</span><span class="th">ติดต่อ</span></span></a>
         </div>
       </div>
       <div class="profile-wrap">
@@ -423,20 +467,46 @@
 
 <section class="about-section" id="about">
   <div class="container">
-    <div class="section-head"><span class="kicker" data-k="aboutKicker">About</span><h2 data-k="aboutTitle">เกี่ยวกับผม</h2></div>
+    <div class="section-head"><span class="kicker" data-k="aboutKicker">About</span><h2><span class="bi"><span class="en" data-k="aboutTitleEn">About Me</span><span class="th" data-k="aboutTitle">เกี่ยวกับผม</span></span></h2></div>
     <div class="about">
       <div class="about-text">
-        <p class="body" data-k="aboutP1">ผม Boom — Somporn Usaphanich กราฟิกดีไซเนอร์ที่ทำงานในสายนี้มากว่า 10 ปี เริ่มจากงาน Video Editor และ Creative ในบริษัทสื่อ ก่อนเติบโตเป็น Senior Graphic Designer ที่ดูแลงาน Key Visual และ Sport Campaign ให้แบรนด์กีฬาและองค์กรชั้นนำ</p>
-        <p class="body" data-k="aboutP2">ผมเชี่ยวชาญทั้งงาน Print, Digital, OOH, Social Media และงานออกแบบกีฬา/ฟุตบอล รวมถึงต่อยอดงานด้วย AI Image Generator และ Motion Graphic — สนุกกับการพัฒนาตัวเอง พร้อมเปิดรับเครื่องมือใหม่ๆ ทุกอย่าง</p>
+        <div class="lang-block en-block">
+          <p class="body" data-k="aboutP1En">I'm Boom — Somporn Usaphanich, a graphic designer with 10+ years in the industry. Started as a Video Editor and Creative at media companies, then grew into a Senior Graphic Designer handling Key Visuals and Sport Campaigns for leading sports brands and organizations.</p>
+          <p class="body" data-k="aboutP2En">I'm experienced in Print, Digital, OOH, Social Media, and sport/football design — extending my work with AI Image Generators and Motion Graphics. I enjoy growing my craft and stay open to learning every new tool.</p>
+        </div>
+        <div class="lang-block th-block">
+          <p class="body" data-k="aboutP1">ผม Boom — Somporn Usaphanich กราฟิกดีไซเนอร์ที่ทำงานในสายนี้มากว่า 10 ปี เริ่มจากงาน Video Editor และ Creative ในบริษัทสื่อ ก่อนเติบโตเป็น Senior Graphic Designer ที่ดูแลงาน Key Visual และ Sport Campaign ให้แบรนด์กีฬาและองค์กรชั้นนำ</p>
+          <p class="body" data-k="aboutP2">ผมเชี่ยวชาญทั้งงาน Print, Digital, OOH, Social Media และงานออกแบบกีฬา/ฟุตบอล รวมถึงต่อยอดงานด้วย AI Image Generator และ Motion Graphic — สนุกกับการพัฒนาตัวเอง พร้อมเปิดรับเครื่องมือใหม่ๆ ทุกอย่าง</p>
+        </div>
       </div>
       <div class="info-list">
-        <div class="row"><span>ชื่อ-นามสกุล</span><span data-k="iName">Somporn Usaphanich</span></div>
-        <div class="row"><span>ชื่อเล่น</span><span data-k="iNick">Boom</span></div>
-        <div class="row"><span>ตำแหน่งที่สนใจ</span><span data-k="iRole">Graphic Designer</span></div>
-        <div class="row"><span>ประสบการณ์</span><span data-k="iExp">10+ ปี</span></div>
-        <div class="row"><span>ที่อยู่</span><span data-k="iLoc">Huai Khwang, Bangkok</span></div>
-        <div class="row"><span>ความสนใจ</span><span data-k="iInt">Football · Jet Ski · Go-Kart</span></div>
-        <div class="row"><span>สถานะ</span><span class="open" data-k="iStatus">พร้อมเริ่มงาน</span></div>
+        <div class="row"><span><span class="bi"><span class="en">Full Name</span><span class="th">ชื่อ-นามสกุล</span></span></span><span data-k="iName">Somporn Usaphanich</span></div>
+        <div class="row"><span><span class="bi"><span class="en">Nickname</span><span class="th">ชื่อเล่น</span></span></span><span data-k="iNick">Boom</span></div>
+        <div class="row"><span><span class="bi"><span class="en">Position</span><span class="th">ตำแหน่งที่สนใจ</span></span></span><span data-k="iRole">Graphic Designer</span></div>
+        <div class="row"><span><span class="bi"><span class="en">Experience</span><span class="th">ประสบการณ์</span></span></span><span data-k="iExp">10+ Years · 10+ ปี</span></div>
+        <div class="row"><span><span class="bi"><span class="en">Location</span><span class="th">ที่อยู่</span></span></span><span data-k="iLoc">Huai Khwang, Bangkok</span></div>
+        <div class="row"><span><span class="bi"><span class="en">Interests</span><span class="th">ความสนใจ</span></span></span><span data-k="iInt">Football · Jet Ski · Go-Kart</span></div>
+        <div class="row"><span><span class="bi"><span class="en">Status</span><span class="th">สถานะ</span></span></span><span class="open" data-k="iStatus">Ready to Start · พร้อมเริ่มงาน</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gd-section" id="graphic-design">
+  <div class="container">
+    <div class="gd-grid">
+      <div class="gd-head">
+        <span class="gd-kicker">GRAPHIC DESIGN</span>
+        <h2 class="gd-title">WHAT IS<br><span class="gd-accent">Graphic Design?</span></h2>
+        <p class="gd-intro">คำว่า "งานกราฟิก" (Graphic Design) เป็นงานออกแบบที่สื่อสาร "ข้อความ" หรือ "แนวคิด" ผ่านภาพ ตัวอักษร สี รูปร่าง และองค์ประกอบต่างๆ เพื่อให้คนดูเข้าใจง่าย และจดจำได้ชัดเจน ภายในงานกราฟิกมีคำศัพท์เฉพาะหลายคำที่นักออกแบบหรือฝ่ายการตลาดมักใช้บ่อย เช่น</p>
+      </div>
+      <div class="gd-cards">
+        <div class="gd-card"><span class="gd-num">1</span><h3>Key Visual (KV)</h3><p class="gd-sub">"ภาพหลักของแคมเปญ"</p><p class="gd-body">คือภาพหรือองค์ประกอบหลักที่ใช้สื่อสารแนวคิดของแบรนด์หรือแคมเปญโฆษณา เป็นตัวกำหนดโทน สี อารมณ์ และสไตล์ของงานทั้งหมดใช้ในหลายสื่อ เช่น โปสเตอร์, ป้ายโฆษณา, โพสต์โซเชียล, สื่อสิ่งพิมพ์ ฯลฯ</p><p class="gd-example"><b>ตัวอย่าง:</b> แคมเปญโคล่าล่าสุดของ Coca-Cola มี Art Direction โทนสีแดง-ขาว อบอุ่น และบรรยากาศครอบครัว</p></div>
+        <div class="gd-card"><span class="gd-num">2</span><h3>CI (Corporate Identity)</h3><p class="gd-sub">"เอกลักษณ์องค์กร"</p><p class="gd-body">เป็นชุดแนวทางการออกแบบที่กำหนดรูปลักษณ์ขององค์กร ครอบคลุมโลโก้ สีประจำองค์กร ฟอนต์ ลักษณะการวางเลย์เอาท์ การใช้ภาพ ฯลฯ เพื่อให้แบรนด์ดูมีมาตรฐานและจดจำได้ง่ายในทุกช่องทาง</p><p class="gd-example"><b>ตัวอย่าง:</b> โลโก้ SCB ต้องใช้สีม่วงเฉพาะ ไม่ใช้ฟอนต์อื่นนอกจากที่ระบุไว้ใน CI</p></div>
+        <div class="gd-card"><span class="gd-num">3</span><h3>Branding</h3><p class="gd-sub">"ภาพลักษณ์ของแบรนด์"</p><p class="gd-body">คือการสร้าง "ตัวตน" ของแบรนด์ให้ผู้คนรู้จักและรู้สึกบางอย่างเมื่อเห็น ไม่ใช่แค่โลโก้ แต่รวมถึงโทนเสียงการสื่อสาร (Tone of Voice), อารมณ์, เรื่องราว, ความรู้สึกของลูกค้า</p><p class="gd-example"><b>ตัวอย่าง:</b> Apple มี Branding ที่ชัดเจน = เรียบ หรู มินิมอล ทันสมัย</p></div>
+        <div class="gd-card"><span class="gd-num">4</span><h3>Brand Identity</h3><p class="gd-sub">"อัตลักษณ์แบรนด์"</p><p class="gd-body">เป็นสิ่งที่แบรนด์ "สร้างขึ้น" เพื่อบอกคนอื่นว่า "เราเป็นใคร" รวมโลโก้ สี ฟอนต์ Key Visual โทนการพูด และจุดยืนของแบรนด์ เป็นส่วนหนึ่งของ Branding แต่เน้นที่ "สิ่งที่จับต้องได้" เช่น งานออกแบบจริง</p><p class="gd-example"><b>ตัวอย่าง:</b> สัญลักษณ์ Facebook, เส้นสายเรียบง่าย, การใช้ตัวพิมพ์เล็ก — ทั้งหมดคือ Brand Identity</p></div>
+        <div class="gd-card"><span class="gd-num">5</span><h3>Visual Guideline</h3><p class="gd-sub">"ระบบภาพของแบรนด์"</p><p class="gd-body">คือคู่มือที่บอกว่าโลโก้ควรวางอย่างไร ขนาดเท่าไหร่ ใช้สื่ออะไรได้บ้าง ห้ามใช้อย่างไร เพื่อให้ทุกคนที่ทำงานกับแบรนด์ ออกแบบไปในทิศทางเดียวกัน</p><p class="gd-example"><b>ตัวอย่าง:</b> คู่มือ CI ของแบรนด์ Starbucks กำหนดระยะห่างรอบโลโก้ ขนาดขั้นต่ำ สีประจำแบรนด์ ฯลฯ</p></div>
+        <div class="gd-card"><span class="gd-num">6</span><h3>Art Direction</h3><p class="gd-sub">"ทิศทางทางศิลป์"</p><p class="gd-body">เป็นแนวทางภาพรวมของการออกแบบทั้งหมดในโปรเจกต์หนึ่ง เช่น โทนแสง สี ฟอนต์ มู้ดภาพ ทุกอย่างถูกกำหนดโดย Art Director และทีมสร้างสรรค์</p><p class="gd-example"><b>ตัวอย่าง:</b> แคมเปญโคล่าล่าสุดของ Coca-Cola มี Art Direction โทนสีแดง-ขาว อบอุ่น และบรรยากาศครอบครัว</p></div>
       </div>
     </div>
   </div>
@@ -444,7 +514,7 @@
 
 <section class="exp-section" id="experience">
   <div class="container">
-    <div class="section-head"><span class="kicker">Experience</span><h2 data-k="expTitle">ประสบการณ์ทำงาน</h2><p class="desc" data-k="expDesc">ประสบการณ์ในสายงานกราฟิก ครีเอทีฟ และ Visual Content กว่า 10 ปี</p></div>
+    <div class="section-head"><span class="kicker">Experience</span><h2><span class="bi"><span class="en" data-k="expTitleEn">Work Experience</span><span class="th" data-k="expTitle">ประสบการณ์ทำงาน</span></span></h2><p class="desc"><span class="bi"><span class="en" data-k="expDescEn">10+ years across graphic design, creative direction, and Visual Content production.</span><span class="th" data-k="expDesc">ประสบการณ์ในสายงานกราฟิก ครีเอทีฟ และ Visual Content กว่า 10 ปี</span></span></p></div>
     <div class="exp-grid" id="mlExp">
       <div class="exp current"><div class="year" data-k="e1y">Current</div><div><h4 data-k="e1h">Senior Graphic Designer</h4><div class="company" data-k="e1c">Warrix Sport Public Company Limited</div></div><span class="tag">ปัจจุบัน</span></div>
       <div class="exp"><div class="year" data-k="e2y">2022</div><div><h4 data-k="e2h">Senior Graphic Designer</h4><div class="company" data-k="e2c">5A FINTECH Company</div></div><span class="tag">Senior</span></div>
@@ -456,14 +526,14 @@
       <div class="exp"><div class="year" data-k="e8y">2014</div><div><h4 data-k="e8h">Creative</h4><div class="company" data-k="e8c">Zab Channel</div></div><span class="tag">Creative</span></div>
       <div class="exp"><div class="year" data-k="e9y">2013</div><div><h4 data-k="e9h">Video Editor</h4><div class="company" data-k="e9c">Company 112</div></div><span class="tag">Editor</span></div>
     </div>
-    <div class="subhead"><span class="kicker">Education</span><h3 data-k="eduTitle">การศึกษา</h3></div>
+    <div class="subhead"><span class="kicker">Education</span><h3><span class="bi"><span class="en" data-k="eduTitleEn">Education</span><span class="th" data-k="eduTitle">การศึกษา</span></span></h3></div>
     <div class="edu-list" id="mlEdu"><div class="edu-row"><div class="y" data-k="eduY">2011 — 2015</div><div><h4 data-k="eduH">Bachelor's Degree</h4><div class="deg" data-k="eduD">Suan Sunandha Rajabhat University · มหาวิทยาลัยราชภัฏสวนสุนันทา</div></div></div></div>
   </div>
 </section>
 
 <section class="skills-section" id="skills">
   <div class="container">
-    <div class="section-head"><span class="kicker">Skills & Expertise</span><h2 data-k="skillTitle">ทักษะและความเชี่ยวชาญ</h2><p class="desc" data-k="skillDesc">ทักษะการออกแบบ ครีเอทีฟ และเครื่องมือที่ใช้งานได้คล่อง</p></div>
+    <div class="section-head"><span class="kicker">Skills & Expertise</span><h2><span class="bi"><span class="en" data-k="skillTitleEn">Skills &amp; Expertise</span><span class="th" data-k="skillTitle">ทักษะและความเชี่ยวชาญ</span></span></h2><p class="desc"><span class="bi"><span class="en" data-k="skillDescEn">Design, creative direction, and tools I work with confidently.</span><span class="th" data-k="skillDesc">ทักษะการออกแบบ ครีเอทีฟ และเครื่องมือที่ใช้งานได้คล่อง</span></span></p></div>
     <div class="skill-grid" id="mlSkills">
       <div class="skill"><span class="num">01</span><h4 data-k="s1h">Graphic Design</h4><p data-k="s1p">Key Visual, Campaign, Print, Digital, OOH</p></div>
       <div class="skill"><span class="num">02</span><h4 data-k="s2h">Sport & Football Design</h4><p data-k="s2p">Key Visual กีฬา, Matchday, Jersey, Teamwear</p></div>
@@ -472,7 +542,7 @@
       <div class="skill"><span class="num">05</span><h4 data-k="s5h">Content Creation</h4><p data-k="s5p">ผลิตคอนเทนต์ Online และ Offline ครบวงจร</p></div>
       <div class="skill"><span class="num">06</span><h4 data-k="s6h">Channel Management</h4><p data-k="s6p">Facebook Page, YouTube, LINE OA, Facebook Ads</p></div>
     </div>
-    <div class="subhead"><span class="kicker">Software · Adobe Suite</span><h3>โปรแกรมที่ใช้งาน <span style="color:var(--ink-mute);font-weight:500;font-size:14px">— เรียงตามความถนัด</span></h3></div>
+    <div class="subhead"><span class="kicker">Software · Adobe Suite</span><h3><span class="bi"><span class="en">Software I Use</span><span class="th">โปรแกรมที่ใช้งาน</span></span> <span style="color:var(--ink-mute);font-weight:500;font-size:14px">— sorted by proficiency · เรียงตามความถนัด</span></h3></div>
     <div class="tools" id="mlAdobe">
       <span class="tool-tag adobe"><span class="rank">1</span>Adobe Illustrator</span>
       <span class="tool-tag adobe"><span class="rank">2</span>Adobe Photoshop</span>
@@ -480,7 +550,7 @@
       <span class="tool-tag adobe"><span class="rank">4</span>Adobe Premiere Pro</span>
       <span class="tool-tag adobe"><span class="rank">5</span>Adobe After Effects</span>
     </div>
-    <div class="subhead"><span class="kicker">AI Image · Video · Audio</span><h3>เครื่องมือ AI ที่ใช้</h3></div>
+    <div class="subhead"><span class="kicker">AI Image · Video · Audio</span><h3><span class="bi"><span class="en">AI Tools I Use</span><span class="th">เครื่องมือ AI ที่ใช้</span></span></h3></div>
     <div class="tools" id="mlAI">
       <span class="tool-tag">ChatGPT</span><span class="tool-tag">Gemini</span><span class="tool-tag">Claude</span>
       <span class="tool-tag">Copilot</span><span class="tool-tag">Midjourney</span><span class="tool-tag">Kling AI</span>
@@ -494,37 +564,37 @@
     <div class="work-top">
       <div>
         <span class="kicker">Portfolio</span>
-        <h2 data-k="workTitle">ผลงานทั้งหมด</h2>
-        <p class="desc" data-k="workDesc">รวมผลงานออกแบบจาก Google Drive — สลับโหมดฟุตบอล แยกหมวดตามสัดส่วนและโทนสี เพิ่ม/ลบรูปได้</p>
+        <h2><span class="bi"><span class="en" data-k="workTitleEn">All Works</span><span class="th" data-k="workTitle">ผลงานทั้งหมด</span></span></h2>
+        <p class="desc"><span class="bi"><span class="en" data-k="workDescEn">Design works pulled from Google Drive — switch to Football mode, filter by aspect ratio and color tone, add/remove images freely.</span><span class="th" data-k="workDesc">รวมผลงานออกแบบจาก Google Drive — สลับโหมดฟุตบอล แยกหมวดตามสัดส่วนและโทนสี เพิ่ม/ลบรูปได้</span></span></p>
       </div>
-      <span class="count-pill">● <span id="countNum">558</span> ผลงาน</span>
+      <span class="count-pill">● <span id="countNum">558</span> Works · ผลงาน</span>
     </div>
     <div class="notice" id="notice">
-      หากรูปจาก Drive ยังไม่ขึ้น — กรุณาตั้งค่าแชร์โฟลเดอร์ <b>"Portfolio"</b> ใน Google Drive เป็น <b>"Anyone with the link"</b> → Viewer แล้วรีเฟรช
+      If Drive images don't load yet, please set the <b>"Portfolio"</b> folder sharing in Google Drive to <b>"Anyone with the link"</b> → Viewer, then refresh.<br><span style="opacity:.85">หากรูปจาก Drive ยังไม่ขึ้น — กรุณาตั้งค่าแชร์โฟลเดอร์ <b>"Portfolio"</b> ใน Google Drive เป็น <b>"Anyone with the link"</b> → Viewer แล้วรีเฟรช</span>
     </div>
     <div class="work-controls">
       <div class="mode-switch">
-        <button class="mode-btn active" id="modeAll" onclick="setMode('all')">▦ ผลงานทั้งหมด</button>
-        <button class="mode-btn fb" id="modeFb" onclick="setMode('fb')">⚽ โหมดฟุตบอล</button>
-        <button class="mode-btn pt" id="modePortrait" onclick="setMode('portrait')">👤 ภาพประวัติบางส่วน</button>
-        <button class="mode-btn vd" id="modeVideo" onclick="setMode('video')">▶ ตัดต่อวิดีโอ</button>
-        <button class="mode-btn mo" id="modeMotion" onclick="setMode('motion')">🎬 โมชั่น</button>
+        <button class="mode-btn active" id="modeAll" onclick="setMode('all')">▦ <span class="bi"><span class="en">All Works</span><span class="th">ผลงานทั้งหมด</span></span></button>
+        <button class="mode-btn fb" id="modeFb" onclick="setMode('fb')">⚽ <span class="bi"><span class="en">Football</span><span class="th">โหมดฟุตบอล</span></span></button>
+        <button class="mode-btn pt" id="modePortrait" onclick="setMode('portrait')">👤 <span class="bi"><span class="en">History Photos</span><span class="th">ภาพประวัติบางส่วน</span></span></button>
+        <button class="mode-btn vd" id="modeVideo" onclick="setMode('video')">▶ <span class="bi"><span class="en">Video Editing</span><span class="th">ตัดต่อวิดีโอ</span></span></button>
+        <button class="mode-btn mo" id="modeMotion" onclick="setMode('motion')">🎬 <span class="bi"><span class="en">Motion</span><span class="th">โมชั่น</span></span></button>
       </div>
-      <button class="add-btn" onclick="document.getElementById('addInput').click()">+ เพิ่มรูป</button>
-      <button class="manage-btn" id="manageBtn" onclick="toggleManage()">⚙ จัดการรูป</button>
+      <button class="add-btn" onclick="document.getElementById('addInput').click()">+ Add · เพิ่มรูป</button>
+      <button class="manage-btn" id="manageBtn" onclick="toggleManage()">⚙ Manage · จัดการรูป</button>
       <input type="file" id="addInput" accept="image/*" multiple hidden onchange="addFiles(event.target.files)">
     </div>
     <div class="dropzone" id="dropzone">
       <div class="big">⬆</div>
-      ลากไฟล์รูปมาวางที่นี่เพื่อเพิ่มเข้าพอร์ต · ในโหมด "จัดการรูป" — ลากรูปเพื่อสลับตำแหน่ง · ⤒ เลื่อนไปหน้าสุด · ⤓ ไปท้ายสุด · ✕ ลบ
+      Drop images here to add · ลากไฟล์รูปมาวางที่นี่เพื่อเพิ่ม &nbsp;·&nbsp; In <b>Manage</b> mode · โหมด "จัดการรูป" — drag to reorder · ลากเพื่อสลับตำแหน่ง · ⤒ to front / หน้าสุด · ⤓ to back / ท้ายสุด · ✕ delete / ลบ
     </div>
     <div class="filter-wrap">
       <div class="filter-block">
-        <span class="flabel">สัดส่วน</span>
+        <span class="flabel"><span class="bi"><span class="en">Aspect</span><span class="th">สัดส่วน</span></span></span>
         <div class="fchips" id="arChips"></div>
       </div>
       <div class="filter-block">
-        <span class="flabel">โทนสี</span>
+        <span class="flabel"><span class="bi"><span class="en">Tone</span><span class="th">โทนสี</span></span></span>
         <div class="fchips" id="toneChips"></div>
       </div>
     </div>
@@ -537,16 +607,16 @@
     <div class="contact">
       <div>
         <span class="kicker">Contact</span>
-        <p class="quote"><span data-k="q1">สนใจ</span> <span class="accent" data-k="q2">รับเข้าทำงาน</span><span data-k="q3">?</span><br/><span data-k="q4">ทักมาคุยกันได้เลย</span></p>
-        <p style="color:var(--ink-dim);line-height:1.7;font-size:15px;max-width:440px" data-k="contactP">พร้อมเริ่มงานทันที เปิดรับโอกาสในตำแหน่ง Senior Graphic Designer / Creative Designer ที่บริษัทหรือเอเจนซี่ที่ใช่</p>
+        <p class="quote"><span class="bi"><span class="en"><span data-k="q1En">Interested in</span> <span class="accent" data-k="q2En">hiring me</span><span data-k="q3En">?</span><br/><span data-k="q4En">Let's chat.</span></span><span class="th"><span data-k="q1">สนใจ</span> <span class="accent" data-k="q2">รับเข้าทำงาน</span><span data-k="q3">?</span><br/><span data-k="q4">ทักมาคุยกันได้เลย</span></span></span></p>
+        <p style="color:var(--ink-dim);line-height:1.7;font-size:15px;max-width:440px"><span class="bi"><span class="en" data-k="contactPEn">Available immediately. Open to opportunities as a Senior Graphic Designer / Creative Designer at the right company or agency.</span><span class="th" data-k="contactP">พร้อมเริ่มงานทันที เปิดรับโอกาสในตำแหน่ง Senior Graphic Designer / Creative Designer ที่บริษัทหรือเอเจนซี่ที่ใช่</span></span></p>
       </div>
       <div class="contact-card">
         <a class="contact-row" href="mailto:somporn.usa01@gmail.com" data-copy="somporn.usa01@gmail.com"><div class="ic">@</div><div class="cr-text"><div class="lbl">Email · กดเพื่อส่ง</div><div class="val" data-k="cEmail">somporn.usa01@gmail.com</div></div><button class="cr-copy" title="คัดลอก">⧉</button></a>
         <a class="contact-row" href="tel:0955919199" data-copy="095-591-9199"><div class="ic">☎</div><div class="cr-text"><div class="lbl">Phone · กดเพื่อโทร</div><div class="val" data-k="cPhone">095-591-9199</div></div><button class="cr-copy" title="คัดลอก">⧉</button></a>
         <a class="contact-row" href="https://line.me/ti/p/TDixg_5hPs" target="_blank" rel="noopener" data-copy="prince.79"><div class="ic">▼</div><div class="cr-text"><div class="lbl">Line · กดเพื่อเพิ่มเพื่อน</div><div class="val" data-k="cLine">prince.79</div></div><button class="cr-copy" title="คัดลอก">⧉</button></a>
         <a class="contact-row" href="https://www.google.com/maps/search/?api=1&amp;query=Huai+Khwang+Sam+Sen+Nok+Bangkok" target="_blank" rel="noopener"><div class="ic">◉</div><div class="cr-text"><div class="lbl">Location · เปิด Google Maps</div><div class="val" data-k="cLoc">Huai Khwang · สามเสนนอก, Bangkok</div></div><button class="cr-go" title="เปิดแผนที่">↗</button></a>
-        <div class="line-qr"><img src="https://drive.google.com/thumbnail?id=1Jsi68DTlBJPKCgeuPinDsu1Pr7-WhYsj&amp;sz=w400" alt="LINE QR Code" loading="lazy"><div class="qr-text"><b>LINE QR Code</b><br>สแกนเพื่อเพิ่มเพื่อน หรือกดที่ Line ID ด้านบนได้เลย</div></div>
-        <a class="btn solid" style="margin-top:20px;width:100%;justify-content:center" href="mailto:somporn.usa01@gmail.com">ส่งอีเมลหาผม</a>
+        <div class="line-qr"><img src="https://drive.google.com/thumbnail?id=1Jsi68DTlBJPKCgeuPinDsu1Pr7-WhYsj&amp;sz=w400" alt="LINE QR Code" loading="lazy"><div class="qr-text"><b>LINE QR Code</b><br>Scan to add friend, or tap the Line ID above<br><span style="opacity:.8">สแกนเพื่อเพิ่มเพื่อน หรือกดที่ Line ID ด้านบนได้เลย</span></div></div>
+        <a class="btn solid" style="margin-top:20px;width:100%;justify-content:center" href="mailto:somporn.usa01@gmail.com"><span class="bi"><span class="en">Email Me</span><span class="th">ส่งอีเมลหาผม</span></span></a>
       </div>
     </div>
   </div>
@@ -557,13 +627,13 @@
     <div class="fb-card">
       <div class="fb-head">
         <span class="kicker">Feedback</span>
-        <h3 data-k="fbTitle">ความสนใจในผลงาน · Interest in Portfolio</h3>
-        <p class="fb-sub" data-k="fbSub">กดเลือกระดับความสนใจของคุณ — ผลรวมจะอัปเดตทันที</p>
+        <h3><span class="bi"><span class="en" data-k="fbTitleEn">Interest in Portfolio</span><span class="th" data-k="fbTitle">ความสนใจในผลงาน</span></span></h3>
+        <p class="fb-sub"><span class="bi"><span class="en" data-k="fbSubEn">Tap the level that best matches your interest — counts update instantly.</span><span class="th" data-k="fbSub">กดเลือกระดับความสนใจของคุณ — ผลรวมจะอัปเดตทันที</span></span></p>
       </div>
       <div class="fb-grid">
-        <button class="fb-opt" data-fb="hi"><span class="fb-ck">✓</span><span class="fb-lbl">สนใจผลงานของคุณมาก</span><span class="fb-cnt" id="fbCntHi">0</span></button>
-        <button class="fb-opt" data-fb="mid"><span class="fb-ck">✓</span><span class="fb-lbl">สนใจผลงานของคุณ</span><span class="fb-cnt" id="fbCntMid">0</span></button>
-        <button class="fb-opt" data-fb="no"><span class="fb-ck">✓</span><span class="fb-lbl">ยังไม่สนใจ</span><span class="fb-cnt" id="fbCntNo">0</span></button>
+        <button class="fb-opt" data-fb="hi"><span class="fb-ck">✓</span><span class="fb-lbl"><span class="bi"><span class="en">Very Interested</span><span class="th">สนใจผลงานของคุณมาก</span></span></span><span class="fb-cnt" id="fbCntHi">0</span></button>
+        <button class="fb-opt" data-fb="mid"><span class="fb-ck">✓</span><span class="fb-lbl"><span class="bi"><span class="en">Interested</span><span class="th">สนใจผลงานของคุณ</span></span></span><span class="fb-cnt" id="fbCntMid">0</span></button>
+        <button class="fb-opt" data-fb="no"><span class="fb-ck">✓</span><span class="fb-lbl"><span class="bi"><span class="en">Not Yet</span><span class="th">ยังไม่สนใจ</span></span></span><span class="fb-cnt" id="fbCntNo">0</span></button>
       </div>
     </div>
   </div>
@@ -573,8 +643,8 @@
   <div class="container">
     <div class="section-head" style="text-align:center">
       <span class="kicker">Brands · Companies</span>
-      <h2 data-k="logosTitle">บริษัทที่เคยร่วมงาน</h2>
-      <p class="desc" data-k="logosDesc">โลโก้บริษัทและองค์กรที่ผมเคยมีส่วนร่วมในงานออกแบบ</p>
+      <h2><span class="bi"><span class="en" data-k="logosTitleEn">Companies I've Worked With</span><span class="th" data-k="logosTitle">บริษัทที่เคยร่วมงาน</span></span></h2>
+      <p class="desc"><span class="bi"><span class="en" data-k="logosDescEn">Logos of companies and organizations I've collaborated with on design projects.</span><span class="th" data-k="logosDesc">โลโก้บริษัทและองค์กรที่ผมเคยมีส่วนร่วมในงานออกแบบ</span></span></p>
     </div>
     <div class="logo-grid">
       <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1Ld4v_2nj3WxBmR-LenK39upfpxBW8WZJ&sz=w400" alt="" loading="lazy"></div>
@@ -594,8 +664,8 @@
   <div class="container">
     <div class="salary-inner">
       <span class="kicker">Expected Salary · เงินเดือนที่ต้องการ</span>
-      <div class="salary-big"><span data-k="salaryNum">35,000</span> <span class="unit" data-k="salaryUnit">บาท / เดือน</span></div>
-      <p data-k="salaryNote">ดูผลงานก่อนได้เลย — ถ้าถูกใจค่อยคุยรายละเอียดเรื่องเงินเดือนและเงื่อนไขกันทีหลัง ยินดีพูดคุยและปรับตามความเหมาะสมของงาน</p>
+      <div class="salary-big"><span data-k="salaryNum">35,000</span> <span class="unit"><span class="bi"><span class="en" data-k="salaryUnitEn">THB / Month</span><span class="th" data-k="salaryUnit">บาท / เดือน</span></span></span></div>
+      <p><span class="bi"><span class="en" data-k="salaryNoteEn">Please review my work first — if you like what you see, we can discuss salary and conditions afterward. Open to negotiate based on the role's scope and fit.</span><span class="th" data-k="salaryNote">ดูผลงานก่อนได้เลย — ถ้าถูกใจค่อยคุยรายละเอียดเรื่องเงินเดือนและเงื่อนไขกันทีหลัง ยินดีพูดคุยและปรับตามความเหมาะสมของงาน</span></span></p>
     </div>
   </div>
 </section>
@@ -603,7 +673,7 @@
 <footer>
   <div class="container row">
     <div class="copy">© 2026 Somporn Usaphanich (Boom) · Graphic Designer · Bangkok, Thailand</div>
-    <div class="links"><a href="#home">Home</a><a href="#work">Work</a><a href="#contact">Contact</a></div>
+    <div class="links"><a href="#home">Home · หน้าแรก</a><a href="#work">Work · ผลงาน</a><a href="#contact">Contact · ติดต่อ</a></div>
   </div>
 </footer>
 
