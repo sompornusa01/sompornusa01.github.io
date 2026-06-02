@@ -150,6 +150,7 @@
   .mode-btn.pt.active{background:#a8ebbf;color:#0a2d18}
   .mode-btn.vd.active{background:#ff5e5e;color:#fff}
   .mode-btn.mo.active{background:#7e5fff;color:#fff}
+  .mode-btn.ph.active{background:#ff9e3d;color:#0a2d18}
   .ai-icon{width:18px;height:18px;border-radius:5px;background:#fff;padding:1.5px;flex:none;object-fit:contain;box-shadow:0 1px 3px rgba(0,0,0,.15)}
   .adobe-logo{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-family:var(--font-head);font-weight:800;font-size:11px;letter-spacing:.3px;flex:none}
   a.tool-tag.mli,a.role-tag.mli{text-decoration:none;cursor:pointer;transition:.15s}
@@ -263,6 +264,31 @@
   .add-album-btn:hover{background:rgba(54,217,107,.24)}
   html.viewonly .add-album-btn,html.viewonly .album-del{display:none!important}
   html.viewonly .album-slot{cursor:default}
+
+  /* ---- album section (dedicated frame between filters and gallery) ---- */
+  .album-section{margin-bottom:24px;padding:18px;background:rgba(54,217,107,.04);border:1px solid rgba(54,217,107,.18);border-radius:14px;display:none}
+  body.edit-on .album-section,body.manage-on .album-section,.album-section.has-albums{display:block}
+  html.viewonly .album-section{display:none}
+  html.viewonly .album-section.has-albums{display:block;padding:18px 0;background:transparent;border:none}
+  .album-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .album-section-title{font-family:var(--font-head);font-size:14px;color:#fff;margin:0;font-weight:800;letter-spacing:.5px}
+  html.viewonly .album-section-title{font-size:18px;letter-spacing:0}
+  .album-pos-ctrl{display:none;align-items:center;gap:5px;margin-left:auto;flex-wrap:wrap}
+  .album-pos-ctrl.show{display:flex}
+  .album-pos-ctrl .apc-lbl{font-size:12px;color:rgba(255,255,255,.6);margin-right:6px;font-weight:600}
+  .album-pos-ctrl button{padding:6px 11px;border-radius:7px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.75);border:1px solid var(--line);cursor:pointer;font-size:11.5px;font-family:inherit;font-weight:700}
+  .album-pos-ctrl button:hover{background:rgba(255,255,255,.13);color:#fff}
+  .album-pos-ctrl button.active{background:#36d96b;color:#0a2d18;border-color:#36d96b}
+  html.viewonly .album-pos-ctrl,html.viewonly .album-toolbar .add-album-btn{display:none!important}
+  .album-area{display:grid;gap:14px}
+  .album-area.layout-single{max-width:560px}
+  .album-area.layout-single.pos-center{margin-left:auto;margin-right:auto}
+  .album-area.layout-single.pos-left{margin-left:0;margin-right:auto}
+  .album-area.layout-single.pos-right{margin-left:auto;margin-right:0}
+  .album-area.layout-multi{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .album-hint{color:var(--ink-mute);font-size:13px;line-height:1.65;padding:24px 18px;text-align:center;border:1.5px dashed var(--line);border-radius:12px;background:rgba(255,255,255,.02)}
+  html.viewonly .album-hint{display:none}
+  .album-section.has-albums .album-hint{display:none}
 
   /* ---- Work History Photos (free-aspect masonry) ---- */
   .history-section{padding:70px 0}
@@ -620,13 +646,13 @@
       <div class="mode-switch">
         <button class="mode-btn active" id="modeAll" onclick="setMode('all')">▦ <span class="bi"><span class="en">Design Work</span><span class="th">งานออกแบบ</span></span></button>
         <button class="mode-btn fb" id="modeFb" onclick="setMode('fb')">⚽ <span class="bi"><span class="en">Football</span><span class="th">โหมดฟุตบอล</span></span></button>
-        <button class="mode-btn pt" id="modePortrait" onclick="setMode('portrait')">👤 <span class="bi"><span class="en">History Photos</span><span class="th">ภาพประวัติบางส่วน</span></span></button>
+        <button class="mode-btn ph" id="modePhoto" onclick="setMode('photo')">📷 <span class="bi"><span class="en">Photo</span><span class="th">ภาพถ่าย</span></span></button>
         <button class="mode-btn vd" id="modeVideo" onclick="setMode('video')">▶ <span class="bi"><span class="en">Video Editing</span><span class="th">ตัดต่อวิดีโอ</span></span></button>
         <button class="mode-btn mo" id="modeMotion" onclick="setMode('motion')">🎬 <span class="bi"><span class="en">Motion</span><span class="th">โมชั่น</span></span></button>
+        <button class="mode-btn pt" id="modePortrait" onclick="setMode('portrait')">👤 <span class="bi"><span class="en">History Photos</span><span class="th">ภาพประวัติบางส่วน</span></span></button>
       </div>
       <button class="add-btn" onclick="document.getElementById('addInput').click()">+ Add · เพิ่มรูป</button>
       <button class="manage-btn" id="manageBtn" onclick="toggleManage()">⚙ Manage · จัดการรูป</button>
-      <button class="add-album-btn" onclick="createAlbum()">+ Album · สร้างอัลบั้ม</button>
       <input type="file" id="addInput" accept="image/*" multiple hidden onchange="addFiles(event.target.files)">
     </div>
     <div class="dropzone" id="dropzone">
@@ -642,6 +668,20 @@
         <span class="flabel"><span class="bi"><span class="en">Tone</span><span class="th">โทนสี</span></span></span>
         <div class="fchips" id="toneChips"></div>
       </div>
+    </div>
+    <div class="album-section" id="albumSection">
+      <div class="album-toolbar">
+        <h3 class="album-section-title">📁 Albums · จัดการอัลบั้ม</h3>
+        <button class="add-album-btn" onclick="createAlbum()">+ Album · สร้างอัลบั้ม</button>
+        <div class="album-pos-ctrl" id="albumPosCtrl">
+          <span class="apc-lbl">Position · ตำแหน่ง:</span>
+          <button data-pos="left" onclick="setAlbumPosition('left')">◀ Left · ซ้าย</button>
+          <button data-pos="center" onclick="setAlbumPosition('center')" class="active">▣ Center · กลาง</button>
+          <button data-pos="right" onclick="setAlbumPosition('right')">▶ Right · ขวา</button>
+        </div>
+      </div>
+      <div class="album-area" id="albumArea"></div>
+      <div class="album-hint" id="albumHint">ยังไม่มีอัลบั้ม — กดปุ่ม <b>+ Album</b> ด้านบนเพื่อสร้างอัลบั้มใหม่ (1–12 รูปต่ออัลบั้ม) แล้วเข้าโหมด ⚙ Manage เพื่อลากรูปจากแกลเลอรีด้านล่างเข้าช่อง<br><span style="font-size:.88em;opacity:.7">No albums yet — click <b>+ Album</b> above to create one (1–12 photos per album), then enable Manage mode to drag photos into slots.</span></div>
     </div>
     <div class="gallery" id="gallery"></div>
   </div>
@@ -1055,9 +1095,9 @@ function buildChips(){
 }
 
 function pool(){
-  if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion') return items.filter(d=>d.dataset.cat===viewMode);
+  if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion'||viewMode==='photo') return items.filter(d=>d.dataset.cat===viewMode);
   if(viewMode==='fb') return items.filter(d=>d.dataset.cat==='football');
-  return items.filter(d=>d.dataset.cat!=='portrait'&&d.dataset.cat!=='football'&&d.dataset.cat!=='video'&&d.dataset.cat!=='motion');
+  return items.filter(d=>d.dataset.cat!=='portrait'&&d.dataset.cat!=='football'&&d.dataset.cat!=='photo'&&d.dataset.cat!=='video'&&d.dataset.cat!=='motion');
 }
 function refreshCounts(){
   const P=pool();
@@ -1069,8 +1109,8 @@ function refreshCounts(){
 }
 function matchItem(d){
   const cat=d.dataset.cat;
-  const special=cat==='portrait'||cat==='video'||cat==='motion'||cat==='football';
-  if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion'){ if(cat!==viewMode) return false; }
+  const special=cat==='portrait'||cat==='video'||cat==='motion'||cat==='football'||cat==='photo';
+  if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion'||viewMode==='photo'){ if(cat!==viewMode) return false; }
   else if(viewMode==='fb'){ if(cat!=='football') return false; }
   else { if(special) return false; }
   const okAr=activeAr==='all'||d.dataset.ar===activeAr;
@@ -1112,29 +1152,56 @@ function createAlbum(){
   if(!size||size<1||size>12){ alert('กรุณาใส่ตัวเลข 1–12'); return; }
   const albums=getAlbums();
   albums.push({id:'al_'+Date.now(),size:size,slots:new Array(size).fill(null)});
-  saveAlbums(albums); layout();
+  saveAlbums(albums); renderAlbums(); layout();
   if(!manageMode){ alert('สร้างอัลบั้ม '+size+' ช่องแล้ว!\nกด "⚙ Manage · จัดการรูป" เพื่อเข้าโหมดลากรูปเข้าช่องอัลบั้ม'); }
 }
 function deleteAlbum(albumId){
   if(!confirm('ลบอัลบั้มนี้?\nรูปที่อยู่ในอัลบั้มจะกลับไปอยู่ในแกลเลอรีรวม\n(Delete this album? Images return to the main gallery)')) return;
-  saveAlbums(getAlbums().filter(a=>a.id!==albumId)); layout();
+  saveAlbums(getAlbums().filter(a=>a.id!==albumId)); renderAlbums(); layout();
 }
 function removeFromSlot(albumId,slotIdx){
   const albums=getAlbums();
   const a=albums.find(x=>x.id===albumId); if(!a) return;
-  a.slots[slotIdx]=null; saveAlbums(albums); layout();
+  a.slots[slotIdx]=null; saveAlbums(albums); renderAlbums(); layout();
 }
 function addToSlot(albumId,slotIdx,itemKey){
   const albums=getAlbums();
   albums.forEach(a=>{ for(let i=0;i<a.slots.length;i++) if(a.slots[i]===itemKey) a.slots[i]=null; });
   const a=albums.find(x=>x.id===albumId); if(!a) return;
-  a.slots[slotIdx]=itemKey; saveAlbums(albums); layout();
+  a.slots[slotIdx]=itemKey; saveAlbums(albums); renderAlbums(); layout();
 }
 const ALBUM_COLS={1:1,2:2,3:3,4:2,5:5,6:3,7:4,8:4,9:3,10:5,11:4,12:4};
-function renderAlbums(container){
+const ALBUM_POS_KEY='boom_album_pos_v1';
+function getAlbumPos(){ try{return localStorage.getItem(ALBUM_POS_KEY)||'center';}catch(e){return 'center';} }
+function setAlbumPosition(pos){ try{localStorage.setItem(ALBUM_POS_KEY,pos);}catch(e){} renderAlbums(); }
+function applyAlbumLayout(area,albums){
+  area.className='album-area';
+  const ctrl=document.getElementById('albumPosCtrl');
+  if(albums.length===1){
+    const pos=getAlbumPos();
+    area.classList.add('layout-single','pos-'+pos);
+    if(ctrl){
+      ctrl.classList.add('show');
+      ctrl.querySelectorAll('button').forEach(function(b){ b.classList.toggle('active',b.dataset.pos===pos); });
+    }
+  } else {
+    area.classList.add('layout-multi');
+    if(ctrl) ctrl.classList.remove('show');
+  }
+}
+function renderAlbums(){
+  const area=document.getElementById('albumArea');
+  const section=document.getElementById('albumSection');
+  if(!area) return;
+  area.innerHTML='';
   const albums=getAlbums();
-  if(!albums.length) return;
-  const wrap=document.createElement('div'); wrap.className='album-wrap';
+  if(!albums.length){
+    if(section) section.classList.remove('has-albums');
+    const ctrl=document.getElementById('albumPosCtrl');
+    if(ctrl) ctrl.classList.remove('show');
+    return;
+  }
+  if(section) section.classList.add('has-albums');
   albums.forEach(function(album,ai){
     const card=document.createElement('div'); card.className='album-card';
     const head=document.createElement('div'); head.className='album-head';
@@ -1171,15 +1238,14 @@ function renderAlbums(container){
       grid.appendChild(slot);
     });
     card.appendChild(grid);
-    wrap.appendChild(card);
+    area.appendChild(card);
   });
-  container.appendChild(wrap);
+  applyAlbumLayout(area,albums);
 }
 
 function doLayout(){
   const N=colCount(), gap=14;
   gallery.innerHTML='';
-  renderAlbums(gallery);
   const claimed=getClaimedKeys();
   const visibleAll=visibleOrdered();
   const order=visibleAll.filter(d=>!claimed.has(d._key));
@@ -1215,6 +1281,7 @@ function setMode(m){
   document.getElementById('modePortrait').classList.toggle('active',m==='portrait');
   document.getElementById('modeVideo').classList.toggle('active',m==='video');
   document.getElementById('modeMotion').classList.toggle('active',m==='motion');
+  const mph=document.getElementById('modePhoto'); if(mph) mph.classList.toggle('active',m==='photo');
   applyOrder(); refreshCounts(); applyFilters();
 }
 
@@ -1245,7 +1312,7 @@ function addFiles(files){
     if(!f.type.startsWith('image/')){ pending--; return; }
     const r=new FileReader();
     r.onload=ev=>{
-      const item={uid:'u'+Date.now()+Math.random().toString(36).slice(2,7),u:ev.target.result,cat:viewMode==='portrait'?'portrait':viewMode==='fb'?'football':'work'};
+      const item={uid:'u'+Date.now()+Math.random().toString(36).slice(2,7),u:ev.target.result,cat:viewMode==='portrait'?'portrait':viewMode==='fb'?'football':viewMode==='photo'?'photo':'work'};
       added.unshift(item);
       const d=makeItem(item,0);
       items.unshift(d);
@@ -1726,7 +1793,7 @@ function hpRender(){
   grid.innerHTML=list.map(function(x){ return '<div class="hp-item"><img src="'+imgUrl(x.id,500)+'" loading="lazy" alt=""></div>'; }).join('');
 }
 
-window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); applyAllSB(); updateRatios(); fbRender(); hpRender();
+window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); applyAllSB(); updateRatios(); fbRender(); hpRender(); renderAlbums();
 </script>
 </body>
 </html>
