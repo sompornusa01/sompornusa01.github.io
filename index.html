@@ -1006,7 +1006,7 @@ const imgObserver=('IntersectionObserver' in window)?new IntersectionObserver(fu
 },{rootMargin:'1400px 0px'}):null;
 function makeItem(im,idx){
   const d=document.createElement('div');
-  d.className='gitem'; d.dataset.ar=''; d.dataset.arsort=''; d.dataset.tone=''; d.dataset.fb=im.fb?'1':'0'; d.dataset.cat=im.cat==='portrait'?'portrait':'work';
+  d.className='gitem'; d.dataset.ar=''; d.dataset.arsort=''; d.dataset.tone=''; d.dataset.fb=im.fb?'1':'0'; d.dataset.cat=im.cat||'work';
   const src = im.yt ? ('https://i.ytimg.com/vi/'+im.yt+'/mqdefault.jpg') : (im.u ? im.u : imgUrl(im.id,500));
   const big = im.yt ? ('https://i.ytimg.com/vi/'+im.yt+'/hqdefault.jpg') : (im.u ? im.u : imgUrl(im.id,1600));
   d._big=big; d._uid=im.uid||null; d._id=im.id||null; d._key=im.uid||im.id;
