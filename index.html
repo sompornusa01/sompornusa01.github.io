@@ -298,13 +298,19 @@
   html.viewonly .alb-divider{display:none!important}
   .album-collage.is-resizing,.album-collage.is-resizing *{cursor:col-resize!important;user-select:none!important}
   /* empty slots strip (manage mode only) */
-  .album-empty-strip{display:none;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .album-empty-strip{display:none;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}
   body.manage-on .album-empty-strip{display:flex}
-  .album-empty-cell{width:50px;height:50px;border-radius:9px;background:rgba(54,217,107,.04);border:1.5px dashed rgba(54,217,107,.38);display:flex;align-items:center;justify-content:center;color:rgba(54,217,107,.45);font-size:22px;transition:.15s}
+  .album-empty-cell{position:relative;width:50px;height:50px;border-radius:9px;background:rgba(54,217,107,.04);border:1.5px dashed rgba(54,217,107,.38);display:flex;align-items:center;justify-content:center;color:rgba(54,217,107,.45);font-size:22px;transition:.15s}
+  .album-empty-cell:hover{background:rgba(54,217,107,.1);border-color:#36d96b}
   .album-empty-cell.over{background:rgba(54,217,107,.18);border-color:#36d96b}
+  .slot-remove-btn{position:absolute;top:-7px;right:-7px;width:18px;height:18px;border-radius:50%;background:#e6398b;color:#fff;font-size:9px;font-weight:800;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;z-index:3;line-height:1}
+  .album-empty-cell:hover .slot-remove-btn{opacity:1}
+  .album-add-slot{width:50px;height:50px;border-radius:9px;background:rgba(54,217,107,.12);border:1.5px solid rgba(54,217,107,.55);display:flex;align-items:center;justify-content:center;color:#36d96b;font-size:22px;cursor:pointer;transition:.15s;flex:none}
+  .album-add-slot:hover{background:rgba(54,217,107,.24)}
   .add-album-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:11px 16px;border-radius:12px;background:rgba(54,217,107,.14);color:#36d96b;border:1.5px dashed rgba(54,217,107,.55);cursor:pointer;font-family:inherit}
   .add-album-btn:hover{background:rgba(54,217,107,.24)}
-  html.viewonly .add-album-btn,html.viewonly .album-del{display:none!important}
+  html.viewonly .add-album-btn,html.viewonly .album-del,html.viewonly .slot-remove-btn,html.viewonly .album-add-slot{display:none!important}
+  html.viewonly .album-empty-strip{display:none!important}
 
   /* ---- album section (dedicated frame between filters and gallery) ---- */
   .album-section{margin-bottom:24px;padding:18px;background:rgba(54,217,107,.04);border:1px solid rgba(54,217,107,.18);border-radius:14px;display:none}
@@ -1397,25 +1403,42 @@ function renderAlbums(){
     head.appendChild(del); card.appendChild(head);
     /* collage grid (filled images only) */
     if(filledPairs.length>0) card.appendChild(buildCollage(album,filledPairs));
-    /* empty slots strip — shown below in manage mode */
+    /* empty slots strip — always shown (not just manage mode) */
+    const strip=document.createElement('div'); strip.className='album-empty-strip';
     const emptyIndices=album.slots.map(function(k,i){return {key:k,idx:i};}).filter(function(p){return !p.key;});
-    if(emptyIndices.length>0){
-      const strip=document.createElement('div'); strip.className='album-empty-strip';
-      emptyIndices.forEach(function(p){
-        const cell=document.createElement('div'); cell.className='album-empty-cell'; cell.textContent='+';
-        cell.dataset.albumId=album.id; cell.dataset.slotIdx=p.idx;
-        cell.addEventListener('dragover',function(e){ if(dragKey&&manageMode){ e.preventDefault(); cell.classList.add('over'); } });
-        cell.addEventListener('dragleave',function(){ cell.classList.remove('over'); });
-        cell.addEventListener('drop',function(e){
-          cell.classList.remove('over');
-          if(!dragKey||!manageMode) return;
-          e.preventDefault(); e.stopPropagation();
-          addToSlot(album.id,p.idx,dragKey); dragKey=null;
-        });
-        strip.appendChild(cell);
+    emptyIndices.forEach(function(p){
+      const cell=document.createElement('div'); cell.className='album-empty-cell';
+      cell.textContent='+';
+      cell.dataset.albumId=album.id; cell.dataset.slotIdx=p.idx;
+      /* X button to remove this slot */
+      const rm=document.createElement('button'); rm.className='slot-remove-btn'; rm.textContent='✕'; rm.title='ลบช่องนี้';
+      rm.onclick=function(e){
+        e.stopPropagation();
+        const albums2=getAlbums(); const a2=albums2.find(function(x){return x.id===album.id;}); if(!a2)return;
+        a2.slots.splice(p.idx,1); a2.size=a2.slots.length;
+        if(a2.widths) a2.widths.splice(p.idx,1);
+        saveAlbums(albums2); renderAlbums(); layout();
+      };
+      cell.appendChild(rm);
+      cell.addEventListener('dragover',function(e){ if(dragKey&&manageMode){ e.preventDefault(); cell.classList.add('over'); } });
+      cell.addEventListener('dragleave',function(){ cell.classList.remove('over'); });
+      cell.addEventListener('drop',function(e){
+        cell.classList.remove('over');
+        if(!dragKey||!manageMode) return;
+        e.preventDefault(); e.stopPropagation();
+        addToSlot(album.id,p.idx,dragKey); dragKey=null;
       });
-      card.appendChild(strip);
-    }
+      strip.appendChild(cell);
+    });
+    /* + button to add a new slot */
+    const addSlot=document.createElement('button'); addSlot.className='album-add-slot'; addSlot.textContent='+'; addSlot.title='เพิ่มช่องภาพใหม่';
+    addSlot.onclick=function(){
+      const albums2=getAlbums(); const a2=albums2.find(function(x){return x.id===album.id;}); if(!a2)return;
+      a2.slots.push(null); a2.size=a2.slots.length;
+      saveAlbums(albums2); renderAlbums();
+    };
+    strip.appendChild(addSlot);
+    card.appendChild(strip);
     area.appendChild(card);
   });
   applyAlbumLayout(area,albums);
