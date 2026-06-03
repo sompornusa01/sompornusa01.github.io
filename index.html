@@ -251,20 +251,39 @@
   .album-title .album-badge{background:#36d96b;color:#0a2d18;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;flex:none}
   .album-del{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);color:#fff;border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
   .album-del:hover{background:#e6398b}
-  /* ---- Facebook-style collage ---- */
-  .album-collage{display:grid;gap:3px;border-radius:10px;overflow:hidden;width:100%}
-  .album-collage-slot{position:relative;overflow:hidden;min-height:60px}
+  /* ---- Free-form mosaic collage (no crop — natural aspect ratio per image) ---- */
+  .album-collage{display:flex;flex-wrap:wrap;gap:3px;border-radius:10px;overflow:hidden;width:100%;align-items:flex-start;background:#071710}
+  .album-collage-slot{position:relative;overflow:hidden;background:#071710;flex:0 0 auto;min-width:0}
+  /* scale 1=XS(25%) 2=S(33%) 3=M(50%) 4=L(100%) */
+  .album-collage-slot[data-scale="1"]{flex:0 0 calc(25% - 3px)}
+  .album-collage-slot[data-scale="2"]{flex:0 0 calc(33.33% - 2px)}
+  .album-collage-slot[data-scale="3"]{flex:0 0 calc(50% - 2px)}
+  .album-collage-slot[data-scale="4"]{flex:0 0 100%}
   .album-collage-slot.filled{cursor:grab}
   .album-collage-slot.filled:active{cursor:grabbing}
   .album-collage-slot.dragging{opacity:.32}
   .album-collage-slot.over{outline:3px dashed #36d96b;outline-offset:-3px}
   .album-collage.grid-drop{outline:3px dashed rgba(54,217,107,.6);outline-offset:-3px}
-  .album-collage-slot img{width:100%;height:100%;object-fit:cover;display:block}
-  .album-collage.n1 .album-collage-slot img{height:auto;object-fit:unset}
+  /* height:auto → image determines its own height from natural aspect ratio */
+  .album-collage-slot img{width:100%;height:auto;display:block}
   .album-collage-slot .slot-x{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.82);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:3;opacity:0;transition:opacity .15s}
   .album-collage-slot:hover .slot-x{opacity:1}
   .album-collage-slot .slot-x:hover{background:#e6398b;opacity:1!important}
   html.viewonly .album-collage-slot .slot-x{display:none!important}
+  /* scale badge */
+  .slot-size-badge{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.78);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:4px;display:none;z-index:3;pointer-events:none;letter-spacing:.5px}
+  body.manage-on .slot-size-badge{display:block}
+  /* resize controls */
+  .slot-resize{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:none;gap:4px;z-index:4}
+  body.manage-on .slot-resize{display:flex}
+  html.viewonly .slot-resize,html.viewonly .slot-size-badge{display:none!important}
+  .sz-btn{width:28px;height:28px;border-radius:7px;background:rgba(0,0,0,.85);color:#fff;font-size:16px;font-weight:700;border:1px solid rgba(255,255,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;flex:none;transition:.12s;padding:0;line-height:1}
+  .sz-btn:hover{background:#36d96b;color:#0a2d18;border-color:#36d96b}
+  @media(max-width:500px){
+    .album-collage-slot[data-scale="1"]{flex:0 0 calc(50% - 2px)}
+    .album-collage-slot[data-scale="2"]{flex:0 0 calc(50% - 2px)}
+    .album-collage-slot[data-scale="3"]{flex:0 0 100%}
+  }
   /* empty slots strip (manage mode only) */
   .album-empty-strip{display:none;flex-wrap:wrap;gap:6px;margin-top:8px}
   body.manage-on .album-empty-strip{display:flex}
@@ -1163,6 +1182,9 @@ function swapAlbumSlots(albumId,idxA,idxB){
   const albums=getAlbums();
   const a=albums.find(x=>x.id===albumId); if(!a) return;
   const tmp=a.slots[idxA]; a.slots[idxA]=a.slots[idxB]; a.slots[idxB]=tmp;
+  if(a.scales){
+    const tmpSc=a.scales[idxA]||null; a.scales[idxA]=a.scales[idxB]||null; a.scales[idxB]=tmpSc;
+  }
   saveAlbums(albums); renderAlbums(); layout();
 }
 const ALBUM_COLS={1:1,2:2,3:3,4:2,5:3,6:3,7:3,8:4,9:3,10:4,11:4,12:4};
@@ -1185,52 +1207,65 @@ function applyAlbumLayout(area,albums){
   }
 }
 const MODE_LABEL={all:'Design Work',fb:'Football',photo:'Photo',video:'Video Editing',motion:'Motion',portrait:'History Photos',gift:'Gift Story'};
-/* ---- Facebook-style collage layout templates (1–12 images) ---- */
-const COLLAGE_LAYOUTS={
-  1:{areas:'"a"',            cols:'1fr',               rows:'auto',                     names:['a']},
-  2:{areas:'"a b"',          cols:'1fr 1fr',            rows:'300px',                    names:['a','b']},
-  3:{areas:'"a b"\n"a c"',   cols:'2fr 1fr',            rows:'210px 210px',              names:['a','b','c']},
-  4:{areas:'"a b"\n"c d"',   cols:'1fr 1fr',            rows:'225px 225px',              names:['a','b','c','d']},
-  5:{areas:'"a a b"\n"c d e"',cols:'1fr 1fr 1fr',       rows:'230px 185px',              names:['a','b','c','d','e']},
-  6:{areas:'"a b c"\n"d e f"',cols:'1fr 1fr 1fr',       rows:'205px 205px',              names:['a','b','c','d','e','f']},
-  7:{areas:'"a b b"\n"c d e"\n"c f g"',cols:'1fr 1fr 1fr',rows:'180px 155px 155px',     names:['a','b','c','d','e','f','g']},
-  8:{areas:'"a b c d"\n"e f g h"',cols:'1fr 1fr 1fr 1fr',rows:'190px 190px',            names:['a','b','c','d','e','f','g','h']},
-  9:{areas:'"a b c"\n"d e f"\n"g h i"',cols:'1fr 1fr 1fr',rows:'175px 175px 175px',     names:['a','b','c','d','e','f','g','h','i']},
-  10:{areas:'"a b c d"\n"e f g h"\n"i i j j"',cols:'1fr 1fr 1fr 1fr',rows:'160px 160px 160px',names:['a','b','c','d','e','f','g','h','i','j']},
-  11:{areas:'"a b c d"\n"e f g h"\n"i i j k"',cols:'1fr 1fr 1fr 1fr',rows:'160px 160px 160px',names:['a','b','c','d','e','f','g','h','i','j','k']},
-  12:{areas:'"a b c d"\n"e f g h"\n"i j k l"',cols:'1fr 1fr 1fr 1fr',rows:'155px 155px 155px',names:['a','b','c','d','e','f','g','h','i','j','k','l']}
-};
+/* ---- Free-form mosaic: scale helpers (1=XS 2=S 3=M 4=L) ---- */
+const SCALE_LABEL=['','XS','S','M','L'];
+function defaultSlotScale(posIdx,total){
+  if(total===1) return 4;
+  if(total===2) return 3;
+  if(total<=4)  return posIdx===0?3:2;
+  return 2;
+}
+function getSlotScale(album,slotIdx,posIdx,total){
+  const s=(album.scales||[])[slotIdx];
+  return (s>=1&&s<=4)?s:defaultSlotScale(posIdx,total);
+}
+function setSlotScale(albumId,slotIdx,scale){
+  const albums=getAlbums();
+  const a=albums.find(function(x){return x.id===albumId;}); if(!a) return;
+  if(!a.scales) a.scales=[];
+  while(a.scales.length<=slotIdx) a.scales.push(null);
+  a.scales[slotIdx]=scale;
+  saveAlbums(albums); renderAlbums();
+}
 let albumDragSrc=null;
 
 function buildCollage(album,filledPairs){
-  /* filledPairs = [{key, idx}, ...] for all non-null slots */
-  const n=Math.min(filledPairs.length,12);
-  const layout=COLLAGE_LAYOUTS[n];
+  const total=filledPairs.length;
   const collage=document.createElement('div');
-  collage.className='album-collage n'+n;
-  collage.style.gridTemplateAreas=layout.areas;
-  collage.style.gridTemplateColumns=layout.cols;
-  collage.style.gridTemplateRows=layout.rows;
-  filledPairs.forEach(function(pair,i){
-    if(i>=layout.names.length) return;
+  collage.className='album-collage';
+  filledPairs.forEach(function(pair,posIdx){
     const key=pair.key; const slotIdx=pair.idx;
+    const scale=getSlotScale(album,slotIdx,posIdx,total);
     const cell=document.createElement('div');
     cell.className='album-collage-slot filled';
-    cell.style.gridArea=layout.names[i];
+    cell.dataset.scale=scale;
     cell.dataset.albumId=album.id; cell.dataset.slotIdx=slotIdx;
     cell.draggable=true;
+    /* image: width=100%, height=auto → shows FULL image at natural aspect ratio, no crop */
     const img=document.createElement('img'); img.src=keyToSrc(key); img.alt=''; img.draggable=false;
     cell.appendChild(img);
+    /* scale badge */
+    const badge=document.createElement('div'); badge.className='slot-size-badge';
+    badge.textContent=SCALE_LABEL[scale]||'S'; cell.appendChild(badge);
+    /* remove button */
     const x=document.createElement('button'); x.className='slot-x'; x.textContent='✕'; x.title='เอาออกจากอัลบั้ม';
     x.onclick=function(e){ e.stopPropagation(); removeFromSlot(album.id,slotIdx); };
     cell.appendChild(x);
+    /* resize controls: − and + */
+    const ctrl=document.createElement('div'); ctrl.className='slot-resize';
+    const mkSz=function(t,tip,fn){
+      const b=document.createElement('button'); b.className='sz-btn'; b.textContent=t; b.title=tip;
+      b.onclick=function(e){ e.stopPropagation(); fn(); }; return b;
+    };
+    ctrl.appendChild(mkSz('−','เล็กลง (XS→S→M→L)',function(){ setSlotScale(album.id,slotIdx,Math.max(1,scale-1)); }));
+    ctrl.appendChild(mkSz('+','ใหญ่ขึ้น (XS→S→M→L)',function(){ setSlotScale(album.id,slotIdx,Math.min(4,scale+1)); }));
+    cell.appendChild(ctrl);
+    /* drag events */
     cell.addEventListener('dragstart',function(e){
       albumDragSrc={albumId:album.id,slotIdx:slotIdx};
       cell.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.stopPropagation();
     });
-    cell.addEventListener('dragend',function(){
-      cell.classList.remove('dragging'); albumDragSrc=null;
-    });
+    cell.addEventListener('dragend',function(){ cell.classList.remove('dragging'); albumDragSrc=null; });
     cell.addEventListener('dragover',function(e){
       const iOk=albumDragSrc&&albumDragSrc.albumId===album.id&&albumDragSrc.slotIdx!==slotIdx;
       const gOk=dragKey&&manageMode;
@@ -1247,7 +1282,7 @@ function buildCollage(album,filledPairs){
     });
     collage.appendChild(cell);
   });
-  /* collage itself is also a drop target (drops to first empty slot) */
+  /* collage itself is also a drop target */
   collage.addEventListener('dragover',function(e){
     if(dragKey&&manageMode){ e.preventDefault(); collage.classList.add('grid-drop'); }
   });
