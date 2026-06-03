@@ -251,34 +251,41 @@
   .album-title .album-badge{background:#36d96b;color:#0a2d18;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;flex:none}
   .album-del{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);color:#fff;border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
   .album-del:hover{background:#e6398b}
-  /* ---- Mosaic collage: 6-col grid, object-fit:contain = NO CROP ---- */
-  .album-collage{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:110px;grid-auto-flow:dense;gap:3px;border-radius:10px;overflow:hidden;width:100%}
-  .album-collage-slot{position:relative;background:#071710;min-height:0;overflow:hidden}
+  /* ---- Mosaic collage: flex + height:auto = no crop, no black bars ---- */
+  .album-collage{display:flex;flex-wrap:wrap;gap:3px;border-radius:10px;overflow:hidden;width:100%;align-items:flex-start}
+  .album-collage-slot{position:relative;overflow:hidden;background:#0a1f16;flex:0 0 auto}
+  /* width presets — height is always auto (natural aspect ratio) */
+  .album-collage-slot[data-w="100"]{flex:0 0 100%}
+  .album-collage-slot[data-w="66"]{flex:0 0 calc(66.66% - 2px)}
+  .album-collage-slot[data-w="50"]{flex:0 0 calc(50% - 2px)}
+  .album-collage-slot[data-w="33"]{flex:0 0 calc(33.33% - 2px)}
+  .album-collage-slot[data-w="25"]{flex:0 0 calc(25% - 3px)}
   .album-collage-slot.filled{cursor:grab}
   .album-collage-slot.filled:active{cursor:grabbing}
-  .album-collage-slot.dragging{opacity:.32}
+  .album-collage-slot.dragging{opacity:.3}
   .album-collage-slot.over{outline:3px dashed #36d96b;outline-offset:-3px}
   .album-collage.grid-drop{outline:3px dashed rgba(54,217,107,.6);outline-offset:-3px}
-  /* object-fit:contain = full image always visible, dark letterbox fills gaps */
-  .album-collage-slot img{width:100%;height:100%;object-fit:contain;display:block}
+  /* height:auto = image shows at FULL natural aspect ratio, zero crop, zero black bars */
+  .album-collage-slot img{width:100%;height:auto;display:block;vertical-align:bottom}
+  /* X remove */
   .album-collage-slot .slot-x{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.82);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:5;opacity:0;transition:opacity .15s}
   .album-collage-slot:hover .slot-x{opacity:1}
   .album-collage-slot .slot-x:hover{background:#e6398b;opacity:1!important}
   html.viewonly .album-collage-slot .slot-x{display:none!important}
-  /* size badge: W×H */
-  .slot-size-badge{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.78);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;display:none;z-index:5;pointer-events:none;letter-spacing:.4px;transition:background .2s}
-  body.manage-on .slot-size-badge{display:block}
-  .slot-size-badge.snapped{background:#36d96b;color:#0a2d18}
-  /* resize controls: W and H separately */
-  .slot-resize{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);display:none;gap:2px;z-index:5;flex-wrap:nowrap}
-  body.manage-on .slot-resize{display:flex}
-  html.viewonly .slot-resize,html.viewonly .slot-size-badge{display:none!important}
-  .sz-btn{height:22px;min-width:22px;padding:0 5px;border-radius:5px;background:rgba(0,0,0,.85);color:#fff;font-size:9px;font-weight:800;border:1px solid rgba(255,255,255,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;flex:none;transition:.12s;white-space:nowrap;letter-spacing:.2px}
-  .sz-btn:hover{background:#36d96b;color:#0a2d18;border-color:#36d96b}
-  .sz-sep{width:1px;background:rgba(255,255,255,.2);align-self:stretch;flex:none}
-  /* snap pulse */
-  @keyframes snapPulse{0%{outline:3px solid #36d96b;outline-offset:-3px}60%{outline:3px solid #36d96b;outline-offset:-3px}100%{outline:none}}
-  .album-collage-slot.snap-flash{animation:snapPulse .5s ease forwards}
+  /* width badge: top-left, always shown on hover */
+  .slot-size-badge{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.78);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;display:none;z-index:5;pointer-events:none;letter-spacing:.4px}
+  .album-collage-slot:hover .slot-size-badge{display:block}
+  html.viewonly .slot-size-badge{display:none!important}
+  /* resize controls — always visible on hover, no manage mode needed */
+  .slot-resize{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:none;gap:4px;z-index:5}
+  .album-collage-slot:hover .slot-resize{display:flex}
+  html.viewonly .slot-resize{display:none!important}
+  .sz-btn{width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.88);color:#fff;font-size:17px;font-weight:300;border:1.5px solid rgba(255,255,255,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;flex:none;transition:.12s;padding:0;line-height:1}
+  .sz-btn:hover{background:#36d96b;color:#0a2d18;border-color:#36d96b;transform:scale(1.15)}
+  @media(max-width:500px){
+    .album-collage-slot[data-w="25"]{flex:0 0 calc(50% - 2px)}
+    .album-collage-slot[data-w="33"]{flex:0 0 calc(50% - 2px)}
+  }
   /* empty slots strip (manage mode only) */
   .album-empty-strip{display:none;flex-wrap:wrap;gap:6px;margin-top:8px}
   body.manage-on .album-empty-strip{display:flex}
@@ -1177,9 +1184,7 @@ function swapAlbumSlots(albumId,idxA,idxB){
   const albums=getAlbums();
   const a=albums.find(x=>x.id===albumId); if(!a) return;
   const tmp=a.slots[idxA]; a.slots[idxA]=a.slots[idxB]; a.slots[idxB]=tmp;
-  if(a.sizes){
-    const tmpSz=a.sizes[idxA]||null; a.sizes[idxA]=a.sizes[idxB]||null; a.sizes[idxB]=tmpSz;
-  }
+  if(a.widths){const tw=a.widths[idxA]||null;a.widths[idxA]=a.widths[idxB]||null;a.widths[idxB]=tw;}
   saveAlbums(albums); renderAlbums(); layout();
 }
 const ALBUM_COLS={1:1,2:2,3:3,4:2,5:3,6:3,7:3,8:4,9:3,10:4,11:4,12:4};
@@ -1202,54 +1207,24 @@ function applyAlbumLayout(area,albums){
   }
 }
 const MODE_LABEL={all:'Design Work',fb:'Football',photo:'Photo',video:'Video Editing',motion:'Motion',portrait:'History Photos',gift:'Gift Story'};
-/* ---- Mosaic: slot size (cs=colSpan 1-6, rs=rowSpan 1-6) + snap ---- */
-function defaultSlotSize(posIdx,total){
-  if(total===1) return {cs:6,rs:3};
-  if(total===2) return {cs:3,rs:3};
-  if(total===3) return posIdx===0?{cs:4,rs:4}:{cs:2,rs:2};
-  /* 4+ images: first image = tall left column (cs=2), rest fill right 4 cols (cs=2, rs=2) */
-  if(posIdx===0){
-    const rowsNeeded=Math.ceil((total-1)/2);
-    return {cs:2,rs:Math.min(rowsNeeded*2,6)};
-  }
-  return {cs:2,rs:2};
+/* ---- Mosaic: width-only control, height auto = no black bars ---- */
+const W_STEPS=[25,33,50,66,100];
+function defaultSlotW(posIdx,total){
+  if(total===1) return 100;
+  if(total===2) return 50;
+  return 33;
 }
-function getSlotSize(album,slotIdx,posIdx,total){
-  const s=(album.sizes||[])[slotIdx];
-  return (s&&s.cs&&s.rs)?s:defaultSlotSize(posIdx,total);
+function getSlotW(album,slotIdx,posIdx,total){
+  const w=(album.widths||[])[slotIdx];
+  return (w&&W_STEPS.indexOf(w)>=0)?w:defaultSlotW(posIdx,total);
 }
-function setSlotSize(albumId,slotIdx,newCs,newRs){
+function setSlotW(albumId,slotIdx,w){
   const albums=getAlbums();
   const a=albums.find(function(x){return x.id===albumId;}); if(!a) return;
-  if(!a.sizes) a.sizes=[];
-  while(a.sizes.length<=slotIdx) a.sizes.push(null);
-  a.sizes[slotIdx]={cs:Math.max(1,Math.min(6,newCs)),rs:Math.max(1,Math.min(6,newRs))};
-  saveAlbums(albums);
-  renderAlbums();
-  /* snap check: flash slots whose row sums to exactly 6 */
-  requestAnimationFrame(function(){
-    const fp=a.slots.map(function(k,i){return {key:k,idx:i};}).filter(function(p){return !!p.key;});
-    const tot=fp.length; let col=0; const snapIdxs=new Set(); const rowStart=[];
-    fp.forEach(function(p,i){
-      const sz=getSlotSize(a,p.idx,i,tot);
-      if(col+sz.cs>6){col=0;}
-      if(col===0) rowStart.length=0;
-      rowStart.push(i); col+=sz.cs;
-      if(col===6){ rowStart.forEach(function(ri){snapIdxs.add(ri);}); col=0; rowStart.length=0; }
-    });
-    if(snapIdxs.size>0){
-      document.querySelectorAll('.album-collage-slot').forEach(function(el){
-        const si=parseInt(el.dataset.slotIdx);
-        const match=fp.findIndex(function(p){return p.idx===si;});
-        if(snapIdxs.has(match)){
-          el.classList.add('snap-flash');
-          const badge=el.querySelector('.slot-size-badge');
-          if(badge){badge.classList.add('snapped');setTimeout(function(){badge.classList.remove('snapped');},700);}
-          setTimeout(function(){el.classList.remove('snap-flash');},500);
-        }
-      });
-    }
-  });
+  if(!a.widths) a.widths=[];
+  while(a.widths.length<=slotIdx) a.widths.push(null);
+  a.widths[slotIdx]=w;
+  saveAlbums(albums); renderAlbums();
 }
 let albumDragSrc=null;
 
@@ -1259,35 +1234,36 @@ function buildCollage(album,filledPairs){
   collage.className='album-collage';
   filledPairs.forEach(function(pair,posIdx){
     const key=pair.key; const slotIdx=pair.idx;
-    const sz=getSlotSize(album,slotIdx,posIdx,total);
+    const w=getSlotW(album,slotIdx,posIdx,total);
     const cell=document.createElement('div');
     cell.className='album-collage-slot filled';
-    cell.style.gridColumn='span '+sz.cs;
-    cell.style.gridRow='span '+sz.rs;
+    cell.dataset.w=w;
     cell.dataset.albumId=album.id; cell.dataset.slotIdx=slotIdx;
     cell.draggable=true;
-    /* object-fit:contain = full image, no crop, dark background fills letterbox */
+    /* height:auto = image shows at full natural aspect ratio — no crop, no black bars */
     const img=document.createElement('img'); img.src=keyToSrc(key); img.alt=''; img.draggable=false;
     cell.appendChild(img);
-    /* size badge W×H */
+    /* width badge */
     const badge=document.createElement('div'); badge.className='slot-size-badge';
-    badge.textContent='W'+sz.cs+'×H'+sz.rs; cell.appendChild(badge);
-    /* remove button */
+    badge.textContent=w+'%'; cell.appendChild(badge);
+    /* remove */
     const x=document.createElement('button'); x.className='slot-x'; x.textContent='✕'; x.title='เอาออกจากอัลบั้ม';
     x.onclick=function(e){ e.stopPropagation(); removeFromSlot(album.id,slotIdx); };
     cell.appendChild(x);
-    /* resize controls: W− W+ | H− H+ */
+    /* resize: − and + (width only, height auto) */
     const ctrl=document.createElement('div'); ctrl.className='slot-resize';
     const mkSz=function(t,tip,fn){
       const b=document.createElement('button'); b.className='sz-btn'; b.textContent=t; b.title=tip;
       b.onclick=function(e){ e.stopPropagation(); fn(); }; return b;
     };
-    const sep=document.createElement('div'); sep.className='sz-sep';
-    ctrl.appendChild(mkSz('W−','แคบลง',function(){ setSlotSize(album.id,slotIdx,sz.cs-1,sz.rs); }));
-    ctrl.appendChild(mkSz('W+','กว้างขึ้น',function(){ setSlotSize(album.id,slotIdx,sz.cs+1,sz.rs); }));
-    ctrl.appendChild(sep);
-    ctrl.appendChild(mkSz('H−','เตี้ยลง',function(){ setSlotSize(album.id,slotIdx,sz.cs,sz.rs-1); }));
-    ctrl.appendChild(mkSz('H+','สูงขึ้น',function(){ setSlotSize(album.id,slotIdx,sz.cs,sz.rs+1); }));
+    ctrl.appendChild(mkSz('−','แคบลง',function(){
+      const cur=getSlotW(album,slotIdx,posIdx,total);
+      const i=W_STEPS.indexOf(cur); if(i>0) setSlotW(album.id,slotIdx,W_STEPS[i-1]);
+    }));
+    ctrl.appendChild(mkSz('+','กว้างขึ้น',function(){
+      const cur=getSlotW(album,slotIdx,posIdx,total);
+      const i=W_STEPS.indexOf(cur); if(i<W_STEPS.length-1) setSlotW(album.id,slotIdx,W_STEPS[i+1]);
+    }));
     cell.appendChild(ctrl);
     /* drag events */
     cell.addEventListener('dragstart',function(e){
@@ -1311,7 +1287,6 @@ function buildCollage(album,filledPairs){
     });
     collage.appendChild(cell);
   });
-  /* collage drop target */
   collage.addEventListener('dragover',function(e){
     if(dragKey&&manageMode){ e.preventDefault(); collage.classList.add('grid-drop'); }
   });
@@ -1351,7 +1326,7 @@ function renderAlbums(){
     const rst=document.createElement('button'); rst.className='album-del'; rst.title='Reset layout · คืนค่า layout อัตโนมัติ'; rst.textContent='↺'; rst.style.background='rgba(54,217,107,.18)'; rst.style.color='#36d96b';
     rst.onclick=function(){
       const albums2=getAlbums(); const a2=albums2.find(function(x){return x.id===album.id;}); if(!a2)return;
-      a2.sizes=[]; saveAlbums(albums2); renderAlbums();
+      a2.sizes=[]; a2.widths=[]; saveAlbums(albums2); renderAlbums();
     };
     head.appendChild(rst);
     const del=document.createElement('button'); del.className='album-del'; del.title='ลบอัลบั้ม / Delete'; del.textContent='✕';
