@@ -251,11 +251,13 @@
   .album-title .album-badge{background:#36d96b;color:#0a2d18;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;flex:none}
   .album-del{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);color:#fff;border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
   .album-del:hover{background:#e6398b}
-  /* ---- Two-panel mosaic: left=featured, right=grid, height:auto=no crop ---- */
-  .album-collage{display:flex;gap:3px;border-radius:10px;overflow:hidden;width:100%;align-items:flex-start;background:#0a1f16;position:relative}
-  /* LEFT panel — featured image */
-  .alb-left{flex:0 0 auto;position:relative;overflow:hidden;background:#0a1f16}
-  .alb-left .album-collage-slot{width:100%}
+  /* ---- Two-panel mosaic: left=featured, right=grid ---- */
+  .album-collage{display:flex;gap:3px;border-radius:10px;overflow:hidden;width:100%;align-items:stretch;background:#0a1f16;position:relative}
+  /* LEFT panel — featured image stretches to match right panel height */
+  .alb-left{flex:0 0 auto;position:relative;overflow:hidden;background:#0a1f16;display:flex;flex-direction:column}
+  .alb-left .album-collage-slot{flex:1;width:100%;height:100%}
+  /* featured image fills full height — object-fit:cover keeps it filled with no black bars */
+  .alb-left .album-collage-slot img{width:100%;height:100%;object-fit:cover;display:block}
   /* RIGHT panel — flex-wrap grid */
   .alb-right{flex:1 1 0;min-width:0;display:flex;flex-wrap:wrap;gap:3px;align-content:flex-start;background:#0a1f16}
   /* single-panel fallback */
@@ -1219,28 +1221,32 @@ const MODE_LABEL={all:'Design Work',fb:'Football',photo:'Photo',video:'Video Edi
 /* ---- Two-panel mosaic: featuredW=left%, itemW=right-item% ---- */
 let _rz=null;
 (function(){
+  function calcPct(startW,dx,contW,min,max){
+    /* float precision during drag — no rounding = fully smooth */
+    return Math.max(min,Math.min(max,(startW+dx)/contW*100));
+  }
   document.addEventListener('mousemove',function(e){
     if(!_rz) return;
     const dx=e.clientX-_rz.startX;
-    const pct=Math.max(10,Math.min(90,Math.round((_rz.startW+dx)/_rz.contW*100)));
+    const pct=calcPct(_rz.startW,dx,_rz.contW,10,_rz.isPanel?90:100);
     if(_rz.isPanel){
       _rz.el.style.flex='0 0 '+pct+'%';
       if(_rz.div) _rz.div.style.left=pct+'%';
     } else {
       _rz.el.style.width='calc('+pct+'% - 2px)';
     }
-    if(_rz.badge) _rz.badge.textContent=pct+'%';
+    if(_rz.badge) _rz.badge.textContent=Math.round(pct)+'%';
   });
   document.addEventListener('mouseup',function(e){
     if(!_rz) return;
     const dx=e.clientX-_rz.startX;
-    const pct=Math.max(10,Math.min(90,Math.round((_rz.startW+dx)/_rz.contW*100)));
+    const pct=calcPct(_rz.startW,dx,_rz.contW,10,_rz.isPanel?90:100);
     if(_rz.collage) _rz.collage.classList.remove('is-resizing');
     if(_rz.isPanel){
       const albums=getAlbums(); const a=albums.find(function(x){return x.id===_rz.albumId;});
-      if(a){ if(!a.featuredW) a.featuredW=50; a.featuredW=pct; saveAlbums(albums); renderAlbums(); }
+      if(a){ a.featuredW=Math.round(pct*10)/10; saveAlbums(albums); renderAlbums(); }
     } else {
-      setSlotW(_rz.albumId,_rz.slotIdx,pct);
+      setSlotW(_rz.albumId,_rz.slotIdx,Math.round(pct*10)/10);
     }
     _rz=null;
   });
@@ -1300,13 +1306,14 @@ function makeSlotCell(album,pair,posIdx,total,isRight){
   rh.addEventListener('mousedown',function(e){
     e.stopPropagation(); e.preventDefault(); cell.draggable=false;
     const collageEl=cell.closest('.album-collage');
+    const collageW=collageEl?collageEl.getBoundingClientRect().width:1;
     if(isRight){
       const parent=cell.parentElement;
-      _rz={el:cell,badge:badge,collage:collageEl,albumId:album.id,slotIdx:slotIdx,startX:e.clientX,startW:cell.offsetWidth,contW:parent?parent.offsetWidth:1,isPanel:false};
+      const parentW=parent?parent.getBoundingClientRect().width:collageW;
+      _rz={el:cell,badge:badge,collage:collageEl,albumId:album.id,slotIdx:slotIdx,startX:e.clientX,startW:cell.getBoundingClientRect().width,contW:parentW,isPanel:false};
     } else {
-      /* left panel resize: same as divider drag */
       const leftPanel=cell.parentElement;
-      _rz={el:leftPanel,div:collageEl?collageEl.querySelector('.alb-divider'):null,badge:badge,collage:collageEl,albumId:album.id,slotIdx:-1,startX:e.clientX,startW:leftPanel?leftPanel.offsetWidth:0,contW:collageEl?collageEl.offsetWidth:1,isPanel:true};
+      _rz={el:leftPanel,div:collageEl?collageEl.querySelector('.alb-divider'):null,badge:badge,collage:collageEl,albumId:album.id,slotIdx:-1,startX:e.clientX,startW:leftPanel?leftPanel.getBoundingClientRect().width:0,contW:collageW,isPanel:true};
     }
     if(_rz.collage) _rz.collage.classList.add('is-resizing');
     document.addEventListener('mouseup',function once(){cell.draggable=true;document.removeEventListener('mouseup',once);});
@@ -1340,7 +1347,8 @@ function buildCollage(album,filledPairs){
   const div=document.createElement('div'); div.className='alb-divider'; div.style.left=featW+'%'; div.title='ลากเพื่อปรับสัดส่วนซ้าย-ขวา';
   div.addEventListener('mousedown',function(e){
     e.stopPropagation(); e.preventDefault();
-    _rz={el:leftPanel,div:div,badge:null,collage:outer,albumId:album.id,slotIdx:-1,startX:e.clientX,startW:leftPanel.offsetWidth,contW:outer.offsetWidth,isPanel:true};
+    const outerW=outer.getBoundingClientRect().width;
+    _rz={el:leftPanel,div:div,badge:null,collage:outer,albumId:album.id,slotIdx:-1,startX:e.clientX,startW:leftPanel.getBoundingClientRect().width,contW:outerW,isPanel:true};
     outer.classList.add('is-resizing');
   });
   outer.appendChild(div);
