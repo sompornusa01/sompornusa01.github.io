@@ -6,6 +6,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Sarabun:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
 <script>(function(){try{if(!(location.protocol==='file:'||location.hash==='#edit'))document.documentElement.classList.add('viewonly');}catch(e){}})();</script>
+<!-- baked album/settings data — updated by Export button -->
+<script id="baked-data" type="application/json">null</script>
+<script>(function(){
+  try{
+    var bd=document.getElementById('baked-data');
+    if(!bd||bd.textContent.trim()==='null') return;
+    var data=JSON.parse(bd.textContent);
+    if(!data||!data._v) return;
+    var sv=parseInt(localStorage.getItem('boom_baked_v')||'0');
+    if(sv>=data._v) return;
+    var KEYS=['boom_albums_v1','boom_order_v1','boom_removed_v1','boom_removedP_v1','boom_edits_v1','boom_secbg_v2','boom_album_pos_v1'];
+    KEYS.forEach(function(k){ if(data[k]!==undefined) try{localStorage.setItem(k,JSON.stringify(data[k]));}catch(e){} });
+    localStorage.setItem('boom_baked_v',data._v);
+  }catch(e){}
+})();</script>
 <style>
   :root{
     --pink:#36d96b;--pink-bright:#5ce88a;--magenta:#1f7a44;
@@ -706,6 +721,7 @@
       <div class="album-toolbar">
         <h3 class="album-section-title" id="albumSectionTitle">📁 Albums · Design Work</h3>
         <button class="add-album-btn" onclick="createAlbum()">+ Album · สร้างอัลบั้ม</button>
+        <button class="add-album-btn" onclick="bakeAndExport()" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:#fff" title="Export HTML พร้อมข้อมูลอัลบั้ม → ไปแทนที่ไฟล์แล้ว push GitHub">💾 Export HTML</button>
         <div class="album-pos-ctrl" id="albumPosCtrl">
           <span class="apc-lbl">Position · ตำแหน่ง:</span>
           <button data-pos="left" onclick="setAlbumPosition('left')">◀ Left · ซ้าย</button>
@@ -1984,6 +2000,31 @@ document.querySelectorAll('.contact-card').forEach(function(card){
     if(editMode){ const a=e.target.closest('a.contact-row'); if(a) e.preventDefault(); }
   });
 });
+
+/* ---- Bake & Export: embed localStorage into HTML for GitHub Pages ---- */
+async function bakeAndExport(){
+  const KEYS=['boom_albums_v1','boom_order_v1','boom_removed_v1','boom_removedP_v1','boom_edits_v1','boom_secbg_v2','boom_album_pos_v1'];
+  const data={_v:Date.now()};
+  KEYS.forEach(function(k){ try{var v=localStorage.getItem(k); if(v) data[k]=JSON.parse(v);}catch(e){} });
+  const json=JSON.stringify(data);
+  let html='';
+  try{
+    const resp=await fetch(location.href);
+    html=await resp.text();
+  }catch(e){
+    try{ html='<!DOCTYPE html>\n'+new XMLSerializer().serializeToString(document); }catch(e2){}
+  }
+  if(!html){ alert('ไม่สามารถอ่านไฟล์ได้ กรุณาลองใหม่'); return; }
+  const tag='<script id="baked-data" type="application/json">';
+  if(html.indexOf(tag)<0){
+    alert('ไม่พบ placeholder ในไฟล์ กรุณา refresh แล้วลองใหม่'); return;
+  }
+  html=html.replace(/<script id="baked-data" type="application\/json">[\s\S]*?<\/script>/,tag+json+'<\/script>');
+  if(!html.startsWith('<!DOCTYPE')) html='<!DOCTYPE html>\n'+html;
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='boom-portfolio.html'; a.click();
+  setTimeout(function(){ alert('✅ Export สำเร็จ!\n\nขั้นตอนต่อไป:\n1. นำไฟล์ boom-portfolio.html ที่ download ไปแทนที่ใน docs/\n2. Push ขึ้น GitHub\n3. GitHub Pages จะแสดงอัลบั้มที่ตั้งไว้ทันที'); },300);
+}
 
 window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); applyAllSB(); updateRatios(); fbRender(); renderAlbums();
 </script></body></html>
