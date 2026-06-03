@@ -1263,39 +1263,61 @@ function setSlotW(albumId,slotIdx,w){
   a.widths[slotIdx]=Math.max(10,Math.min(100,Math.round(w)));
   saveAlbums(albums); renderAlbums();
 }
+const W_STEPS=[15,25,33,40,50,60,66,75,100];
 function makeSlotCell(album,pair,posIdx,total,isRight){
   const key=pair.key; const slotIdx=pair.idx;
   const cell=document.createElement('div'); cell.className='album-collage-slot filled';
   cell.dataset.albumId=album.id; cell.dataset.slotIdx=slotIdx; cell.draggable=true;
+  /* set initial width */
   if(isRight){
     const w=getSlotW(album,slotIdx,posIdx,total);
     cell.style.width='calc('+w+'% - 2px)';
   }
   const img=document.createElement('img'); img.src=keyToSrc(key); img.alt=''; img.draggable=false;
   cell.appendChild(img);
+  /* badge — shows % for both left and right */
   const badge=document.createElement('div'); badge.className='slot-size-badge';
-  badge.textContent=isRight?getSlotW(album,slotIdx,posIdx,total)+'%':'◀▶'; cell.appendChild(badge);
+  badge.textContent=(isRight?getSlotW(album,slotIdx,posIdx,total):getFeaturedW(album))+'%';
+  cell.appendChild(badge);
+  /* X remove */
   const x=document.createElement('button'); x.className='slot-x'; x.textContent='✕'; x.title='เอาออก';
   x.onclick=function(e){ e.stopPropagation(); removeFromSlot(album.id,slotIdx); }; cell.appendChild(x);
-  /* snap +/- for right-panel items only */
+  /* snap +/- and drag handle — same for BOTH left and right panels */
+  const ctrl=document.createElement('div'); ctrl.className='slot-resize';
+  const mk=function(t,tip,fn){ const b=document.createElement('button'); b.className='sz-btn'; b.textContent=t; b.title=tip; b.onclick=function(e){e.stopPropagation();fn();}; return b; };
   if(isRight){
-    const ctrl=document.createElement('div'); ctrl.className='slot-resize';
-    const W_STEPS=[25,33,50,66,75,100];
-    const mk=function(t,tip,fn){ const b=document.createElement('button'); b.className='sz-btn'; b.textContent=t; b.title=tip; b.onclick=function(e){e.stopPropagation();fn();}; return b; };
     ctrl.appendChild(mk('−','แคบลง',function(){ const c=getSlotW(album,slotIdx,posIdx,total); const s=W_STEPS.filter(function(v){return v<c;}); if(s.length)setSlotW(album.id,slotIdx,s[s.length-1]); }));
     ctrl.appendChild(mk('+','กว้างขึ้น',function(){ const c=getSlotW(album,slotIdx,posIdx,total); const s=W_STEPS.filter(function(v){return v>c;}); if(s.length)setSlotW(album.id,slotIdx,s[0]); }));
-    cell.appendChild(ctrl);
-    /* right-edge resize */
-    const rh=document.createElement('div'); rh.className='resize-handle';
-    rh.addEventListener('mousedown',function(e){
-      e.stopPropagation(); e.preventDefault(); cell.draggable=false;
-      const parent=cell.parentElement;
-      _rz={el:cell,badge:badge,collage:cell.closest('.album-collage'),albumId:album.id,slotIdx:slotIdx,startX:e.clientX,startW:cell.offsetWidth,contW:parent?parent.offsetWidth:1,isPanel:false};
-      if(_rz.collage) _rz.collage.classList.add('is-resizing');
-      document.addEventListener('mouseup',function once(){cell.draggable=true;document.removeEventListener('mouseup',once);});
-    });
-    cell.appendChild(rh);
+  } else {
+    /* left panel: snap buttons adjust featuredW */
+    const PANEL_STEPS=[15,25,33,40,50,60,66,75,85];
+    ctrl.appendChild(mk('−','แคบลง',function(){
+      const c=getFeaturedW(album); const s=PANEL_STEPS.filter(function(v){return v<c;});
+      if(s.length){ const albums2=getAlbums(); const a2=albums2.find(function(x){return x.id===album.id;}); if(a2){a2.featuredW=s[s.length-1];saveAlbums(albums2);renderAlbums();} }
+    }));
+    ctrl.appendChild(mk('+','กว้างขึ้น',function(){
+      const c=getFeaturedW(album); const s=PANEL_STEPS.filter(function(v){return v>c;});
+      if(s.length){ const albums2=getAlbums(); const a2=albums2.find(function(x){return x.id===album.id;}); if(a2){a2.featuredW=s[0];saveAlbums(albums2);renderAlbums();} }
+    }));
   }
+  cell.appendChild(ctrl);
+  /* drag resize handle on right edge — same for both */
+  const rh=document.createElement('div'); rh.className='resize-handle';
+  rh.addEventListener('mousedown',function(e){
+    e.stopPropagation(); e.preventDefault(); cell.draggable=false;
+    const collageEl=cell.closest('.album-collage');
+    if(isRight){
+      const parent=cell.parentElement;
+      _rz={el:cell,badge:badge,collage:collageEl,albumId:album.id,slotIdx:slotIdx,startX:e.clientX,startW:cell.offsetWidth,contW:parent?parent.offsetWidth:1,isPanel:false};
+    } else {
+      /* left panel resize: same as divider drag */
+      const leftPanel=cell.parentElement;
+      _rz={el:leftPanel,div:collageEl?collageEl.querySelector('.alb-divider'):null,badge:badge,collage:collageEl,albumId:album.id,slotIdx:-1,startX:e.clientX,startW:leftPanel?leftPanel.offsetWidth:0,contW:collageEl?collageEl.offsetWidth:1,isPanel:true};
+    }
+    if(_rz.collage) _rz.collage.classList.add('is-resizing');
+    document.addEventListener('mouseup',function once(){cell.draggable=true;document.removeEventListener('mouseup',once);});
+  });
+  cell.appendChild(rh);
   cell.addEventListener('dragstart',function(e){ if(_rz){e.preventDefault();return;} albumDragSrc={albumId:album.id,slotIdx:slotIdx}; cell.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.stopPropagation(); });
   cell.addEventListener('dragend',function(){ cell.classList.remove('dragging'); albumDragSrc=null; });
   cell.addEventListener('dragover',function(e){ const iOk=albumDragSrc&&albumDragSrc.albumId===album.id&&albumDragSrc.slotIdx!==slotIdx; const gOk=dragKey&&manageMode; if(iOk||gOk){e.preventDefault();cell.classList.add('over');} });
