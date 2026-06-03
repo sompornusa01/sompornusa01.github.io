@@ -147,6 +147,7 @@
   .mode-btn{padding:9px 18px;border-radius:10px;font-weight:700;font-size:14px;color:var(--ink-dim);transition:.2s;display:flex;align-items:center;gap:7px}
   .mode-btn.active{background:#fff;color:var(--magenta)}
   .mode-btn.fb.active{background:var(--pink);color:#fff}
+  .mode-btn.gs.active{background:#f97316;color:#fff}
   .mode-btn.pt.active{background:#a8ebbf;color:#0a2d18}
   .mode-btn.vd.active{background:#ff5e5e;color:#fff}
   .mode-btn.mo.active{background:#7e5fff;color:#fff}
@@ -250,20 +251,28 @@
   .album-title .album-badge{background:#36d96b;color:#0a2d18;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;flex:none}
   .album-del{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);color:#fff;border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
   .album-del:hover{background:#e6398b}
-  .album-grid{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:8px}
-  .album-slot{aspect-ratio:1/1;border-radius:10px;background:rgba(255,255,255,.03);border:1.5px dashed rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:.15s;cursor:default}
-  body.manage-on .album-slot:not(.filled){border-color:rgba(54,217,107,.42);background:rgba(54,217,107,.05)}
-  .album-slot.over{background:rgba(54,217,107,.2)!important;border-color:#36d96b!important}
-  .album-slot img{width:100%;height:100%;object-fit:cover;display:block}
-  .album-slot .slot-empty{color:rgba(255,255,255,.28);font-size:30px;font-weight:300;line-height:1}
-  body.manage-on .album-slot .slot-empty{color:rgba(54,217,107,.5)}
-  .album-slot .slot-x{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.78);color:#fff;font-size:11px;display:none;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:2}
-  body.manage-on .album-slot.filled .slot-x{display:flex}
-  .album-slot .slot-x:hover{background:#e6398b}
+  /* ---- Facebook-style collage ---- */
+  .album-collage{display:grid;gap:3px;border-radius:10px;overflow:hidden;width:100%}
+  .album-collage-slot{position:relative;overflow:hidden;min-height:60px}
+  .album-collage-slot.filled{cursor:grab}
+  .album-collage-slot.filled:active{cursor:grabbing}
+  .album-collage-slot.dragging{opacity:.32}
+  .album-collage-slot.over{outline:3px dashed #36d96b;outline-offset:-3px}
+  .album-collage.grid-drop{outline:3px dashed rgba(54,217,107,.6);outline-offset:-3px}
+  .album-collage-slot img{width:100%;height:100%;object-fit:cover;display:block}
+  .album-collage.n1 .album-collage-slot img{height:auto;object-fit:unset}
+  .album-collage-slot .slot-x{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.82);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:3;opacity:0;transition:opacity .15s}
+  .album-collage-slot:hover .slot-x{opacity:1}
+  .album-collage-slot .slot-x:hover{background:#e6398b;opacity:1!important}
+  html.viewonly .album-collage-slot .slot-x{display:none!important}
+  /* empty slots strip (manage mode only) */
+  .album-empty-strip{display:none;flex-wrap:wrap;gap:6px;margin-top:8px}
+  body.manage-on .album-empty-strip{display:flex}
+  .album-empty-cell{width:50px;height:50px;border-radius:9px;background:rgba(54,217,107,.04);border:1.5px dashed rgba(54,217,107,.38);display:flex;align-items:center;justify-content:center;color:rgba(54,217,107,.45);font-size:22px;transition:.15s}
+  .album-empty-cell.over{background:rgba(54,217,107,.18);border-color:#36d96b}
   .add-album-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:11px 16px;border-radius:12px;background:rgba(54,217,107,.14);color:#36d96b;border:1.5px dashed rgba(54,217,107,.55);cursor:pointer;font-family:inherit}
   .add-album-btn:hover{background:rgba(54,217,107,.24)}
   html.viewonly .add-album-btn,html.viewonly .album-del{display:none!important}
-  html.viewonly .album-slot{cursor:default}
 
   /* ---- album section (dedicated frame between filters and gallery) ---- */
   .album-section{margin-bottom:24px;padding:18px;background:rgba(54,217,107,.04);border:1px solid rgba(54,217,107,.18);border-radius:14px;display:none}
@@ -290,19 +299,6 @@
   html.viewonly .album-hint{display:none}
   .album-section.has-albums .album-hint{display:none}
 
-  /* ---- Work History Photos (free-aspect masonry) ---- */
-  .history-section{padding:70px 0}
-  .history-section .section-head{margin-bottom:26px}
-  .hp-controls{display:flex;justify-content:center;gap:10px;margin-bottom:26px;flex-wrap:wrap}
-  .hp-upload-btn{padding:11px 18px;border-radius:12px;background:#36d96b;color:#0a2d18;border:none;cursor:pointer;font-weight:800;font-size:14px;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
-  .hp-upload-btn:hover{background:#5ce88a;transform:translateY(-1px)}
-  html.viewonly .hp-controls{display:none}
-  .hp-grid{column-count:4;column-gap:14px;max-width:1240px;margin:0 auto}
-  @media(max-width:1100px){.hp-grid{column-count:3}}
-  @media(max-width:760px){.hp-grid{column-count:2}}
-  @media(max-width:480px){.hp-grid{column-count:1}}
-  .hp-item{position:relative;break-inside:avoid;margin-bottom:14px;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:.2s}
-  .hp-item:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.45)}
   .hp-item img{width:100%;height:auto;display:block}
   .hp-del{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.78);color:#fff;border:none;cursor:pointer;font-size:13px;display:none;align-items:center;justify-content:center;z-index:2}
   body.edit-on .hp-del,body.manage-on .hp-del{display:flex}
@@ -650,6 +646,7 @@
         <button class="mode-btn vd" id="modeVideo" onclick="setMode('video')">▶ <span class="bi"><span class="en">Video Editing</span><span class="th">ตัดต่อวิดีโอ</span></span></button>
         <button class="mode-btn mo" id="modeMotion" onclick="setMode('motion')">🎬 <span class="bi"><span class="en">Motion</span><span class="th">โมชั่น</span></span></button>
         <button class="mode-btn pt" id="modePortrait" onclick="setMode('portrait')">👤 <span class="bi"><span class="en">History Photos</span><span class="th">ภาพประวัติบางส่วน</span></span></button>
+        <button class="mode-btn gs" id="modeGift" onclick="setMode('gift')">🎁 <span class="bi"><span class="en">Gift Story</span><span class="th">ภาพพิเศษ</span></span></button>
       </div>
       <button class="add-btn" onclick="document.getElementById('addInput').click()">+ Add · เพิ่มรูป</button>
       <button class="manage-btn" id="manageBtn" onclick="toggleManage()">⚙ Manage · จัดการรูป</button>
@@ -671,7 +668,7 @@
     </div>
     <div class="album-section" id="albumSection">
       <div class="album-toolbar">
-        <h3 class="album-section-title">📁 Albums · จัดการอัลบั้ม</h3>
+        <h3 class="album-section-title" id="albumSectionTitle">📁 Albums · Design Work</h3>
         <button class="add-album-btn" onclick="createAlbum()">+ Album · สร้างอัลบั้ม</button>
         <div class="album-pos-ctrl" id="albumPosCtrl">
           <span class="apc-lbl">Position · ตำแหน่ง:</span>
@@ -687,33 +684,24 @@
   </div>
 </section>
 
-<section class="history-section" id="history-gallery">
+
+<section class="logos-section" id="logos">
   <div class="container">
     <div class="section-head" style="text-align:center">
-      <span class="kicker">History · Behind the Scenes</span>
-      <h2><span class="bi"><span class="en" data-k="hgTitleEn">History Photo Gallery</span><span class="th" data-k="hgTitle">แกลเลอรีรูปประวัติ</span></span></h2>
-      <p class="desc"><span class="bi"><span class="en" data-k="hgDescEn">Real moments from my work journey — events, collaborations, and personal milestones.</span><span class="th" data-k="hgDesc">ภาพถ่ายจริงระหว่างเส้นทางการทำงาน — งานอีเวนต์ ทีมงาน และเหตุการณ์สำคัญ</span></span></p>
+      <span class="kicker">Brands · Companies</span>
+      <h2><span class="bi"><span class="en" data-k="logosTitleEn">Companies I've Worked With</span><span class="th" data-k="logosTitle">บริษัทที่เคยร่วมงาน</span></span></h2>
+      <p class="desc"><span class="bi"><span class="en" data-k="logosDescEn">Logos of companies and organizations I've collaborated with on design projects.</span><span class="th" data-k="logosDesc">โลโก้บริษัทและองค์กรที่ผมเคยมีส่วนร่วมในงานออกแบบ</span></span></p>
     </div>
-    <div class="hp-grid" id="hpGrid"></div>
-  </div>
-</section>
-
-<section class="contact-section" id="contact">
-  <div class="container">
-    <div class="contact">
-      <div>
-        <span class="kicker">Contact</span>
-        <p class="quote"><span class="bi"><span class="en"><span data-k="q1En">Interested in</span> <span class="accent" data-k="q2En">hiring me</span><span data-k="q3En">?</span><br/><span data-k="q4En">Let's chat.</span></span><span class="th"><span data-k="q1">สนใจ</span> <span class="accent" data-k="q2">รับเข้าทำงาน</span><span data-k="q3">?</span><br/><span data-k="q4">ทักมาคุยกันได้เลย</span></span></span></p>
-        <p style="color:var(--ink-dim);line-height:1.7;font-size:15px;max-width:440px"><span class="bi"><span class="en" data-k="contactPEn">Available immediately. Open to opportunities as a Senior Graphic Designer / Creative Designer at the right company or agency.</span><span class="th" data-k="contactP">พร้อมเริ่มงานทันที เปิดรับโอกาสในตำแหน่ง Senior Graphic Designer / Creative Designer ที่บริษัทหรือเอเจนซี่ที่ใช่</span></span></p>
-      </div>
-      <div class="contact-card">
-        <a class="contact-row" href="mailto:somporn.usa01@gmail.com" data-copy="somporn.usa01@gmail.com"><div class="ic">@</div><div class="cr-text"><div class="lbl">Email · กดเพื่อส่ง</div><div class="val" data-k="cEmail">somporn.usa01@gmail.com</div></div><button class="cr-copy" title="คัดลอก">⧉</button></a>
-        <a class="contact-row" href="tel:0955919199" data-copy="095-591-9199"><div class="ic">☎</div><div class="cr-text"><div class="lbl">Phone · กดเพื่อโทร</div><div class="val" data-k="cPhone">095-591-9199</div></div><button class="cr-copy" title="คัดลอก">⧉</button></a>
-        <a class="contact-row" href="https://line.me/ti/p/TDixg_5hPs" target="_blank" rel="noopener" data-copy="prince.79"><div class="ic">▼</div><div class="cr-text"><div class="lbl">Line · กดเพื่อเพิ่มเพื่อน</div><div class="val" data-k="cLine">prince.79</div></div><button class="cr-copy" title="คัดลอก">⧉</button></a>
-        <a class="contact-row" href="https://www.google.com/maps/search/?api=1&amp;query=Huai+Khwang+Sam+Sen+Nok+Bangkok" target="_blank" rel="noopener"><div class="ic">◉</div><div class="cr-text"><div class="lbl">Location · เปิด Google Maps</div><div class="val" data-k="cLoc">Huai Khwang · สามเสนนอก, Bangkok</div></div><button class="cr-go" title="เปิดแผนที่">↗</button></a>
-        <div class="line-qr"><img src="https://drive.google.com/thumbnail?id=1Jsi68DTlBJPKCgeuPinDsu1Pr7-WhYsj&amp;sz=w400" alt="LINE QR Code" loading="lazy"><div class="qr-text"><b>LINE QR Code</b><br>Scan to add friend, or tap the Line ID above<br><span style="opacity:.8">สแกนเพื่อเพิ่มเพื่อน หรือกดที่ Line ID ด้านบนได้เลย</span></div></div>
-        <a class="btn solid" style="margin-top:20px;width:100%;justify-content:center" href="mailto:somporn.usa01@gmail.com"><span class="bi"><span class="en">Email Me</span><span class="th">ส่งอีเมลหาผม</span></span></a>
-      </div>
+    <div class="logo-grid">
+      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1Ld4v_2nj3WxBmR-LenK39upfpxBW8WZJ&sz=w400" alt="" loading="lazy"></div>
+      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1XFM1p8I7oSrSdLqy4Vaz9Qe1ToEsKaHM&sz=w400" alt="" loading="lazy"></div>
+      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1s-eR2k52tg_LLYi7VOPhi8tZajEMalmF&sz=w400" alt="" loading="lazy"></div>
+      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1RIgvoJ7Iml2-vKlsNIvSrW2xsvii1YOI&sz=w400" alt="" loading="lazy"></div>
+      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1pncUxKxaYfMSuUSaBj655ryOluXb9ag1&sz=w400" alt="" loading="lazy"></div>
+      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1SjsLHpxZF2cuWbZ7vlX1nQgada0kS5Od&sz=w400" alt="" loading="lazy"></div>
+      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1BPTOJyE08ApWdibD9UJeiKrhZUrXIQE9&sz=w400" alt="" loading="lazy"></div>
+      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1dFD-iEppCQA-AUbbYPC8bWSFc4XJJkPt&sz=w400" alt="" loading="lazy"></div>
+      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1Gue111ti-_tKvctQaRaeflnIdzgBD40X&sz=w400" alt="" loading="lazy"></div>
     </div>
   </div>
 </section>
@@ -735,23 +723,22 @@
   </div>
 </section>
 
-<section class="logos-section" id="logos">
+<section class="contact-section" id="contact">
   <div class="container">
-    <div class="section-head" style="text-align:center">
-      <span class="kicker">Brands · Companies</span>
-      <h2><span class="bi"><span class="en" data-k="logosTitleEn">Companies I've Worked With</span><span class="th" data-k="logosTitle">บริษัทที่เคยร่วมงาน</span></span></h2>
-      <p class="desc"><span class="bi"><span class="en" data-k="logosDescEn">Logos of companies and organizations I've collaborated with on design projects.</span><span class="th" data-k="logosDesc">โลโก้บริษัทและองค์กรที่ผมเคยมีส่วนร่วมในงานออกแบบ</span></span></p>
-    </div>
-    <div class="logo-grid">
-      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1Ld4v_2nj3WxBmR-LenK39upfpxBW8WZJ&sz=w400" alt="" loading="lazy"></div>
-      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1XFM1p8I7oSrSdLqy4Vaz9Qe1ToEsKaHM&sz=w400" alt="" loading="lazy"></div>
-      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1s-eR2k52tg_LLYi7VOPhi8tZajEMalmF&sz=w400" alt="" loading="lazy"></div>
-      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1RIgvoJ7Iml2-vKlsNIvSrW2xsvii1YOI&sz=w400" alt="" loading="lazy"></div>
-      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1pncUxKxaYfMSuUSaBj655ryOluXb9ag1&sz=w400" alt="" loading="lazy"></div>
-      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1SjsLHpxZF2cuWbZ7vlX1nQgada0kS5Od&sz=w400" alt="" loading="lazy"></div>
-      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1BPTOJyE08ApWdibD9UJeiKrhZUrXIQE9&sz=w400" alt="" loading="lazy"></div>
-      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1dFD-iEppCQA-AUbbYPC8bWSFc4XJJkPt&sz=w400" alt="" loading="lazy"></div>
-      <div class="logo-card"><img src="https://drive.google.com/thumbnail?id=1Gue111ti-_tKvctQaRaeflnIdzgBD40X&sz=w400" alt="" loading="lazy"></div>
+    <div class="contact">
+      <div>
+        <span class="kicker">Contact</span>
+        <p class="quote"><span class="bi"><span class="en"><span data-k="q1En">Interested in</span> <span class="accent" data-k="q2En">hiring me</span><span data-k="q3En">?</span><br/><span data-k="q4En">Let's chat.</span></span><span class="th"><span data-k="q1">สนใจ</span> <span class="accent" data-k="q2">รับเข้าทำงาน</span><span data-k="q3">?</span><br/><span data-k="q4">ทักมาคุยกันได้เลย</span></span></span></p>
+        <p style="color:var(--ink-dim);line-height:1.7;font-size:15px;max-width:440px"><span class="bi"><span class="en" data-k="contactPEn">Available immediately. Open to opportunities as a Senior Graphic Designer / Creative Designer at the right company or agency.</span><span class="th" data-k="contactP">พร้อมเริ่มงานทันที เปิดรับโอกาสในตำแหน่ง Senior Graphic Designer / Creative Designer ที่บริษัทหรือเอเจนซี่ที่ใช่</span></span></p>
+      </div>
+      <div class="contact-card">
+        <a class="contact-row" href="mailto:somporn.usa01@gmail.com" data-copy="somporn.usa01@gmail.com"><div class="ic">@</div><div class="cr-text"><div class="lbl">Email · กดเพื่อส่ง</div><div class="val" data-k="cEmail">somporn.usa01@gmail.com</div></div><button class="cr-copy" title="คัดลอก">⧉</button></a>
+        <a class="contact-row" href="tel:0955919199" data-copy="095-591-9199"><div class="ic">☎</div><div class="cr-text"><div class="lbl">Phone · กดเพื่อโทร</div><div class="val" data-k="cPhone">095-591-9199</div></div><button class="cr-copy" title="คัดลอก">⧉</button></a>
+        <a class="contact-row" href="https://line.me/ti/p/TDixg_5hPs" target="_blank" rel="noopener" data-copy="prince.79"><div class="ic">▼</div><div class="cr-text"><div class="lbl">Line · กดเพื่อเพิ่มเพื่อน</div><div class="val" data-k="cLine">prince.79</div></div><button class="cr-copy" title="คัดลอก">⧉</button></a>
+        <a class="contact-row" href="https://www.google.com/maps/search/?api=1&amp;query=Huai+Khwang+Sam+Sen+Nok+Bangkok" target="_blank" rel="noopener"><div class="ic">◉</div><div class="cr-text"><div class="lbl">Location · เปิด Google Maps</div><div class="val" data-k="cLoc">Huai Khwang · สามเสนนอก, Bangkok</div></div><button class="cr-go" title="เปิดแผนที่">↗</button></a>
+        <div class="line-qr"><img src="https://drive.google.com/thumbnail?id=1Jsi68DTlBJPKCgeuPinDsu1Pr7-WhYsj&amp;sz=w400" alt="LINE QR Code" loading="lazy"><div class="qr-text"><b>LINE QR Code</b><br>Scan to add friend, or tap the Line ID above<br><span style="opacity:.8">สแกนเพื่อเพิ่มเพื่อน หรือกดที่ Line ID ด้านบนได้เลย</span></div></div>
+        <a class="btn solid" style="margin-top:20px;width:100%;justify-content:center" href="mailto:somporn.usa01@gmail.com"><span class="bi"><span class="en">Email Me</span><span class="th">ส่งอีเมลหาผม</span></span></a>
+      </div>
     </div>
   </div>
 </section>
@@ -1098,9 +1085,9 @@ function buildChips(){
 }
 
 function pool(){
-  if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion'||viewMode==='photo') return items.filter(d=>d.dataset.cat===viewMode);
+  if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion'||viewMode==='photo'||viewMode==='gift') return items.filter(d=>d.dataset.cat===viewMode);
   if(viewMode==='fb') return items.filter(d=>d.dataset.cat==='football');
-  return items.filter(d=>d.dataset.cat!=='portrait'&&d.dataset.cat!=='football'&&d.dataset.cat!=='photo'&&d.dataset.cat!=='video'&&d.dataset.cat!=='motion');
+  return items.filter(d=>d.dataset.cat!=='portrait'&&d.dataset.cat!=='football'&&d.dataset.cat!=='photo'&&d.dataset.cat!=='video'&&d.dataset.cat!=='motion'&&d.dataset.cat!=='gift');
 }
 function refreshCounts(){
   const P=pool();
@@ -1112,8 +1099,8 @@ function refreshCounts(){
 }
 function matchItem(d){
   const cat=d.dataset.cat;
-  const special=cat==='portrait'||cat==='video'||cat==='motion'||cat==='football'||cat==='photo';
-  if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion'||viewMode==='photo'){ if(cat!==viewMode) return false; }
+  const special=cat==='portrait'||cat==='video'||cat==='motion'||cat==='football'||cat==='photo'||cat==='gift';
+  if(viewMode==='portrait'||viewMode==='video'||viewMode==='motion'||viewMode==='photo'||viewMode==='gift'){ if(cat!==viewMode) return false; }
   else if(viewMode==='fb'){ if(cat!=='football') return false; }
   else { if(special) return false; }
   const okAr=activeAr==='all'||d.dataset.ar===activeAr;
@@ -1154,9 +1141,8 @@ function createAlbum(){
   const size=parseInt(raw,10);
   if(!size||size<1||size>12){ alert('กรุณาใส่ตัวเลข 1–12'); return; }
   const albums=getAlbums();
-  albums.push({id:'al_'+Date.now(),size:size,slots:new Array(size).fill(null)});
+  albums.push({id:'al_'+Date.now(),size:size,slots:new Array(size).fill(null),cat:viewMode});
   saveAlbums(albums); renderAlbums(); layout();
-  if(!manageMode){ alert('สร้างอัลบั้ม '+size+' ช่องแล้ว!\nกด "⚙ Manage · จัดการรูป" เพื่อเข้าโหมดลากรูปเข้าช่องอัลบั้ม'); }
 }
 function deleteAlbum(albumId){
   if(!confirm('ลบอัลบั้มนี้?\nรูปที่อยู่ในอัลบั้มจะกลับไปอยู่ในแกลเลอรีรวม\n(Delete this album? Images return to the main gallery)')) return;
@@ -1173,7 +1159,13 @@ function addToSlot(albumId,slotIdx,itemKey){
   const a=albums.find(x=>x.id===albumId); if(!a) return;
   a.slots[slotIdx]=itemKey; saveAlbums(albums); renderAlbums(); layout();
 }
-const ALBUM_COLS={1:1,2:2,3:3,4:2,5:5,6:3,7:4,8:4,9:3,10:5,11:4,12:4};
+function swapAlbumSlots(albumId,idxA,idxB){
+  const albums=getAlbums();
+  const a=albums.find(x=>x.id===albumId); if(!a) return;
+  const tmp=a.slots[idxA]; a.slots[idxA]=a.slots[idxB]; a.slots[idxB]=tmp;
+  saveAlbums(albums); renderAlbums(); layout();
+}
+const ALBUM_COLS={1:1,2:2,3:3,4:2,5:3,6:3,7:3,8:4,9:3,10:4,11:4,12:4};
 const ALBUM_POS_KEY='boom_album_pos_v1';
 function getAlbumPos(){ try{return localStorage.getItem(ALBUM_POS_KEY)||'center';}catch(e){return 'center';} }
 function setAlbumPosition(pos){ try{localStorage.setItem(ALBUM_POS_KEY,pos);}catch(e){} renderAlbums(); }
@@ -1192,12 +1184,92 @@ function applyAlbumLayout(area,albums){
     if(ctrl) ctrl.classList.remove('show');
   }
 }
+const MODE_LABEL={all:'Design Work',fb:'Football',photo:'Photo',video:'Video Editing',motion:'Motion',portrait:'History Photos',gift:'Gift Story'};
+/* ---- Facebook-style collage layout templates (1–12 images) ---- */
+const COLLAGE_LAYOUTS={
+  1:{areas:'"a"',            cols:'1fr',               rows:'auto',                     names:['a']},
+  2:{areas:'"a b"',          cols:'1fr 1fr',            rows:'300px',                    names:['a','b']},
+  3:{areas:'"a b"\n"a c"',   cols:'2fr 1fr',            rows:'210px 210px',              names:['a','b','c']},
+  4:{areas:'"a b"\n"c d"',   cols:'1fr 1fr',            rows:'225px 225px',              names:['a','b','c','d']},
+  5:{areas:'"a a b"\n"c d e"',cols:'1fr 1fr 1fr',       rows:'230px 185px',              names:['a','b','c','d','e']},
+  6:{areas:'"a b c"\n"d e f"',cols:'1fr 1fr 1fr',       rows:'205px 205px',              names:['a','b','c','d','e','f']},
+  7:{areas:'"a b b"\n"c d e"\n"c f g"',cols:'1fr 1fr 1fr',rows:'180px 155px 155px',     names:['a','b','c','d','e','f','g']},
+  8:{areas:'"a b c d"\n"e f g h"',cols:'1fr 1fr 1fr 1fr',rows:'190px 190px',            names:['a','b','c','d','e','f','g','h']},
+  9:{areas:'"a b c"\n"d e f"\n"g h i"',cols:'1fr 1fr 1fr',rows:'175px 175px 175px',     names:['a','b','c','d','e','f','g','h','i']},
+  10:{areas:'"a b c d"\n"e f g h"\n"i i j j"',cols:'1fr 1fr 1fr 1fr',rows:'160px 160px 160px',names:['a','b','c','d','e','f','g','h','i','j']},
+  11:{areas:'"a b c d"\n"e f g h"\n"i i j k"',cols:'1fr 1fr 1fr 1fr',rows:'160px 160px 160px',names:['a','b','c','d','e','f','g','h','i','j','k']},
+  12:{areas:'"a b c d"\n"e f g h"\n"i j k l"',cols:'1fr 1fr 1fr 1fr',rows:'155px 155px 155px',names:['a','b','c','d','e','f','g','h','i','j','k','l']}
+};
+let albumDragSrc=null;
+
+function buildCollage(album,filledPairs){
+  /* filledPairs = [{key, idx}, ...] for all non-null slots */
+  const n=Math.min(filledPairs.length,12);
+  const layout=COLLAGE_LAYOUTS[n];
+  const collage=document.createElement('div');
+  collage.className='album-collage n'+n;
+  collage.style.gridTemplateAreas=layout.areas;
+  collage.style.gridTemplateColumns=layout.cols;
+  collage.style.gridTemplateRows=layout.rows;
+  filledPairs.forEach(function(pair,i){
+    if(i>=layout.names.length) return;
+    const key=pair.key; const slotIdx=pair.idx;
+    const cell=document.createElement('div');
+    cell.className='album-collage-slot filled';
+    cell.style.gridArea=layout.names[i];
+    cell.dataset.albumId=album.id; cell.dataset.slotIdx=slotIdx;
+    cell.draggable=true;
+    const img=document.createElement('img'); img.src=keyToSrc(key); img.alt=''; img.draggable=false;
+    cell.appendChild(img);
+    const x=document.createElement('button'); x.className='slot-x'; x.textContent='✕'; x.title='เอาออกจากอัลบั้ม';
+    x.onclick=function(e){ e.stopPropagation(); removeFromSlot(album.id,slotIdx); };
+    cell.appendChild(x);
+    cell.addEventListener('dragstart',function(e){
+      albumDragSrc={albumId:album.id,slotIdx:slotIdx};
+      cell.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.stopPropagation();
+    });
+    cell.addEventListener('dragend',function(){
+      cell.classList.remove('dragging'); albumDragSrc=null;
+    });
+    cell.addEventListener('dragover',function(e){
+      const iOk=albumDragSrc&&albumDragSrc.albumId===album.id&&albumDragSrc.slotIdx!==slotIdx;
+      const gOk=dragKey&&manageMode;
+      if(iOk||gOk){ e.preventDefault(); cell.classList.add('over'); }
+    });
+    cell.addEventListener('dragleave',function(){ cell.classList.remove('over'); });
+    cell.addEventListener('drop',function(e){
+      cell.classList.remove('over'); e.preventDefault(); e.stopPropagation();
+      if(albumDragSrc&&albumDragSrc.albumId===album.id&&albumDragSrc.slotIdx!==slotIdx){
+        swapAlbumSlots(album.id,albumDragSrc.slotIdx,slotIdx); albumDragSrc=null;
+      } else if(dragKey&&manageMode){
+        addToSlot(album.id,slotIdx,dragKey); dragKey=null;
+      }
+    });
+    collage.appendChild(cell);
+  });
+  /* collage itself is also a drop target (drops to first empty slot) */
+  collage.addEventListener('dragover',function(e){
+    if(dragKey&&manageMode){ e.preventDefault(); collage.classList.add('grid-drop'); }
+  });
+  collage.addEventListener('dragleave',function(){ collage.classList.remove('grid-drop'); });
+  collage.addEventListener('drop',function(e){
+    collage.classList.remove('grid-drop');
+    if(!dragKey||!manageMode) return;
+    e.preventDefault(); e.stopPropagation();
+    const firstEmpty=album.slots.indexOf(null);
+    if(firstEmpty!==-1){ addToSlot(album.id,firstEmpty,dragKey); dragKey=null; }
+  });
+  return collage;
+}
+
 function renderAlbums(){
   const area=document.getElementById('albumArea');
   const section=document.getElementById('albumSection');
   if(!area) return;
   area.innerHTML='';
-  const albums=getAlbums();
+  const albums=getAlbums().filter(function(a){ return (a.cat||'all')===viewMode; });
+  const titleEl=document.getElementById('albumSectionTitle');
+  if(titleEl) titleEl.textContent='📁 Albums · '+(MODE_LABEL[viewMode]||viewMode);
   if(!albums.length){
     if(section) section.classList.remove('has-albums');
     const ctrl=document.getElementById('albumPosCtrl');
@@ -1207,40 +1279,34 @@ function renderAlbums(){
   if(section) section.classList.add('has-albums');
   albums.forEach(function(album,ai){
     const card=document.createElement('div'); card.className='album-card';
+    /* header */
     const head=document.createElement('div'); head.className='album-head';
-    const filled=album.slots.filter(function(s){return !!s;}).length;
-    head.innerHTML='<div class="album-title">📁 Album #'+(ai+1)+' · อัลบั้ม <span class="album-badge">'+filled+' / '+album.size+'</span></div>';
+    const filledPairs=album.slots.map(function(k,i){return {key:k,idx:i};}).filter(function(p){return !!p.key;});
+    head.innerHTML='<div class="album-title">📁 Album #'+(ai+1)+' · อัลบั้ม <span class="album-badge">'+filledPairs.length+' / '+album.size+'</span></div>';
     const del=document.createElement('button'); del.className='album-del'; del.title='ลบอัลบั้ม / Delete'; del.textContent='✕';
     del.onclick=function(){ deleteAlbum(album.id); };
-    head.appendChild(del);
-    card.appendChild(head);
-    const grid=document.createElement('div'); grid.className='album-grid';
-    grid.style.setProperty('--cols',ALBUM_COLS[album.size]||3);
-    album.slots.forEach(function(key,idx){
-      const slot=document.createElement('div'); slot.className='album-slot';
-      slot.dataset.albumId=album.id; slot.dataset.slotIdx=idx;
-      if(key){
-        slot.classList.add('filled');
-        const img=document.createElement('img'); img.src=keyToSrc(key); img.draggable=false; img.alt='';
-        slot.appendChild(img);
-        const x=document.createElement('button'); x.className='slot-x'; x.textContent='✕'; x.title='เอาออกจากอัลบั้ม';
-        x.onclick=function(e){ e.stopPropagation(); removeFromSlot(album.id,idx); };
-        slot.appendChild(x);
-      } else {
-        const empty=document.createElement('span'); empty.className='slot-empty'; empty.textContent='+';
-        slot.appendChild(empty);
-      }
-      slot.addEventListener('dragover',function(e){ if(manageMode&&dragKey){ e.preventDefault(); slot.classList.add('over'); } });
-      slot.addEventListener('dragleave',function(){ slot.classList.remove('over'); });
-      slot.addEventListener('drop',function(e){
-        slot.classList.remove('over');
-        if(!manageMode||!dragKey) return;
-        e.preventDefault();
-        addToSlot(album.id,idx,dragKey); dragKey=null;
+    head.appendChild(del); card.appendChild(head);
+    /* collage grid (filled images only) */
+    if(filledPairs.length>0) card.appendChild(buildCollage(album,filledPairs));
+    /* empty slots strip — shown below in manage mode */
+    const emptyIndices=album.slots.map(function(k,i){return {key:k,idx:i};}).filter(function(p){return !p.key;});
+    if(emptyIndices.length>0){
+      const strip=document.createElement('div'); strip.className='album-empty-strip';
+      emptyIndices.forEach(function(p){
+        const cell=document.createElement('div'); cell.className='album-empty-cell'; cell.textContent='+';
+        cell.dataset.albumId=album.id; cell.dataset.slotIdx=p.idx;
+        cell.addEventListener('dragover',function(e){ if(dragKey&&manageMode){ e.preventDefault(); cell.classList.add('over'); } });
+        cell.addEventListener('dragleave',function(){ cell.classList.remove('over'); });
+        cell.addEventListener('drop',function(e){
+          cell.classList.remove('over');
+          if(!dragKey||!manageMode) return;
+          e.preventDefault(); e.stopPropagation();
+          addToSlot(album.id,p.idx,dragKey); dragKey=null;
+        });
+        strip.appendChild(cell);
       });
-      grid.appendChild(slot);
-    });
-    card.appendChild(grid);
+      card.appendChild(strip);
+    }
     area.appendChild(card);
   });
   applyAlbumLayout(area,albums);
@@ -1285,6 +1351,8 @@ function setMode(m){
   document.getElementById('modeVideo').classList.toggle('active',m==='video');
   document.getElementById('modeMotion').classList.toggle('active',m==='motion');
   const mph=document.getElementById('modePhoto'); if(mph) mph.classList.toggle('active',m==='photo');
+  const mg=document.getElementById('modeGift'); if(mg) mg.classList.toggle('active',m==='gift');
+  renderAlbums();
   applyOrder(); refreshCounts(); applyFilters();
 }
 
@@ -1315,7 +1383,7 @@ function addFiles(files){
     if(!f.type.startsWith('image/')){ pending--; return; }
     const r=new FileReader();
     r.onload=ev=>{
-      const item={uid:'u'+Date.now()+Math.random().toString(36).slice(2,7),u:ev.target.result,cat:viewMode==='portrait'?'portrait':viewMode==='fb'?'football':viewMode==='photo'?'photo':'work'};
+      const item={uid:'u'+Date.now()+Math.random().toString(36).slice(2,7),u:ev.target.result,cat:viewMode==='portrait'?'portrait':viewMode==='fb'?'football':viewMode==='photo'?'photo':viewMode==='gift'?'gift':'work'};
       added.unshift(item);
       const d=makeItem(item,0);
       items.unshift(d);
@@ -1787,16 +1855,7 @@ document.querySelectorAll('.contact-card').forEach(function(card){
   });
 });
 
-/* ---- history photo gallery (auto-loads from PORTRAIT_IMAGES Drive folder) ---- */
-function hpRender(){
-  const grid=document.getElementById('hpGrid'); if(!grid) return;
-  if(typeof PORTRAIT_IMAGES==='undefined' || !PORTRAIT_IMAGES.length){ grid.innerHTML=''; return; }
-  const removed=(typeof getRemovedP==='function')?getRemovedP():new Set();
-  const list=PORTRAIT_IMAGES.filter(function(x){return !removed.has(x.id);});
-  grid.innerHTML=list.map(function(x){ return '<div class="hp-item"><img src="'+imgUrl(x.id,500)+'" loading="lazy" alt=""></div>'; }).join('');
-}
-
-window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); applyAllSB(); updateRatios(); fbRender(); hpRender(); renderAlbums();
+window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); applyAllSB(); updateRatios(); fbRender(); renderAlbums();
 </script>
 </body>
 </html>
