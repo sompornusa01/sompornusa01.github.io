@@ -251,28 +251,39 @@
   .album-title .album-badge{background:#36d96b;color:#0a2d18;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;flex:none}
   .album-del{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);color:#fff;border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
   .album-del:hover{background:#e6398b}
-  /* ---- Free-form mosaic collage (drag + resize, no crop) ---- */
-  .album-collage{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:110px;grid-auto-flow:dense;gap:3px;border-radius:10px;overflow:hidden;width:100%}
-  .album-collage-slot{position:relative;overflow:hidden;min-height:0;background:#071710}
+  /* ---- Free-form mosaic collage (no crop — natural aspect ratio per image) ---- */
+  .album-collage{display:flex;flex-wrap:wrap;gap:3px;border-radius:10px;overflow:hidden;width:100%;align-items:flex-start;background:#071710}
+  .album-collage-slot{position:relative;overflow:hidden;background:#071710;flex:0 0 auto;min-width:0}
+  /* scale 1=XS(25%) 2=S(33%) 3=M(50%) 4=L(100%) */
+  .album-collage-slot[data-scale="1"]{flex:0 0 calc(25% - 3px)}
+  .album-collage-slot[data-scale="2"]{flex:0 0 calc(33.33% - 2px)}
+  .album-collage-slot[data-scale="3"]{flex:0 0 calc(50% - 2px)}
+  .album-collage-slot[data-scale="4"]{flex:0 0 100%}
   .album-collage-slot.filled{cursor:grab}
   .album-collage-slot.filled:active{cursor:grabbing}
   .album-collage-slot.dragging{opacity:.32}
   .album-collage-slot.over{outline:3px dashed #36d96b;outline-offset:-3px}
   .album-collage.grid-drop{outline:3px dashed rgba(54,217,107,.6);outline-offset:-3px}
-  .album-collage-slot img{width:100%;height:100%;object-fit:contain;display:block}
+  /* height:auto → image determines its own height from natural aspect ratio */
+  .album-collage-slot img{width:100%;height:auto;display:block}
   .album-collage-slot .slot-x{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.82);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:3;opacity:0;transition:opacity .15s}
   .album-collage-slot:hover .slot-x{opacity:1}
   .album-collage-slot .slot-x:hover{background:#e6398b;opacity:1!important}
   html.viewonly .album-collage-slot .slot-x{display:none!important}
-  /* size badge */
-  .slot-size-badge{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.75);color:rgba(255,255,255,.85);font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;display:none;z-index:3;pointer-events:none;letter-spacing:.3px}
+  /* scale badge */
+  .slot-size-badge{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.78);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:4px;display:none;z-index:3;pointer-events:none;letter-spacing:.5px}
   body.manage-on .slot-size-badge{display:block}
   /* resize controls */
-  .slot-resize{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);display:none;gap:3px;z-index:4;flex-wrap:nowrap}
+  .slot-resize{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:none;gap:4px;z-index:4}
   body.manage-on .slot-resize{display:flex}
   html.viewonly .slot-resize,html.viewonly .slot-size-badge{display:none!important}
-  .sz-btn{width:26px;height:26px;border-radius:6px;background:rgba(0,0,0,.82);color:#fff;font-size:10px;font-weight:800;border:1px solid rgba(255,255,255,.22);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;flex:none;transition:.12s;padding:0}
+  .sz-btn{width:28px;height:28px;border-radius:7px;background:rgba(0,0,0,.85);color:#fff;font-size:16px;font-weight:700;border:1px solid rgba(255,255,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;flex:none;transition:.12s;padding:0;line-height:1}
   .sz-btn:hover{background:#36d96b;color:#0a2d18;border-color:#36d96b}
+  @media(max-width:500px){
+    .album-collage-slot[data-scale="1"]{flex:0 0 calc(50% - 2px)}
+    .album-collage-slot[data-scale="2"]{flex:0 0 calc(50% - 2px)}
+    .album-collage-slot[data-scale="3"]{flex:0 0 100%}
+  }
   /* empty slots strip (manage mode only) */
   .album-empty-strip{display:none;flex-wrap:wrap;gap:6px;margin-top:8px}
   body.manage-on .album-empty-strip{display:flex}
@@ -1171,8 +1182,8 @@ function swapAlbumSlots(albumId,idxA,idxB){
   const albums=getAlbums();
   const a=albums.find(x=>x.id===albumId); if(!a) return;
   const tmp=a.slots[idxA]; a.slots[idxA]=a.slots[idxB]; a.slots[idxB]=tmp;
-  if(a.sizes){
-    const tmpSz=a.sizes[idxA]||null; a.sizes[idxA]=a.sizes[idxB]||null; a.sizes[idxB]=tmpSz;
+  if(a.scales){
+    const tmpSc=a.scales[idxA]||null; a.scales[idxA]=a.scales[idxB]||null; a.scales[idxB]=tmpSc;
   }
   saveAlbums(albums); renderAlbums(); layout();
 }
@@ -1196,27 +1207,24 @@ function applyAlbumLayout(area,albums){
   }
 }
 const MODE_LABEL={all:'Design Work',fb:'Football',photo:'Photo',video:'Video Editing',motion:'Motion',portrait:'History Photos',gift:'Gift Story'};
-/* ---- Free-form mosaic: slot size helpers ---- */
-/* Default sizes by position index and total count (6-col grid) */
-function defaultSlotSize(posIdx,total){
-  if(total===1) return {cs:6,rs:3};
-  if(total===2) return {cs:3,rs:3};
-  if(total===3) return posIdx===0?{cs:4,rs:4}:{cs:2,rs:2};
-  if(total===4) return {cs:3,rs:3};
-  if(total<=6)  return posIdx===0?{cs:4,rs:3}:{cs:2,rs:3};
-  if(total<=9)  return posIdx===0?{cs:4,rs:2}:{cs:2,rs:2};
-  return {cs:2,rs:2};
+/* ---- Free-form mosaic: scale helpers (1=XS 2=S 3=M 4=L) ---- */
+const SCALE_LABEL=['','XS','S','M','L'];
+function defaultSlotScale(posIdx,total){
+  if(total===1) return 4;
+  if(total===2) return 3;
+  if(total<=4)  return posIdx===0?3:2;
+  return 2;
 }
-function getSlotSize(album,slotIdx,posIdx,total){
-  const s=(album.sizes||[])[slotIdx];
-  return (s&&s.cs&&s.rs)?s:defaultSlotSize(posIdx,total);
+function getSlotScale(album,slotIdx,posIdx,total){
+  const s=(album.scales||[])[slotIdx];
+  return (s>=1&&s<=4)?s:defaultSlotScale(posIdx,total);
 }
-function setSlotSize(albumId,slotIdx,cs,rs){
+function setSlotScale(albumId,slotIdx,scale){
   const albums=getAlbums();
   const a=albums.find(function(x){return x.id===albumId;}); if(!a) return;
-  if(!a.sizes) a.sizes=[];
-  while(a.sizes.length<=slotIdx) a.sizes.push(null);
-  a.sizes[slotIdx]={cs:cs,rs:rs};
+  if(!a.scales) a.scales=[];
+  while(a.scales.length<=slotIdx) a.scales.push(null);
+  a.scales[slotIdx]=scale;
   saveAlbums(albums); renderAlbums();
 }
 let albumDragSrc=null;
@@ -1227,33 +1235,30 @@ function buildCollage(album,filledPairs){
   collage.className='album-collage';
   filledPairs.forEach(function(pair,posIdx){
     const key=pair.key; const slotIdx=pair.idx;
-    const sz=getSlotSize(album,slotIdx,posIdx,total);
+    const scale=getSlotScale(album,slotIdx,posIdx,total);
     const cell=document.createElement('div');
     cell.className='album-collage-slot filled';
-    cell.style.gridColumn='span '+sz.cs;
-    cell.style.gridRow='span '+sz.rs;
+    cell.dataset.scale=scale;
     cell.dataset.albumId=album.id; cell.dataset.slotIdx=slotIdx;
     cell.draggable=true;
-    /* image — object-fit:contain keeps original aspect ratio */
+    /* image: width=100%, height=auto → shows FULL image at natural aspect ratio, no crop */
     const img=document.createElement('img'); img.src=keyToSrc(key); img.alt=''; img.draggable=false;
     cell.appendChild(img);
-    /* size badge */
+    /* scale badge */
     const badge=document.createElement('div'); badge.className='slot-size-badge';
-    badge.textContent=sz.cs+'×'+sz.rs; cell.appendChild(badge);
+    badge.textContent=SCALE_LABEL[scale]||'S'; cell.appendChild(badge);
     /* remove button */
     const x=document.createElement('button'); x.className='slot-x'; x.textContent='✕'; x.title='เอาออกจากอัลบั้ม';
     x.onclick=function(e){ e.stopPropagation(); removeFromSlot(album.id,slotIdx); };
     cell.appendChild(x);
-    /* resize controls */
+    /* resize controls: − and + */
     const ctrl=document.createElement('div'); ctrl.className='slot-resize';
     const mkSz=function(t,tip,fn){
       const b=document.createElement('button'); b.className='sz-btn'; b.textContent=t; b.title=tip;
       b.onclick=function(e){ e.stopPropagation(); fn(); }; return b;
     };
-    ctrl.appendChild(mkSz('W−','แคบลง (−1 คอลัมน์)',function(){ setSlotSize(album.id,slotIdx,Math.max(1,sz.cs-1),sz.rs); }));
-    ctrl.appendChild(mkSz('W+','กว้างขึ้น (+1 คอลัมน์)',function(){ setSlotSize(album.id,slotIdx,Math.min(6,sz.cs+1),sz.rs); }));
-    ctrl.appendChild(mkSz('H−','เตี้ยลง (−1 แถว)',function(){ setSlotSize(album.id,slotIdx,sz.cs,Math.max(1,sz.rs-1)); }));
-    ctrl.appendChild(mkSz('H+','สูงขึ้น (+1 แถว)',function(){ setSlotSize(album.id,slotIdx,sz.cs,Math.min(6,sz.rs+1)); }));
+    ctrl.appendChild(mkSz('−','เล็กลง (XS→S→M→L)',function(){ setSlotScale(album.id,slotIdx,Math.max(1,scale-1)); }));
+    ctrl.appendChild(mkSz('+','ใหญ่ขึ้น (XS→S→M→L)',function(){ setSlotScale(album.id,slotIdx,Math.min(4,scale+1)); }));
     cell.appendChild(ctrl);
     /* drag events */
     cell.addEventListener('dragstart',function(e){
