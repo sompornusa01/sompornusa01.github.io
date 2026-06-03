@@ -251,39 +251,50 @@
   .album-title .album-badge{background:#36d96b;color:#0a2d18;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;flex:none}
   .album-del{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);color:#fff;border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
   .album-del:hover{background:#e6398b}
-  /* ---- Mosaic collage: flex + height:auto = no crop, no black bars ---- */
-  .album-collage{display:flex;flex-wrap:wrap;gap:3px;border-radius:10px;overflow:hidden;width:100%;align-items:flex-start}
+  /* ---- Two-panel mosaic: left=featured, right=grid, height:auto=no crop ---- */
+  .album-collage{display:flex;gap:3px;border-radius:10px;overflow:hidden;width:100%;align-items:flex-start;background:#0a1f16;position:relative}
+  /* LEFT panel — featured image */
+  .alb-left{flex:0 0 auto;position:relative;overflow:hidden;background:#0a1f16}
+  .alb-left .album-collage-slot{width:100%}
+  /* RIGHT panel — flex-wrap grid */
+  .alb-right{flex:1 1 0;min-width:0;display:flex;flex-wrap:wrap;gap:3px;align-content:flex-start;background:#0a1f16}
+  /* single-panel fallback */
+  .album-collage.single .album-collage-slot{width:100%}
+  /* common slot */
   .album-collage-slot{position:relative;overflow:hidden;background:#0a1f16;flex:0 0 auto}
-  /* width set inline via style.width — no data-w presets needed */
   .album-collage-slot.filled{cursor:grab}
   .album-collage-slot.filled:active{cursor:grabbing}
   .album-collage-slot.dragging{opacity:.3}
   .album-collage-slot.over{outline:3px dashed #36d96b;outline-offset:-3px}
   .album-collage.grid-drop{outline:3px dashed rgba(54,217,107,.6);outline-offset:-3px}
-  /* height:auto = image shows at FULL natural aspect ratio, zero crop, zero black bars */
+  /* height:auto = full natural aspect ratio, no crop, no black bars */
   .album-collage-slot img{width:100%;height:auto;display:block;vertical-align:bottom}
   /* X remove */
   .album-collage-slot .slot-x{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.82);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:5;opacity:0;transition:opacity .15s}
   .album-collage-slot:hover .slot-x{opacity:1}
   .album-collage-slot .slot-x:hover{background:#e6398b;opacity:1!important}
   html.viewonly .album-collage-slot .slot-x{display:none!important}
-  /* width badge: top-left, always shown on hover */
-  .slot-size-badge{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.78);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;display:none;z-index:5;pointer-events:none;letter-spacing:.4px}
+  /* badge */
+  .slot-size-badge{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.78);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;display:none;z-index:5;pointer-events:none}
   .album-collage-slot:hover .slot-size-badge{display:block}
   html.viewonly .slot-size-badge{display:none!important}
-  /* resize controls — always visible on hover, no manage mode needed */
+  /* snap +/- buttons */
   .slot-resize{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:none;gap:4px;z-index:5}
   .album-collage-slot:hover .slot-resize{display:flex}
   html.viewonly .slot-resize{display:none!important}
-  .sz-btn{width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.88);color:#fff;font-size:17px;font-weight:300;border:1.5px solid rgba(255,255,255,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;flex:none;transition:.12s;padding:0;line-height:1}
+  .sz-btn{width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.88);color:#fff;font-size:16px;font-weight:300;border:1.5px solid rgba(255,255,255,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;flex:none;transition:.12s;padding:0;line-height:1}
   .sz-btn:hover{background:#36d96b;color:#0a2d18;border-color:#36d96b;transform:scale(1.15)}
-  /* drag resize handle — right edge */
-  .resize-handle{position:absolute;right:0;top:10%;bottom:10%;width:8px;cursor:col-resize;z-index:8;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
-  .resize-handle::after{content:'';width:3px;height:40%;border-radius:2px;background:#36d96b;box-shadow:0 0 6px rgba(54,217,107,.7)}
-  .album-collage-slot:hover .resize-handle{opacity:1}
+  /* right-edge resize handle per slot */
+  .resize-handle{position:absolute;right:0;top:15%;bottom:15%;width:8px;cursor:col-resize;z-index:8;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+  .resize-handle::after{content:'';width:3px;height:50%;border-radius:2px;background:#36d96b;box-shadow:0 0 6px rgba(54,217,107,.7)}
+  .album-collage-slot:hover .resize-handle,.alb-left:hover .resize-handle{opacity:1}
   html.viewonly .resize-handle{display:none!important}
-  .album-collage-slot.resizing{cursor:col-resize;user-select:none}
-  .album-collage.is-resizing{cursor:col-resize;user-select:none}
+  /* panel divider handle (between left and right) */
+  .alb-divider{position:absolute;top:0;bottom:0;width:10px;cursor:col-resize;z-index:10;display:flex;align-items:center;justify-content:center;transform:translateX(-50%)}
+  .alb-divider::after{content:'';width:4px;height:60px;border-radius:2px;background:#36d96b;box-shadow:0 0 8px rgba(54,217,107,.8);opacity:0;transition:opacity .15s}
+  .alb-divider:hover::after,.album-collage.is-resizing .alb-divider::after{opacity:1}
+  html.viewonly .alb-divider{display:none!important}
+  .album-collage.is-resizing,.album-collage.is-resizing *{cursor:col-resize!important;user-select:none!important}
   /* empty slots strip (manage mode only) */
   .album-empty-strip{display:none;flex-wrap:wrap;gap:6px;margin-top:8px}
   body.manage-on .album-empty-strip{display:flex}
@@ -1205,15 +1216,44 @@ function applyAlbumLayout(area,albums){
   }
 }
 const MODE_LABEL={all:'Design Work',fb:'Football',photo:'Photo',video:'Video Editing',motion:'Motion',portrait:'History Photos',gift:'Gift Story'};
-/* ---- Mosaic: continuous width (%) + drag-to-resize handle ---- */
-function defaultSlotW(posIdx,total){
-  if(total===1) return 100;
-  if(total===2) return 50;
-  return 33;
+/* ---- Two-panel mosaic: featuredW=left%, itemW=right-item% ---- */
+let _rz=null;
+(function(){
+  document.addEventListener('mousemove',function(e){
+    if(!_rz) return;
+    const dx=e.clientX-_rz.startX;
+    const pct=Math.max(10,Math.min(90,Math.round((_rz.startW+dx)/_rz.contW*100)));
+    if(_rz.isPanel){
+      _rz.el.style.flex='0 0 '+pct+'%';
+      if(_rz.div) _rz.div.style.left=pct+'%';
+    } else {
+      _rz.el.style.width='calc('+pct+'% - 2px)';
+    }
+    if(_rz.badge) _rz.badge.textContent=pct+'%';
+  });
+  document.addEventListener('mouseup',function(e){
+    if(!_rz) return;
+    const dx=e.clientX-_rz.startX;
+    const pct=Math.max(10,Math.min(90,Math.round((_rz.startW+dx)/_rz.contW*100)));
+    if(_rz.collage) _rz.collage.classList.remove('is-resizing');
+    if(_rz.isPanel){
+      const albums=getAlbums(); const a=albums.find(function(x){return x.id===_rz.albumId;});
+      if(a){ if(!a.featuredW) a.featuredW=50; a.featuredW=pct; saveAlbums(albums); renderAlbums(); }
+    } else {
+      setSlotW(_rz.albumId,_rz.slotIdx,pct);
+    }
+    _rz=null;
+  });
+})();
+function getFeaturedW(album){ return (album.featuredW&&album.featuredW>=10&&album.featuredW<=90)?album.featuredW:50; }
+function defaultItemW(posIdx,total){
+  if(total<=3) return 100;
+  if(total<=5) return 50;
+  return 50;
 }
 function getSlotW(album,slotIdx,posIdx,total){
   const w=(album.widths||[])[slotIdx];
-  return (w&&w>=10&&w<=100)?w:defaultSlotW(posIdx,total);
+  return (w&&w>=10&&w<=100)?w:defaultItemW(posIdx,total);
 }
 function setSlotW(albumId,slotIdx,w){
   const albums=getAlbums();
@@ -1223,126 +1263,81 @@ function setSlotW(albumId,slotIdx,w){
   a.widths[slotIdx]=Math.max(10,Math.min(100,Math.round(w)));
   saveAlbums(albums); renderAlbums();
 }
-/* global drag-resize state */
-let _rz=null;
-(function(){
-  document.addEventListener('mousemove',function(e){
-    if(!_rz) return;
-    const dx=e.clientX-_rz.startX;
-    const pct=Math.max(10,Math.min(100,Math.round((_rz.startW+dx)/_rz.contW*100)));
-    _rz.cell.style.width='calc('+pct+'% - 3px)';
-    if(_rz.badge) _rz.badge.textContent=pct+'%';
-  });
-  document.addEventListener('mouseup',function(e){
-    if(!_rz) return;
-    const dx=e.clientX-_rz.startX;
-    const pct=Math.max(10,Math.min(100,Math.round((_rz.startW+dx)/_rz.contW*100)));
-    _rz.cell.classList.remove('resizing');
-    if(_rz.collage) _rz.collage.classList.remove('is-resizing');
-    setSlotW(_rz.albumId,_rz.slotIdx,pct);
-    _rz=null;
-  });
-})();
-
+function makeSlotCell(album,pair,posIdx,total,isRight){
+  const key=pair.key; const slotIdx=pair.idx;
+  const cell=document.createElement('div'); cell.className='album-collage-slot filled';
+  cell.dataset.albumId=album.id; cell.dataset.slotIdx=slotIdx; cell.draggable=true;
+  if(isRight){
+    const w=getSlotW(album,slotIdx,posIdx,total);
+    cell.style.width='calc('+w+'% - 2px)';
+  }
+  const img=document.createElement('img'); img.src=keyToSrc(key); img.alt=''; img.draggable=false;
+  cell.appendChild(img);
+  const badge=document.createElement('div'); badge.className='slot-size-badge';
+  badge.textContent=isRight?getSlotW(album,slotIdx,posIdx,total)+'%':'◀▶'; cell.appendChild(badge);
+  const x=document.createElement('button'); x.className='slot-x'; x.textContent='✕'; x.title='เอาออก';
+  x.onclick=function(e){ e.stopPropagation(); removeFromSlot(album.id,slotIdx); }; cell.appendChild(x);
+  /* snap +/- for right-panel items only */
+  if(isRight){
+    const ctrl=document.createElement('div'); ctrl.className='slot-resize';
+    const W_STEPS=[25,33,50,66,75,100];
+    const mk=function(t,tip,fn){ const b=document.createElement('button'); b.className='sz-btn'; b.textContent=t; b.title=tip; b.onclick=function(e){e.stopPropagation();fn();}; return b; };
+    ctrl.appendChild(mk('−','แคบลง',function(){ const c=getSlotW(album,slotIdx,posIdx,total); const s=W_STEPS.filter(function(v){return v<c;}); if(s.length)setSlotW(album.id,slotIdx,s[s.length-1]); }));
+    ctrl.appendChild(mk('+','กว้างขึ้น',function(){ const c=getSlotW(album,slotIdx,posIdx,total); const s=W_STEPS.filter(function(v){return v>c;}); if(s.length)setSlotW(album.id,slotIdx,s[0]); }));
+    cell.appendChild(ctrl);
+    /* right-edge resize */
+    const rh=document.createElement('div'); rh.className='resize-handle';
+    rh.addEventListener('mousedown',function(e){
+      e.stopPropagation(); e.preventDefault(); cell.draggable=false;
+      const parent=cell.parentElement;
+      _rz={el:cell,badge:badge,collage:cell.closest('.album-collage'),albumId:album.id,slotIdx:slotIdx,startX:e.clientX,startW:cell.offsetWidth,contW:parent?parent.offsetWidth:1,isPanel:false};
+      if(_rz.collage) _rz.collage.classList.add('is-resizing');
+      document.addEventListener('mouseup',function once(){cell.draggable=true;document.removeEventListener('mouseup',once);});
+    });
+    cell.appendChild(rh);
+  }
+  cell.addEventListener('dragstart',function(e){ if(_rz){e.preventDefault();return;} albumDragSrc={albumId:album.id,slotIdx:slotIdx}; cell.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.stopPropagation(); });
+  cell.addEventListener('dragend',function(){ cell.classList.remove('dragging'); albumDragSrc=null; });
+  cell.addEventListener('dragover',function(e){ const iOk=albumDragSrc&&albumDragSrc.albumId===album.id&&albumDragSrc.slotIdx!==slotIdx; const gOk=dragKey&&manageMode; if(iOk||gOk){e.preventDefault();cell.classList.add('over');} });
+  cell.addEventListener('dragleave',function(){ cell.classList.remove('over'); });
+  cell.addEventListener('drop',function(e){ cell.classList.remove('over'); e.preventDefault(); e.stopPropagation(); if(albumDragSrc&&albumDragSrc.albumId===album.id&&albumDragSrc.slotIdx!==slotIdx){swapAlbumSlots(album.id,albumDragSrc.slotIdx,slotIdx);albumDragSrc=null;}else if(dragKey&&manageMode){addToSlot(album.id,slotIdx,dragKey);dragKey=null;} });
+  return cell;
+}
 let albumDragSrc=null;
 
 function buildCollage(album,filledPairs){
   const total=filledPairs.length;
-  const collage=document.createElement('div');
-  collage.className='album-collage';
-  filledPairs.forEach(function(pair,posIdx){
-    const key=pair.key; const slotIdx=pair.idx;
-    const w=getSlotW(album,slotIdx,posIdx,total);
-    const cell=document.createElement('div');
-    cell.className='album-collage-slot filled';
-    cell.style.width='calc('+w+'% - 3px)';
-    cell.dataset.albumId=album.id; cell.dataset.slotIdx=slotIdx;
-    cell.draggable=true;
-    /* height:auto = full image at natural aspect ratio — no crop, no black bars */
-    const img=document.createElement('img'); img.src=keyToSrc(key); img.alt=''; img.draggable=false;
-    cell.appendChild(img);
-    /* width badge top-left */
-    const badge=document.createElement('div'); badge.className='slot-size-badge';
-    badge.textContent=w+'%'; cell.appendChild(badge);
-    /* remove */
-    const x=document.createElement('button'); x.className='slot-x'; x.textContent='✕'; x.title='เอาออกจากอัลบั้ม';
-    x.onclick=function(e){ e.stopPropagation(); removeFromSlot(album.id,slotIdx); };
-    cell.appendChild(x);
-    /* snap buttons − + */
-    const ctrl=document.createElement('div'); ctrl.className='slot-resize';
-    const W_STEPS=[25,33,50,66,75,100];
-    const mkSz=function(t,tip,fn){
-      const b=document.createElement('button'); b.className='sz-btn'; b.textContent=t; b.title=tip;
-      b.onclick=function(e){ e.stopPropagation(); fn(); }; return b;
-    };
-    ctrl.appendChild(mkSz('−','แคบลง',function(){
-      const cur=getSlotW(album,slotIdx,posIdx,total);
-      const snap=W_STEPS.filter(function(s){return s<cur;});
-      if(snap.length) setSlotW(album.id,slotIdx,snap[snap.length-1]);
-    }));
-    ctrl.appendChild(mkSz('+','กว้างขึ้น',function(){
-      const cur=getSlotW(album,slotIdx,posIdx,total);
-      const snap=W_STEPS.filter(function(s){return s>cur;});
-      if(snap.length) setSlotW(album.id,slotIdx,snap[0]);
-    }));
-    cell.appendChild(ctrl);
-    /* ← drag resize handle on right edge */
-    const rh=document.createElement('div'); rh.className='resize-handle';
-    rh.title='ลากเพื่อปรับความกว้าง';
-    rh.addEventListener('mousedown',function(e){
-      e.stopPropagation(); e.preventDefault();
-      cell.draggable=false;
-      cell.classList.add('resizing');
-      collage.classList.add('is-resizing');
-      _rz={
-        cell:cell, badge:badge, collage:collage,
-        albumId:album.id, slotIdx:slotIdx,
-        startX:e.clientX,
-        startW:cell.offsetWidth,
-        contW:collage.offsetWidth
-      };
-      // re-enable drag after mouseup
-      document.addEventListener('mouseup',function once(){
-        cell.draggable=true; document.removeEventListener('mouseup',once);
-      });
-    });
-    cell.appendChild(rh);
-    /* drag-to-swap events */
-    cell.addEventListener('dragstart',function(e){
-      if(_rz){e.preventDefault();return;}
-      albumDragSrc={albumId:album.id,slotIdx:slotIdx};
-      cell.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.stopPropagation();
-    });
-    cell.addEventListener('dragend',function(){ cell.classList.remove('dragging'); albumDragSrc=null; });
-    cell.addEventListener('dragover',function(e){
-      if(_rz) return;
-      const iOk=albumDragSrc&&albumDragSrc.albumId===album.id&&albumDragSrc.slotIdx!==slotIdx;
-      const gOk=dragKey&&manageMode;
-      if(iOk||gOk){ e.preventDefault(); cell.classList.add('over'); }
-    });
-    cell.addEventListener('dragleave',function(){ cell.classList.remove('over'); });
-    cell.addEventListener('drop',function(e){
-      cell.classList.remove('over'); e.preventDefault(); e.stopPropagation();
-      if(albumDragSrc&&albumDragSrc.albumId===album.id&&albumDragSrc.slotIdx!==slotIdx){
-        swapAlbumSlots(album.id,albumDragSrc.slotIdx,slotIdx); albumDragSrc=null;
-      } else if(dragKey&&manageMode){
-        addToSlot(album.id,slotIdx,dragKey); dragKey=null;
-      }
-    });
-    collage.appendChild(cell);
+  const outer=document.createElement('div');
+  outer.className='album-collage';
+  if(total===0) return outer;
+  if(total===1){
+    outer.classList.add('single');
+    outer.appendChild(makeSlotCell(album,filledPairs[0],0,1,false));
+    return outer;
+  }
+  /* LEFT panel: featured image */
+  const featW=getFeaturedW(album);
+  const leftPanel=document.createElement('div'); leftPanel.className='alb-left';
+  leftPanel.style.flex='0 0 '+featW+'%';
+  leftPanel.appendChild(makeSlotCell(album,filledPairs[0],0,total,false));
+  /* panel divider drag handle */
+  const div=document.createElement('div'); div.className='alb-divider'; div.style.left=featW+'%'; div.title='ลากเพื่อปรับสัดส่วนซ้าย-ขวา';
+  div.addEventListener('mousedown',function(e){
+    e.stopPropagation(); e.preventDefault();
+    _rz={el:leftPanel,div:div,badge:null,collage:outer,albumId:album.id,slotIdx:-1,startX:e.clientX,startW:leftPanel.offsetWidth,contW:outer.offsetWidth,isPanel:true};
+    outer.classList.add('is-resizing');
   });
-  collage.addEventListener('dragover',function(e){
-    if(dragKey&&manageMode){ e.preventDefault(); collage.classList.add('grid-drop'); }
-  });
-  collage.addEventListener('dragleave',function(){ collage.classList.remove('grid-drop'); });
-  collage.addEventListener('drop',function(e){
-    collage.classList.remove('grid-drop');
-    if(!dragKey||!manageMode) return;
-    e.preventDefault(); e.stopPropagation();
-    const firstEmpty=album.slots.indexOf(null);
-    if(firstEmpty!==-1){ addToSlot(album.id,firstEmpty,dragKey); dragKey=null; }
-  });
-  return collage;
+  outer.appendChild(div);
+  outer.appendChild(leftPanel);
+  /* RIGHT panel: remaining images */
+  const rightPanel=document.createElement('div'); rightPanel.className='alb-right';
+  for(var i=1;i<total;i++) rightPanel.appendChild(makeSlotCell(album,filledPairs[i],i,total,true));
+  outer.appendChild(rightPanel);
+  /* collage drop target */
+  outer.addEventListener('dragover',function(e){ if(dragKey&&manageMode){e.preventDefault();outer.classList.add('grid-drop');} });
+  outer.addEventListener('dragleave',function(){ outer.classList.remove('grid-drop'); });
+  outer.addEventListener('drop',function(e){ outer.classList.remove('grid-drop'); if(!dragKey||!manageMode)return; e.preventDefault(); e.stopPropagation(); const fe=album.slots.indexOf(null); if(fe!==-1){addToSlot(album.id,fe,dragKey);dragKey=null;} });
+  return outer;
 }
 
 function renderAlbums(){
@@ -1370,7 +1365,7 @@ function renderAlbums(){
     const rst=document.createElement('button'); rst.className='album-del'; rst.title='Reset layout · คืนค่า layout อัตโนมัติ'; rst.textContent='↺'; rst.style.background='rgba(54,217,107,.18)'; rst.style.color='#36d96b';
     rst.onclick=function(){
       const albums2=getAlbums(); const a2=albums2.find(function(x){return x.id===album.id;}); if(!a2)return;
-      a2.sizes=[]; a2.widths=[]; saveAlbums(albums2); renderAlbums();
+      a2.sizes=[]; a2.widths=[]; delete a2.featuredW; saveAlbums(albums2); renderAlbums();
     };
     head.appendChild(rst);
     const del=document.createElement('button'); del.className='album-del'; del.title='ลบอัลบั้ม / Delete'; del.textContent='✕';
