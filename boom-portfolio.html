@@ -207,6 +207,7 @@
   /* ---- company logos ---- */
   .logos-section{padding:60px 0}
   .logos-section .section-head{margin-bottom:28px}
+  .logos-section .section-head .desc{margin-left:auto;margin-right:auto;text-align:center}
   .logo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:1100px;margin:0 auto}
   @media(min-width:560px){.logo-grid{grid-template-columns:repeat(3,1fr)}}
   @media(min-width:880px){.logo-grid{grid-template-columns:repeat(5,1fr)}}
@@ -417,6 +418,27 @@
   .gitem.dragging{opacity:.35}
   .gitem.dragover{outline:3px dashed #36d96b;outline-offset:-3px}
   .empty-msg{grid-column:1/-1;padding:50px;text-align:center;color:var(--ink-dim);border:1px dashed var(--line);border-radius:14px}
+
+  /* ---- Highlights section ---- */
+  .hl-section{padding:60px 0}
+  .hl-section .section-head{margin-bottom:32px}
+  .hl-grid{display:flex;gap:18px;align-items:flex-start}
+  .hl-card{flex:1;display:flex;background:rgba(10,26,16,.85);border:1px solid rgba(54,217,107,.22);border-radius:16px;overflow:hidden;min-width:0}
+  .hl-img-wrap{flex:0 0 50%;min-width:0;display:flex;align-items:center;justify-content:center;background:#071209;margin:10px}
+  .hl-img-wrap img{width:100%;height:auto;display:block;border:2px solid #36d96b;padding:5px;box-sizing:content-box}
+  .hl-content{flex:1;padding:24px 20px;display:flex;flex-direction:column;min-width:0}
+  .hl-tag{font-family:var(--font-head);font-size:clamp(22px,2.6vw,38px);font-weight:900;color:#36d96b;letter-spacing:4px;margin-bottom:18px;text-shadow:0 0 24px rgba(54,217,107,.35);line-height:1}
+  .hl-desc-label{font-size:12.5px;font-weight:700;color:#fff;border-left:3px solid #36d96b;padding-left:9px;margin-bottom:14px;line-height:1.5}
+  .hl-desc-label span{color:var(--ink-dim);font-weight:400;margin-left:5px}
+  .hl-body{font-size:13.5px;color:rgba(255,255,255,.7);line-height:1.9;flex:1;border-radius:6px;padding:2px;transition:background .15s}
+  .hl-body[contenteditable=true]:hover{background:rgba(54,217,107,.05)}
+  .hl-body[contenteditable=true]:focus{outline:1.5px dashed rgba(54,217,107,.5);padding:6px}
+  html.viewonly .hl-body[contenteditable]{pointer-events:none}
+  @media(max-width:820px){
+    .hl-grid{flex-direction:column}
+    .hl-card{flex-direction:column}
+    .hl-img-wrap{flex:none;width:100%}
+  }
 
   section.salary-section{text-align:center;padding:80px 0}
   .salary-inner{background:var(--glass);border:1px solid var(--line);border-radius:28px;padding:54px 30px;backdrop-filter:blur(6px)}
@@ -682,6 +704,39 @@
         <div class="gd-card"><span class="gd-num">4</span><h3>Brand Identity</h3><p class="gd-sub">"อัตลักษณ์แบรนด์"</p><p class="gd-body">เป็นสิ่งที่แบรนด์ "สร้างขึ้น" เพื่อบอกคนอื่นว่า "เราเป็นใคร" รวมโลโก้ สี ฟอนต์ Key Visual โทนการพูด และจุดยืนของแบรนด์ เป็นส่วนหนึ่งของ Branding แต่เน้นที่ "สิ่งที่จับต้องได้" เช่น งานออกแบบจริง</p><p class="gd-example"><b>ตัวอย่าง:</b> สัญลักษณ์ Facebook, เส้นสายเรียบง่าย, การใช้ตัวพิมพ์เล็ก — ทั้งหมดคือ Brand Identity</p></div>
         <div class="gd-card"><span class="gd-num">5</span><h3>Visual Guideline</h3><p class="gd-sub">"ระบบภาพของแบรนด์"</p><p class="gd-body">คือคู่มือที่บอกว่าโลโก้ควรวางอย่างไร ขนาดเท่าไหร่ ใช้สื่ออะไรได้บ้าง ห้ามใช้อย่างไร เพื่อให้ทุกคนที่ทำงานกับแบรนด์ ออกแบบไปในทิศทางเดียวกัน</p><p class="gd-example"><b>ตัวอย่าง:</b> คู่มือ CI ของแบรนด์ Starbucks กำหนดระยะห่างรอบโลโก้ ขนาดขั้นต่ำ สีประจำแบรนด์ ฯลฯ</p></div>
         <div class="gd-card"><span class="gd-num">6</span><h3>Art Direction</h3><p class="gd-sub">"ทิศทางทางศิลป์"</p><p class="gd-body">เป็นแนวทางภาพรวมของการออกแบบทั้งหมดในโปรเจกต์หนึ่ง เช่น โทนแสง สี ฟอนต์ มู้ดภาพ ทุกอย่างถูกกำหนดโดย Art Director และทีมสร้างสรรค์</p><p class="gd-example"><b>ตัวอย่าง:</b> แคมเปญโคล่าล่าสุดของ Coca-Cola มี Art Direction โทนสีแดง-ขาว อบอุ่น และบรรยากาศครอบครัว</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hl-section" id="highlights">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">Featured Work · ผลงานเด่น</span>
+      <h2>Highlights</h2>
+    </div>
+    <div class="hl-grid">
+      <!-- Card 1: LINE OA ไทยสร้างไทย -->
+      <div class="hl-card">
+        <div class="hl-img-wrap">
+          <img src="https://drive.google.com/thumbnail?id=1Z3T-05BjR0_ClgdbuBFwGJ50lEbxce9y&sz=w900" alt="ไทยสร้างไทย LINE OA" loading="lazy">
+        </div>
+        <div class="hl-content">
+          <div class="hl-tag">HIGHLIGHT</div>
+          <div class="hl-desc-label">| คำอธิบาย <span>Description</span></div>
+          <div class="hl-body" contenteditable="true" data-hl-key="hl2">งานชิ้นนี้คืองานออกแบบเมนูสำหรับ LINE OA ของพรรคไทยสร้างไทย ในการสร้างสรรค์งานกราฟิก ส่งผลให้ผ่านการพิจารณาและคัดเลือก แม้จะต้องรับการแก้ไขและปรับแบบหลายครั้งหลังจากส่งครั้งแรก งานนี้ทำให้ได้เรียนรู้การทำงานกับลูกค้าโดยตรง สามารถสร้างความประทับใจ และมอบประสบการณ์การออกแบบที่มีคุณค่าอย่างยิ่ง</div>
+        </div>
+      </div>
+      <!-- Card 2: King's Cup -->
+      <div class="hl-card">
+        <div class="hl-img-wrap">
+          <img src="https://drive.google.com/thumbnail?id=1FKvxOMVtAGIknya9SJwXTAthJtpMCVir&sz=w900" alt="King's Cup 50th Champions" loading="lazy">
+        </div>
+        <div class="hl-content">
+          <div class="hl-tag">HIGHLIGHT</div>
+          <div class="hl-desc-label">| คำอธิบาย <span>Description</span></div>
+          <div class="hl-body" contenteditable="true" data-hl-key="hl1">ภาพนี้เป็นหนึ่งในผลงานสำคัญ การออกแบบ Artwork ทีมชาติไทยในการแข่งขัน King's Cup ครั้งที่ 50 ซึ่งถือเป็นสิ่งพิเศษมากในช่วงเวลานั้น เนื่องจากทีมชาติไทยชนะรายการ King's Cup นี้ ถือเป็นงานที่ภาคภูมิใจสูงมาก ในฐานะนักออกแบบที่ประกอบสร้างผลงานขึ้นมาจากภาพถ่ายจริงและเหตุการณ์จริง ตัดต่อภาพ (Artwork) โดยใช้เวลาประมาณ 10 นาที เพื่อให้สามารถแชร์ได้อย่างรวดเร็วและสื่อสารได้ทันเหตุการณ์</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1635,6 +1690,14 @@ document.addEventListener('drop',e=>{
     if(!manageMode) toggleManage();
     addFiles(e.dataTransfer.files);
   }
+});
+
+/* ---- highlights text persistence ---- */
+document.querySelectorAll('.hl-body[data-hl-key]').forEach(function(el){
+  const k='hltext_'+el.dataset.hlKey;
+  const saved=localStorage.getItem(k);
+  if(saved) el.innerHTML=saved;
+  el.addEventListener('blur',function(){ localStorage.setItem(k,el.innerHTML); });
 });
 
 /* ---- lightbox ---- */
