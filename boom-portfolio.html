@@ -111,6 +111,7 @@
 
   .panel{background:var(--glass);border:1px solid var(--line);border-radius:24px;backdrop-filter:blur(6px)}
   section.about-section .container,section.work-section .container{position:relative}
+  section.about-section .secbg::after{content:'';position:absolute;inset:0;background:rgba(15,45,42,0.85);pointer-events:none}
 
   .about{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
   .about-text{padding:8px 4px}
@@ -1764,6 +1765,15 @@ function applySB(id){
   bg.style.filter=d.bw?'grayscale(1)':'';
 }
 function applyAllSB(){ SECS.forEach(s=>applySB(s.id)); }
+function migrateSecbgColors(){
+  const LEGACY=['#33b2ac','#3ec0ba','#278f8a','#236b67','#2a9e98','#00bfa5'];
+  try{
+    const d=getSB(), changed=Object.keys(d).filter(id=>d[id]&&LEGACY.includes((d[id].color||'').toLowerCase()));
+    if(!changed.length) return;
+    changed.forEach(id=>{ d[id].color='#0F2D2A'; d[id].ov=0; });
+    saveSB(d);
+  }catch(e){}
+}
 function buildSecUI(){
   SECS.forEach(S=>{
     const sec=document.getElementById(S.id); if(!sec) return;
@@ -2174,5 +2184,5 @@ async function bakeAndExport(){
   setTimeout(function(){ alert('✅ Export สำเร็จ!\n\nขั้นตอนต่อไป:\n1. นำไฟล์ boom-portfolio.html ที่ download ไปแทนที่ใน docs/\n2. Push ขึ้น GitHub\n3. GitHub Pages จะแสดงอัลบั้มที่ตั้งไว้ทันที'); },300);
 }
 
-window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); applyAllSB(); updateRatios(); fbRender(); renderAlbums();
+window.addEventListener('resize',layout); window.addEventListener('resize',updateRatios); applyFonts(); loadEdits(); initManagedLists(); loadProfile(); buildChips(); buildGallery(); refreshCounts(); buildSecUI(); migrateSecbgColors(); applyAllSB(); updateRatios(); fbRender(); renderAlbums();
 </script></body></html>
