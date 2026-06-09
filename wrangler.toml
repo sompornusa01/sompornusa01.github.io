@@ -1,0 +1,13 @@
+name = "kengkongame-ai"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# ตั้งค่า API keys ด้วยคำสั่ง:
+#   wrangler secret put GEMINI_API_KEY
+#   wrangler secret put OPENAI_API_KEY
+#   wrangler secret put CLAUDE_API_KEY
+#   wrangler secret put MEMBER_PASSWORD   (รหัสผ่านสมาชิก default: Aa123456//++)
+
+[vars]
+# ตัวแปรที่ไม่ใช่ secret (ปลอดภัยโชว์ได้)
+SITE_NAME = "kengkongame"

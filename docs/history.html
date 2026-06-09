@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ผลวิเคราะห์ย้อนหลัง 7 วัน | เก่งก่อนเกม</title>
+<meta name="description" content="ดูผลวิเคราะห์ฟุตบอลย้อนหลัง 7 วัน ตรวจสอบความแม่นยำของ AI วิเคราะห์บอล เก่งก่อนเกม">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HKLSPGXK3F"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-HKLSPGXK3F');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f14;--card:#161a22;--card2:#1c2130;--border:#2a3045;
+  --text:#e8eaf0;--sub:#8892a4;--acc:#3b82f6;
+  --green:#22c55e;--red:#ef4444;--gold:#f59e0b;--purple:#a855f7;
+  --c1:#3b82f6;--c2:#22c55e;--c3:#a855f7;--c4:#f59e0b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh}
+
+/* NAV */
+.topnav{background:#111827;border-bottom:1px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+.nav-logo{font-size:1.15rem;font-weight:700;color:#fff;white-space:nowrap;text-decoration:none}
+.nav-logo span{color:var(--acc)}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap}
+.nav-links a{color:var(--sub);font-size:.83rem;padding:4px 10px;border-radius:6px;transition:.2s;text-decoration:none}
+.nav-links a:hover,.nav-links a.active{background:var(--card2);color:#fff}
+
+/* PAGE HEADER */
+.page-hdr{background:linear-gradient(135deg,#1e293b,#0f172a);padding:24px 16px 18px;text-align:center;border-bottom:1px solid var(--border)}
+.page-hdr h1{font-size:1.5rem;font-weight:700;margin-bottom:4px}
+.page-hdr p{color:var(--sub);font-size:.85rem}
+
+/* 7-DAY OVERVIEW STATS */
+.overview{max-width:960px;margin:20px auto 0;padding:0 16px}
+.overview-title{font-size:.8rem;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;font-weight:700}
+.stat-row{display:flex;gap:10px;flex-wrap:wrap}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;text-align:center;flex:1;min-width:100px}
+.stat-box .sv{font-size:1.5rem;font-weight:700;line-height:1}
+.stat-box .sl{font-size:.72rem;color:var(--sub);margin-top:4px}
+.sv.blue{color:var(--acc)}
+.sv.green{color:var(--green)}
+.sv.red{color:var(--red)}
+.sv.gold{color:var(--gold)}
+.sv.purple{color:var(--purple)}
+
+/* ACCURACY BAR */
+.acc-bar-wrap{max-width:960px;margin:12px auto 0;padding:0 16px}
+.acc-bar-label{font-size:.78rem;color:var(--sub);margin-bottom:6px}
+.acc-bar-track{height:8px;background:var(--card2);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.acc-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--acc),var(--green));transition:width .6s ease}
+
+/* DAY TABS */
+.day-tabs{max-width:960px;margin:16px auto 0;padding:0 16px;display:flex;gap:6px;flex-wrap:wrap}
+.dtab{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:.8rem;cursor:pointer;color:var(--sub);transition:.2s;user-select:none}
+.dtab:hover{border-color:var(--acc);color:#fff}
+.dtab.active{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700}
+.dtab .dtab-acc{font-size:.68rem;margin-top:1px;opacity:.85}
+
+/* MAIN WRAP */
+.hist-wrap{max-width:960px;margin:16px auto 32px;padding:0 16px}
+
+/* DATE GROUP */
+.day-block{margin-bottom:20px}
+.day-hdr{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;cursor:pointer;user-select:none}
+.day-hdr-left .dh-date{font-weight:700;font-size:1rem}
+.day-hdr-left .dh-sub{font-size:.75rem;color:var(--sub);margin-top:2px}
+.day-hdr-right{display:flex;align-items:center;gap:12px}
+.day-summary{display:flex;gap:8px;flex-wrap:wrap}
+.ds-chip{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:20px}
+.ds-chip.total{background:rgba(59,130,246,.15);color:var(--acc)}
+.ds-chip.correct{background:rgba(34,197,94,.15);color:var(--green)}
+.ds-chip.wrong{background:rgba(239,68,68,.15);color:var(--red)}
+.ds-chip.acc{background:rgba(245,158,11,.15);color:var(--gold)}
+.day-toggle{color:var(--sub);font-size:.85rem}
+
+/* MATCH ROW */
+.match-list{display:flex;flex-direction:column;gap:6px}
+.mrow{background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;gap:10px;padding:10px 14px;transition:.15s}
+.mrow:hover{border-color:#3b5080}
+.mrow-col{width:4px;border-radius:2px;align-self:stretch;flex-shrink:0}
+.mrow-col.c1{background:var(--c1)}
+.mrow-col.c2{background:var(--c2)}
+.mrow-col.c3{background:var(--c3)}
+.mrow-col.c4{background:var(--c4)}
+.mrow-time{font-size:.75rem;color:var(--sub);min-width:44px;text-align:center;flex-shrink:0}
+.mrow-league{font-size:.7rem;color:var(--sub);min-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.mrow-teams{flex:1;min-width:0}
+.mrow-teams .teams{font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow-teams .pred{display:flex;align-items:center;gap:6px;margin-top:3px}
+.pred-badge{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:5px}
+.pred-badge.win{background:rgba(59,130,246,.2);color:#60a5fa}
+.pred-badge.over{background:rgba(34,197,94,.2);color:#4ade80}
+.pred-badge.under{background:rgba(168,85,247,.2);color:#c084fc}
+.pred-badge.best{background:rgba(245,158,11,.2);color:#fbbf24}
+.col-tag{font-size:.65rem;color:var(--sub);border:1px solid var(--border);border-radius:4px;padding:1px 5px}
+.mrow-conf{font-size:.95rem;font-weight:700;color:var(--gold);min-width:44px;text-align:center;flex-shrink:0}
+.mrow-mark{display:flex;gap:5px;flex-shrink:0}
+.btn-mark{border:none;border-radius:6px;padding:5px 10px;font-size:.85rem;cursor:pointer;font-weight:700;transition:.2s;line-height:1}
+.btn-mark.cor{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.btn-mark.wrg{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.btn-mark.cor.on{background:var(--green);color:#fff;box-shadow:0 0 10px rgba(34,197,94,.4)}
+.btn-mark.wrg.on{background:var(--red);color:#fff;box-shadow:0 0 10px rgba(239,68,68,.4)}
+.btn-mark:hover{filter:brightness(1.15)}
+.mrow-icon{font-size:1.1rem;min-width:24px;text-align:center;flex-shrink:0}
+
+/* LOADING */
+.loading-box{text-align:center;padding:48px;color:var(--sub)}
+.spin{display:inline-block;width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-box{text-align:center;padding:48px;color:var(--sub)}
+.empty-box .ei{font-size:2.5rem;margin-bottom:8px}
+
+/* LEGEND */
+.legend{max-width:960px;margin:4px auto 0;padding:0 16px 8px;display:flex;gap:14px;flex-wrap:wrap;font-size:.75rem;color:var(--sub)}
+.legend span{display:flex;align-items:center;gap:4px}
+.leg-dot{width:8px;height:8px;border-radius:50%}
+
+/* DAILY ACC CHART */
+.acc-chart{max-width:960px;margin:14px auto 0;padding:0 16px}
+.acc-chart-title{font-size:.78rem;color:var(--sub);margin-bottom:8px;font-weight:700}
+.acc-chart-bars{display:flex;gap:6px;align-items:flex-end;height:60px}
+.acc-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.acc-bar-col .bar{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--acc),rgba(59,130,246,.4));min-height:2px;transition:height .5s}
+.acc-bar-col .bar-pct{font-size:.6rem;color:var(--sub)}
+.acc-bar-col .bar-lbl{font-size:.6rem;color:var(--sub);margin-top:2px}
+
+@media(max-width:600px){
+  .mrow-league{display:none}
+  .stat-box{min-width:80px;padding:10px 12px}
+  .stat-box .sv{font-size:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-logo" href="index.html">⚽ เก่ง<span>ก่อนเกม</span></a>
+  <div class="nav-links">
+    <a href="index.html" style="display:flex;align-items:center;gap:5px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:#60a5fa;padding:5px 12px;border-radius:8px;font-weight:700">← กลับหน้าหลัก</a>
+  </div>
+</nav>
+
+<div class="page-hdr">
+  <h1>📊 ผลวิเคราะห์ย้อนหลัง 7 วัน</h1>
+  <p>แสดงคู่ที่วิเคราะห์ไว้ (>60%) จากทุกคอลัมน์ — กด ✓ ถูก / ✗ ผิด เพื่อบันทึกผล</p>
+</div>
+
+<!-- 7-day overview -->
+<div class="overview">
+  <div class="overview-title">📈 สรุปภาพรวม 7 วันล่าสุด</div>
+  <div class="stat-row">
+    <div class="stat-box"><div class="sv blue" id="ov-total">—</div><div class="sl">คู่ทั้งหมด</div></div>
+    <div class="stat-box"><div class="sv green" id="ov-correct">—</div><div class="sl">ถูก ✓</div></div>
+    <div class="stat-box"><div class="sv red" id="ov-wrong">—</div><div class="sl">ผิด ✗</div></div>
+    <div class="stat-box"><div class="sv gold" id="ov-acc">—</div><div class="sl">ความแม่น 7 วัน</div></div>
+    <div class="stat-box"><div class="sv purple" id="ov-marked">—</div><div class="sl">ตรวจแล้ว</div></div>
+  </div>
+</div>
+
+<!-- Accuracy bar -->
+<div class="acc-bar-wrap">
+  <div class="acc-bar-label">ความแม่นยำรวม 7 วัน</div>
+  <div class="acc-bar-track"><div class="acc-bar-fill" id="ov-bar" style="width:0%"></div></div>
+</div>
+
+<!-- Daily bar chart -->
+<div class="acc-chart">
+  <div class="acc-chart-title">ความแม่นยำรายวัน (%)</div>
+  <div class="acc-chart-bars" id="daily-chart"></div>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <span><div class="leg-dot" style="background:var(--c1)"></div> คอลัมน์ 1 ทีมชนะ</span>
+  <span><div class="leg-dot" style="background:var(--c2)"></div> คอลัมน์ 2 สกอร์สูง</span>
+  <span><div class="leg-dot" style="background:var(--c3)"></div> คอลัมน์ 3 สกอร์ต่ำ</span>
+  <span><div class="leg-dot" style="background:var(--c4)"></div> คอลัมน์ 4 สูงสุดรวม</span>
+  <span>✅ ถูก &nbsp; ❌ ผิด</span>
+</div>
+
+<!-- Day tabs -->
+<div class="day-tabs" id="day-tabs"></div>
+
+<!-- Main content -->
+<div class="hist-wrap" id="hist-wrap">
+  <div class="loading-box"><div class="spin"></div><br>กำลังโหลดข้อมูล...</div>
+</div>
+
+<script>
+const MARKS_KEY = 'kkg_hist_marks';
+const WIN_TH = {'Home Win':'เจ้าบ้านชนะ','Away Win':'ทีมเยือนชนะ','Draw':'เสมอ'};
+
+// ─── LocalStorage helpers ───────────────────────────────────────
+function loadMarks(){ try{ return JSON.parse(localStorage.getItem(MARKS_KEY)||'{}'); }catch(e){ return {}; } }
+function saveMark(id, val){ const m=loadMarks(); if(val===null) delete m[id]; else m[id]=val; localStorage.setItem(MARKS_KEY,JSON.stringify(m)); }
+
+// ─── Date helpers ───────────────────────────────────────────────
+function dateStr(d){ return d.toISOString().slice(0,10); }
+function thaiDate(ds){
+  const [y,mo,dd] = ds.split('-');
+  const months=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const dayNames=['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+  const dt = new Date(`${ds}T12:00:00`);
+  return `${dayNames[dt.getDay()]} ${parseInt(dd)} ${months[parseInt(mo)]} ${parseInt(y)+543}`;
+}
+function shortDate(ds){
+  const [,mo,dd]=ds.split('-');
+  return `${parseInt(dd)}/${parseInt(mo)}`;
+}
+
+// ─── Build prediction entries from one day's data ───────────────
+// Returns array of { id, ds, match, col, colName, pred, conf, predType }
+function buildPredictions(ds, matches){
+  const entries = [];
+  const seen = {}; // track (fixture_id, col) to avoid duplicates
+
+  matches.forEach(m => {
+    const wc = m.win_conf||0, oc = m.over_conf||0, uc = m.under_conf||0;
+    const fid = m.fixture_id || `${m.home}_${m.away}`;
+
+    // Col 1: ทีมชนะ — win_conf > 60
+    if(wc > 60 && !seen[`${fid}_c1`]){
+      seen[`${fid}_c1`]=1;
+      entries.push({ id:`${ds}_${fid}_c1`, ds, m, col:'c1', colName:'ทีมชนะ', pred:WIN_TH[m.win_label]||m.win_label||'ชนะ', conf:wc, predType:'win' });
+    }
+    // Col 2: สกอร์สูง — over_conf > 60
+    if(oc > 60 && !seen[`${fid}_c2`]){
+      seen[`${fid}_c2`]=1;
+      entries.push({ id:`${ds}_${fid}_c2`, ds, m, col:'c2', colName:'สกอร์สูง', pred:`Over ${m.ou_line||2.5}`, conf:oc, predType:'over' });
+    }
+    // Col 3: สกอร์ต่ำ — under_conf > 60
+    if(uc > 60 && !seen[`${fid}_c3`]){
+      seen[`${fid}_c3`]=1;
+      entries.push({ id:`${ds}_${fid}_c3`, ds, m, col:'c3', colName:'สกอร์ต่ำ', pred:`Under ${m.ou_line||2.5}`, conf:uc, predType:'under' });
+    }
+    // Col 4: สูงสุดรวม — เฉพาะ win_conf > 60, แล้วเอา max signal
+    if(wc > 60 && !seen[`${fid}_c4`]){
+      seen[`${fid}_c4`]=1;
+      const mx = Math.max(wc,oc,uc);
+      let p4, t4;
+      if(oc===mx && oc>wc){ p4=`Over ${m.ou_line||2.5}`; t4='over'; }
+      else if(uc===mx && uc>wc){ p4=`Under ${m.ou_line||2.5}`; t4='under'; }
+      else { p4=WIN_TH[m.win_label]||m.win_label||'ชนะ'; t4='win'; }
+      entries.push({ id:`${ds}_${fid}_c4`, ds, m, col:'c4', colName:'สูงสุดรวม', pred:p4, conf:mx, predType:t4 });
+    }
+  });
+
+  // Sort by conf desc
+  return entries.sort((a,b)=>b.conf-a.conf);
+}
+
+// ─── Render one match row ───────────────────────────────────────
+function renderRow(e, marks){
+  const mark = marks[e.id];
+  const time = (e.m.kickoff||e.m.time||'').slice(0,5);
+  const league = e.m.league||e.m.league_name||'';
+  const home = e.m.home_name||e.m.home||'';
+  const away = e.m.away_name||e.m.away||'';
+  const icon = mark==='correct'?'✅':mark==='wrong'?'❌':'';
+  const corCls = 'btn-mark cor'+(mark==='correct'?' on':'');
+  const wrgCls = 'btn-mark wrg'+(mark==='wrong'?' on':'');
+  const safeId = e.id.replace(/[^a-zA-Z0-9]/g,'_');
+  return `<div class="mrow" id="mrow_${safeId}">
+    <div class="mrow-col ${e.col}"></div>
+    <div class="mrow-time">${time}</div>
+    <div class="mrow-league">${league}</div>
+    <div class="mrow-teams">
+      <div class="teams">${home} <span style="color:var(--sub);font-weight:400">vs</span> ${away}</div>
+      <div class="pred">
+        <span class="pred-badge ${e.predType}">${e.pred}</span>
+        <span class="col-tag">${e.colName}</span>
+      </div>
+    </div>
+    <div class="mrow-conf">${Math.round(e.conf)}%</div>
+    <div class="mrow-mark">
+      <button class="${corCls}" onclick="toggleMark('${e.id}','correct')" title="ถูก">✓</button>
+      <button class="${wrgCls}" onclick="toggleMark('${e.id}','wrong')" title="ผิด">✗</button>
+    </div>
+    <div class="mrow-icon" id="icon_${safeId}">${icon}</div>
+  </div>`;
+}
+
+// ─── Toggle mark ────────────────────────────────────────────────
+window.toggleMark = function(id, val){
+  const marks = loadMarks();
+  saveMark(id, marks[id]===val ? null : val);
+  const safeId = id.replace(/[^a-zA-Z0-9]/g,'_');
+  const row = document.getElementById('mrow_'+safeId);
+  if(row){
+    const newMark = loadMarks()[id];
+    row.querySelector('.btn-mark.cor').className = 'btn-mark cor'+(newMark==='correct'?' on':'');
+    row.querySelector('.btn-mark.wrg').className = 'btn-mark wrg'+(newMark==='wrong'?' on':'');
+    document.getElementById('icon_'+safeId).textContent = newMark==='correct'?'✅':newMark==='wrong'?'❌':'';
+  }
+  refreshStats();
+};
+
+// ─── Day stats ──────────────────────────────────────────────────
+function dayStats(entries, marks){
+  let total=entries.length, correct=0, wrong=0;
+  entries.forEach(e=>{ if(marks[e.id]==='correct') correct++; else if(marks[e.id]==='wrong') wrong++; });
+  const marked=correct+wrong;
+  const acc = marked>0 ? Math.round(correct/marked*100) : null;
+  return {total,correct,wrong,marked,acc};
+}
+
+// ─── Refresh overall stats ──────────────────────────────────────
+function refreshStats(){
+  const marks = loadMarks();
+  let total=0,correct=0,wrong=0,marked=0;
+  Object.values(allEntries).forEach(entries=>{
+    entries.forEach(e=>{
+      total++;
+      if(marks[e.id]==='correct'){correct++;marked++;}
+      else if(marks[e.id]==='wrong'){wrong++;marked++;}
+    });
+  });
+  const acc = marked>0 ? Math.round(correct/marked*100) : null;
+  document.getElementById('ov-total').textContent = total;
+  document.getElementById('ov-correct').textContent = correct;
+  document.getElementById('ov-wrong').textContent = wrong;
+  document.getElementById('ov-acc').textContent = acc!==null ? acc+'%' : '—';
+  document.getElementById('ov-marked').textContent = marked;
+  document.getElementById('ov-bar').style.width = (acc||0)+'%';
+
+  // Refresh day tabs
+  refreshDayTabs();
+  // Refresh daily chart
+  renderDailyChart();
+}
+
+// ─── Render daily chart ─────────────────────────────────────────
+function renderDailyChart(){
+  const marks = loadMarks();
+  const dates = Object.keys(allEntries).sort();
+  const chart = document.getElementById('daily-chart');
+  if(!chart) return;
+  chart.innerHTML = dates.map(ds=>{
+    const s = dayStats(allEntries[ds]||[], marks);
+    const pct = s.acc!==null ? s.acc : 0;
+    const barH = Math.max(2, pct*0.56); // max 56px for 100%
+    return `<div class="acc-bar-col">
+      <div class="bar-pct">${s.acc!==null?s.acc+'%':''}</div>
+      <div class="bar" style="height:${barH}px"></div>
+      <div class="bar-lbl">${shortDate(ds)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── Refresh day tabs ───────────────────────────────────────────
+function refreshDayTabs(){
+  const marks = loadMarks();
+  document.querySelectorAll('.dtab').forEach(tab=>{
+    const ds = tab.dataset.date;
+    if(!ds || ds==='all') return;
+    const s = dayStats(allEntries[ds]||[], marks);
+    const accTxt = s.acc!==null ? `${s.acc}%` : `${s.total}คู่`;
+    tab.querySelector('.dtab-acc').textContent = accTxt;
+  });
+}
+
+// ─── Render day block ───────────────────────────────────────────
+function renderDayBlock(ds, entries){
+  const marks = loadMarks();
+  const s = dayStats(entries, marks);
+  const accCls = s.acc===null?'':s.acc>=70?'correct':s.acc>=50?'acc':'wrong';
+  const accText = s.acc!==null ? `แม่น ${s.acc}%` : 'ยังไม่ตรวจ';
+  const rows = entries.map(e=>renderRow(e,marks)).join('');
+  return `<div class="day-block" id="dayblock_${ds}">
+    <div class="day-hdr" onclick="toggleDayBlock('${ds}')">
+      <div class="day-hdr-left">
+        <div class="dh-date">📅 ${thaiDate(ds)}</div>
+        <div class="dh-sub">${s.total} คู่วิเคราะห์ (>60%)</div>
+      </div>
+      <div class="day-hdr-right">
+        <div class="day-summary">
+          <span class="ds-chip total">ทั้งหมด ${s.total}</span>
+          <span class="ds-chip correct">ถูก ${s.correct}</span>
+          <span class="ds-chip wrong">ผิด ${s.wrong}</span>
+          ${s.acc!==null?`<span class="ds-chip ${accCls}">${accText}</span>`:''}
+        </div>
+        <div class="day-toggle" id="tog_${ds}">▼</div>
+      </div>
+    </div>
+    <div class="match-list" id="daylist_${ds}">${rows||'<div class="empty-box"><div class="ei">📭</div><div>ไม่มีคู่เกิน 60%</div></div>'}</div>
+  </div>`;
+}
+
+window.toggleDayBlock = function(ds){
+  const list = document.getElementById('daylist_'+ds);
+  const tog = document.getElementById('tog_'+ds);
+  if(!list) return;
+  const hidden = list.style.display==='none';
+  list.style.display = hidden?'flex':'none';
+  if(hidden) list.style.flexDirection='column';
+  tog.textContent = hidden?'▼':'▶';
+};
+
+// ─── Render all / filter ────────────────────────────────────────
+function renderContent(filterDate){
+  const wrap = document.getElementById('hist-wrap');
+  const dates = Object.keys(allEntries).sort().reverse();
+  const toShow = filterDate&&filterDate!=='all' ? [filterDate] : dates;
+  let html = '';
+  toShow.forEach(ds=>{ if(allEntries[ds]) html+=renderDayBlock(ds, allEntries[ds]); });
+  wrap.innerHTML = html || `<div class="empty-box"><div class="ei">📭</div><div>ไม่มีข้อมูล</div></div>`;
+}
+
+// ─── Fetch helpers ──────────────────────────────────────────────
+function norm(m){
+  return {
+    fixture_id: m.fixture_id||m.id,
+    home_name: m.home_name||m.home,
+    away_name: m.away_name||m.away,
+    league: m.league||m.league_name||'',
+    kickoff: m.kickoff||m.time||'',
+    win_conf: parseFloat(m.win_conf)||0,
+    over_conf: parseFloat(m.over_conf)||0,
+    under_conf: parseFloat(m.under_conf)||0,
+    ou_line: m.ou_line||2.5,
+    win_label: m.win_label||'',
+    home: m.home, away: m.away,
+  };
+}
+async function fetchDay(ds){
+  try{
+    const r = await fetch(`step_result_${ds}.json?t=${Date.now()}`);
+    if(!r.ok) return null;
+    const data = await r.json();
+    const arr = Array.isArray(data)?data:(data.analyses||data.matches||data.data||[]);
+    return arr.map(norm);
+  }catch(e){ return null; }
+}
+
+// ─── Global state ───────────────────────────────────────────────
+let allEntries = {}; // { ds: [prediction entries] }
+let currentFilter = 'all';
+
+// ─── Main init ──────────────────────────────────────────────────
+async function init(){
+  const now = new Date();
+  const dates = [];
+  for(let i=1;i<=7;i++){
+    const d=new Date(now); d.setDate(d.getDate()-i); dates.push(dateStr(d));
+  }
+
+  // Fetch all
+  document.getElementById('hist-wrap').innerHTML='<div class="loading-box"><div class="spin"></div><br>กำลังโหลดข้อมูลย้อนหลัง 7 วัน...</div>';
+  const results = await Promise.all(dates.map(ds=>fetchDay(ds).then(r=>({ds,r}))));
+  results.forEach(({ds,r})=>{ if(r&&r.length) allEntries[ds]=buildPredictions(ds,r); });
+
+  // Build tabs
+  const tabsEl = document.getElementById('day-tabs');
+  const allDates = Object.keys(allEntries).sort().reverse();
+  const allTab = `<div class="dtab active" data-date="all" onclick="filterDay('all',this)">📋 ทั้งหมด<div class="dtab-acc"></div></div>`;
+  const dayTabsHtml = allDates.map(ds=>{
+    return `<div class="dtab" data-date="${ds}" onclick="filterDay('${ds}',this)">${shortDate(ds)}<div class="dtab-acc"></div></div>`;
+  }).join('');
+  tabsEl.innerHTML = allTab + dayTabsHtml;
+
+  if(!allDates.length){
+    document.getElementById('hist-wrap').innerHTML=`<div class="empty-box"><div class="ei">📭</div><div>ไม่พบข้อมูลย้อนหลัง</div><div style="font-size:.78rem;margin-top:6px;color:var(--sub)">ต้องการไฟล์ step_result_YYYY-MM-DD.json ในโฟลเดอร์ docs/</div></div>`;
+    return;
+  }
+
+  renderContent('all');
+  refreshStats();
+}
+
+window.filterDay = function(date, el){
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter = date;
+  renderContent(date);
+};
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analytics · เก่งก่อนเกม</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080c14;--bg2:#0f1623;--bg3:#161e2e;--bg4:#1c2538;--gold:#f0b429;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--border:#1e2a3a;--border2:#253040}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Kanit',sans-serif;font-size:14px;min-height:100vh}
+.hdr{background:linear-gradient(135deg,#0a0e1a,#111827);border-bottom:2px solid var(--gold);padding:14px 20px;display:flex;align-items:center;gap:12px}
+.hdr-title{font-size:18px;font-weight:700;color:var(--gold)}
+.hdr-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.lock{display:none;position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.lock-box{background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:32px 28px;width:320px;text-align:center}
+.lock-icon{font-size:40px;margin-bottom:10px}
+.lock-title{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:6px}
+.lock-sub{font-size:12px;color:var(--text3);margin-bottom:18px}
+.lock-input{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--border2);background:var(--bg4);color:var(--text);font-family:'Kanit',sans-serif;font-size:14px;outline:none}
+.lock-input:focus{border-color:var(--gold)}
+.lock-btn{margin-top:12px;width:100%;padding:10px;border-radius:8px;border:none;background:var(--gold);color:#000;font-family:'Kanit',sans-serif;font-weight:700;font-size:14px;cursor:pointer}
+.lock-btn:hover{background:#e8a020}
+.lock-err{color:var(--red);font-size:12px;margin-top:8px;display:none}
+.main{display:none;padding:20px;max-width:1400px;margin:0 auto}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.stat-val{font-size:28px;font-weight:800;color:var(--gold)}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+.sec{background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.sec-hdr{padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.sec-hdr span{color:var(--gold)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:9px 12px;background:rgba(0,0,0,.3);color:var(--text3);font-size:10.5px;font-weight:700;text-align:left;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)}
+.tbl td{padding:8px 12px;font-size:11.5px;border-bottom:1px solid rgba(30,42,58,.5);color:var(--text2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700}
+.b-mobile{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.3)}
+.b-desktop{background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
+.b-tablet{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+.chart-bar-row{display:flex;align-items:center;gap:8px;padding:6px 16px;border-bottom:1px solid rgba(30,42,58,.5)}
+.chart-bar-row:last-child{border-bottom:none}
+.chart-label{font-size:11px;color:var(--text2);min-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chart-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.chart-bar-fill{height:100%;border-radius:4px;background:var(--gold)}
+.chart-count{font-size:11px;color:var(--text3);min-width:30px;text-align:right}
+.btn-clear{padding:6px 14px;border-radius:7px;border:1px solid var(--red);background:rgba(239,68,68,.08);color:var(--red);font-family:'Kanit',sans-serif;font-size:12px;cursor:pointer;font-weight:700}
+.btn-clear:hover{background:rgba(239,68,68,.18)}
+.empty{padding:20px;text-align:center;color:var(--text3);font-size:12px}
+.tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9.5px;background:rgba(255,255,255,.06);color:var(--text3);margin:1px}
+</style>
+</head>
+<body>
+
+<!-- Lock screen -->
+<div class="lock" id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">Analytics Dashboard</div>
+    <div class="lock-sub">เก่งก่อนเกม · ข้อมูลผู้เข้าชม</div>
+    <input type="password" class="lock-input" id="pw-input" placeholder="รหัสผ่าน..." onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="lock-btn" onclick="checkPw()">เข้าสู่ระบบ</button>
+    <div class="lock-err" id="pw-err">❌ รหัสผ่านไม่ถูกต้อง</div>
+  </div>
+</div>
+
+<!-- Main content -->
+<div id="main-content" style="display:none">
+<div class="hdr">
+  <div>
+    <div class="hdr-title">📊 Analytics Dashboard · เก่งก่อนเกม</div>
+    <div class="hdr-sub">ข้อมูลผู้เข้าชมจาก localStorage (Client-side tracking)</div>
+  </div>
+  <a href="index.html" style="margin-left:auto;color:var(--text3);font-size:12px;text-decoration:none">← กลับหน้าหลัก</a>
+</div>
+
+<div class="main" id="main">
+  <!-- Stats cards -->
+  <div class="stats-grid" id="stats-grid"></div>
+
+  <!-- Visit log -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <span>📋 บันทึกการเข้าชมล่าสุด</span>
+      <button class="btn-clear" onclick="clearData()">🗑 ล้างข้อมูล</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl" id="visit-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>วัน-เวลา (ไทย)</th>
+            <th>ประเทศ/เมือง</th>
+            <th>อุปกรณ์</th>
+            <th>ภาษา</th>
+            <th>หน้าจอ</th>
+            <th>มาจาก</th>
+            <th>User Agent</th>
+          </tr>
+        </thead>
+        <tbody id="visit-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <!-- Country chart -->
+    <div class="sec">
+      <div class="sec-hdr"><span>🌍 ประเทศที่เข้าชม</span></div>
+      <div id="country-chart"></div>
+    </div>
+    <!-- Device chart -->
+    <div class="sec">
+      <div class="sec-hdr"><span>📱 ประเภทอุปกรณ์</span></div>
+      <div id="device-chart"></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+    <!-- Hour chart -->
+    <div class="sec">
+      <div class="sec-hdr"><span>🕐 ชั่วโมงที่นิยมเข้าชม</span></div>
+      <div id="hour-chart"></div>
+    </div>
+    <!-- Language chart -->
+    <div class="sec">
+      <div class="sec-hdr"><span>🗣 ภาษาของผู้ใช้งาน</span></div>
+      <div id="lang-chart"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const PASS = 'kengkongame2025'; // เปลี่ยนรหัสผ่านได้ที่นี่
+const KEY = 'kkg_visits';
+
+function checkPw() {
+  const v = document.getElementById('pw-input').value;
+  if(v === PASS) {
+    document.getElementById('lock-screen').style.display='none';
+    document.getElementById('main-content').style.display='block';
+    loadAnalytics();
+  } else {
+    document.getElementById('pw-err').style.display='block';
+    setTimeout(()=>document.getElementById('pw-err').style.display='none',2000);
+  }
+}
+document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
+
+function clearData() {
+  if(confirm('ล้างข้อมูลทั้งหมด?')) {
+    localStorage.removeItem(KEY);
+    localStorage.removeItem('kkg_pv');
+    loadAnalytics();
+  }
+}
+
+function loadAnalytics() {
+  const raw = localStorage.getItem(KEY);
+  const visits = raw ? JSON.parse(raw) : [];
+  const pv = parseInt(localStorage.getItem('kkg_pv')||'0');
+
+  // Stats cards
+  const today = new Date().toLocaleDateString('th-TH',{timeZone:'Asia/Bangkok'});
+  const todayVisits = visits.filter(v=>{
+    const d = new Date(v.ts).toLocaleDateString('th-TH',{timeZone:'Asia/Bangkok'});
+    return d===today;
+  });
+  const countries = [...new Set(visits.map(v=>v.country||'?').filter(c=>c!=='...'))];
+  const devices = {};
+  visits.forEach(v=>{const d=v.device||'Desktop';devices[d]=(devices[d]||0)+1;});
+  const topDevice = Object.entries(devices).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-val">${visits.length}</div><div class="stat-lbl">📊 ยอดเข้าชมทั้งหมด (Session)</div></div>
+    <div class="stat-card"><div class="stat-val">${pv}</div><div class="stat-lbl">👁 Page Views รวม</div></div>
+    <div class="stat-card"><div class="stat-val">${todayVisits.length}</div><div class="stat-lbl">📅 เข้าชมวันนี้</div></div>
+    <div class="stat-card"><div class="stat-val">${countries.length}</div><div class="stat-lbl">🌍 ประเทศที่เข้าชม</div></div>
+    <div class="stat-card"><div class="stat-val">${topDevice?topDevice[0]:'-'}</div><div class="stat-lbl">📱 อุปกรณ์ยอดนิยม</div></div>
+    <div class="stat-card"><div class="stat-val">${visits.length>0?new Date(visits[visits.length-1].ts).toLocaleTimeString('th-TH',{timeZone:'Asia/Bangkok',hour:'2-digit',minute:'2-digit'}):'-'}</div><div class="stat-lbl">🕐 เข้าชมล่าสุด</div></div>
+  `;
+
+  // Visit table (latest 50, reversed)
+  const tbody = document.getElementById('visit-tbody');
+  if(!visits.length){
+    tbody.innerHTML='<tr><td colspan="8" class="empty">ยังไม่มีข้อมูล — ต้องเยี่ยมชมหน้าหลักก่อนเพื่อเริ่มเก็บข้อมูล</td></tr>';
+  } else {
+    const rev = [...visits].reverse().slice(0,50);
+    tbody.innerHTML = rev.map((v,i)=>{
+      const devBadge = v.device==='Mobile'?'b-mobile':v.device==='Tablet'?'b-tablet':'b-desktop';
+      const country = v.country&&v.country!=='...'?(v.city?`${v.country} (${v.city})`:v.country):'ไม่ทราบ';
+      const ref = v.ref&&v.ref!=='direct'?`<span class="tag">${v.ref.substring(0,30)}</span>`:'<span class="tag">direct</span>';
+      const ua = v.ua?v.ua.substring(0,60)+'...':'?';
+      return `<tr>
+        <td style="color:var(--text3)">${visits.length-i}</td>
+        <td>${v.dt||'-'}</td>
+        <td>🌍 ${country}</td>
+        <td><span class="badge ${devBadge}">${v.device||'?'}</span></td>
+        <td>${v.lang||'-'}</td>
+        <td style="font-size:10px">${v.screen||'-'}</td>
+        <td>${ref}</td>
+        <td style="font-size:10px;color:var(--text3)">${ua}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Chart helper
+  function barChart(el, data, color='var(--gold)') {
+    if(!data.length){el.innerHTML='<div class="empty">ไม่มีข้อมูล</div>';return;}
+    const max = data[0][1];
+    el.innerHTML = data.slice(0,10).map(([label,count])=>`
+      <div class="chart-bar-row">
+        <span class="chart-label">${label}</span>
+        <div class="chart-bar-wrap"><div class="chart-bar-fill" style="width:${(count/max*100).toFixed(0)}%;background:${color}"></div></div>
+        <span class="chart-count">${count}</span>
+      </div>`).join('');
+  }
+
+  // Country chart
+  const cCount={};
+  visits.forEach(v=>{const c=v.country&&v.country!=='...'?v.country:'ไม่ทราบ';cCount[c]=(cCount[c]||0)+1;});
+  barChart(document.getElementById('country-chart'), Object.entries(cCount).sort((a,b)=>b[1]-a[1]), 'var(--green)');
+
+  // Device chart
+  barChart(document.getElementById('device-chart'), Object.entries(devices).sort((a,b)=>b[1]-a[1]), 'var(--blue)');
+
+  // Hour chart
+  const hCount={};
+  for(let i=0;i<24;i++) hCount[`${String(i).padStart(2,'0')}:xx`]=0;
+  visits.forEach(v=>{
+    const h = new Date(v.ts).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',hour:'2-digit'});
+    const hk = `${h.padStart(2,'0')}:xx`;
+    hCount[hk]=(hCount[hk]||0)+1;
+  });
+  const hourData = Object.entries(hCount).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  barChart(document.getElementById('hour-chart'), hourData, 'var(--purple)');
+
+  // Language chart
+  const lCount={};
+  visits.forEach(v=>{const l=v.lang||'?';lCount[l]=(lCount[l]||0)+1;});
+  barChart(document.getElementById('lang-chart'), Object.entries(lCount).sort((a,b)=>b[1]-a[1]), 'var(--gold)');
+}
+
+// Auto show if already "logged in" via session
+if(sessionStorage.getItem('kkg_auth')==='1'){
+  document.getElementById('lock-screen').style.display='none';
+  document.getElementById('main-content').style.display='block';
+  loadAnalytics();
+}
+function checkPwOrig(){
+  const v=document.getElementById('pw-input').value;
+  if(v===PASS){sessionStorage.setItem('kkg_auth','1');document.getElementById('lock-screen').style.display='none';document.getElementById('main-content').style.display='block';loadAnalytics();}
+  else{document.getElementById('pw-err').style.display='block';setTimeout(()=>document.getElementById('pw-err').style.display='none',2000);}
+}
+// override
+window.checkPw = checkPwOrig;
+</script>
+</body>
+</html>

@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Panel · เก่งก่อนเกม</title>
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c14;--bg2:#0f1623;--bg3:#161e2e;--bg4:#1c2538;
+  --gold:#f0b429;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--orange:#f97316;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
+  --border:#1e2a3a;--border2:#253040;
+  --sidebar:220px;
+}
+body{font-family:'Kanit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+
+/* ── Lock ── */
+#lock-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}
+.lock-box{background:var(--bg3);border:1px solid var(--border2);border-radius:16px;padding:36px 32px;width:340px;text-align:center}
+.lock-icon{font-size:44px;margin-bottom:12px}
+.lock-title{font-size:20px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.lock-sub{font-size:12px;color:var(--text3);margin-bottom:20px}
+.lock-input{width:100%;padding:11px 14px;border-radius:9px;border:1.5px solid var(--border2);background:var(--bg4);color:var(--text);font-family:'Kanit',sans-serif;font-size:14px;outline:none;margin-bottom:4px}
+.lock-input:focus{border-color:var(--gold)}
+.lock-btn{margin-top:10px;width:100%;padding:11px;border-radius:9px;border:none;background:var(--gold);color:#000;font-family:'Kanit',sans-serif;font-weight:700;font-size:14px;cursor:pointer}
+.lock-btn:hover{background:#e8a020}
+.lock-err{color:var(--red);font-size:12px;margin-top:8px;display:none}
+
+/* ── Layout ── */
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100}
+.sb-logo{padding:18px 16px;border-bottom:1px solid var(--border)}
+.sb-logo-title{font-size:15px;font-weight:700;color:var(--gold)}
+.sb-logo-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.sb-nav{flex:1;padding:12px 0;overflow-y:auto}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;border-radius:0;font-size:13px;color:var(--text2);transition:.15s;border-left:3px solid transparent}
+.sb-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.sb-item.active{background:rgba(240,180,41,.08);color:var(--gold);border-left-color:var(--gold)}
+.sb-item-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sb-sep{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:14px 16px 6px;font-weight:700}
+.sb-foot{padding:14px 16px;border-top:1px solid var(--border)}
+.sb-back{display:block;font-size:12px;color:var(--text3);text-decoration:none;padding:7px 10px;border-radius:7px;border:1px solid var(--border2);text-align:center;transition:.15s}
+.sb-back:hover{color:var(--gold);border-color:var(--gold);text-decoration:none}
+
+.main-area{margin-left:var(--sidebar);padding:24px;min-height:100vh}
+.page-hdr{margin-bottom:20px}
+.page-hdr h1{font-size:20px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.page-hdr p{font-size:12px;color:var(--text3);margin-top:3px}
+
+/* ── Tabs ── */
+.tab-page{display:none}
+.tab-page.active{display:block}
+
+/* ── Cards ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px}
+.kpi-val{font-size:26px;font-weight:800;color:var(--gold)}
+.kpi-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+.kpi-sub{font-size:10px;color:var(--green);margin-top:2px}
+
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.card-hdr{padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.card-hdr-title{display:flex;align-items:center;gap:8px}
+.card-body{padding:16px}
+
+/* ── Time Filter ── */
+.time-filter{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.tf-btn{padding:5px 14px;border-radius:16px;border:1px solid var(--border2);background:var(--bg4);color:var(--text3);font-size:12px;cursor:pointer;font-family:'Kanit',sans-serif;transition:.15s}
+.tf-btn.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
+
+/* ── Charts ── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.bar-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(30,42,58,.5)}
+.bar-row:last-child{border-bottom:none}
+.bar-label{font-size:11px;color:var(--text2);min-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-wrap{flex:1;height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+.bar-count{font-size:11px;color:var(--text3);min-width:28px;text-align:right}
+.timeline-bar{display:flex;align-items:flex-end;gap:3px;height:80px;padding:0 4px}
+.tl-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tl-bar{width:100%;border-radius:3px 3px 0 0;background:var(--gold);min-height:2px;transition:.3s}
+.tl-lbl{font-size:8px;color:var(--text3);white-space:nowrap;overflow:hidden;max-width:100%;text-align:center}
+
+/* ── Table ── */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:8px 10px;background:rgba(0,0,0,.3);color:var(--text3);font-size:10px;font-weight:700;text-align:left;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border)}
+.tbl td{padding:7px 10px;font-size:11.5px;border-bottom:1px solid rgba(30,42,58,.5);color:var(--text2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700}
+.b-m{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.3)}
+.b-d{background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
+.b-t{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+
+/* ── Forms ── */
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--text3);margin-bottom:5px;display:block;font-weight:600}
+.form-input{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border2);background:var(--bg4);color:var(--text);font-family:'Kanit',sans-serif;font-size:13px;outline:none}
+.form-input:focus{border-color:var(--gold)}
+.form-input[type=password]{letter-spacing:2px}
+textarea.form-input{resize:vertical;min-height:80px;letter-spacing:normal}
+.form-hint{font-size:10.5px;color:var(--text3);margin-top:4px}
+
+/* ── Buttons ── */
+.btn{padding:9px 18px;border-radius:8px;border:none;font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
+.btn-primary{background:var(--gold);color:#000}
+.btn-primary:hover{background:#e8a020}
+.btn-danger{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.22)}
+.btn-secondary{background:var(--bg4);color:var(--text2);border:1px solid var(--border2)}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+/* ── Status ── */
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.s-green{background:var(--green)}
+.s-red{background:var(--red)}
+.s-gray{background:var(--text3)}
+.status-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(30,42,58,.5);font-size:12.5px}
+.status-row:last-child{border-bottom:none}
+.status-key{color:var(--text3);min-width:140px}
+.status-val{color:var(--text);font-weight:600}
+
+/* ── Upload ── */
+.drop-zone{border:2px dashed var(--border2);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:.2s}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--gold);background:rgba(240,180,41,.05)}
+.drop-zone-icon{font-size:36px;margin-bottom:10px}
+.drop-zone-txt{font-size:13px;color:var(--text2)}
+.drop-zone-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.upload-preview{background:var(--bg4);border-radius:8px;padding:12px;margin-top:12px;font-size:12px;color:var(--text2);display:none}
+
+/* ── Notification ── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:12px 18px;font-size:13px;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:9999;transform:translateY(60px);opacity:0;transition:.3s;max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.t-ok{border-left:3px solid var(--green)}
+.toast.t-err{border-left:3px solid var(--red)}
+
+.empty-msg{padding:24px;text-align:center;color:var(--text3);font-size:12px}
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+/* GA4 embed section */
+.ga4-box{background:var(--bg4);border:1px dashed var(--border2);border-radius:10px;padding:20px;text-align:center}
+.ga4-box h3{color:var(--gold);margin-bottom:8px;font-size:14px}
+.ga4-box p{font-size:12px;color:var(--text3);line-height:1.7}
+.ga4-link{display:inline-block;margin-top:12px;padding:8px 20px;background:var(--gold);color:#000;border-radius:8px;font-weight:700;font-size:12px;text-decoration:none}
+.ga4-link:hover{background:#e8a020;text-decoration:none}
+</style>
+</head>
+<body>
+
+<!-- ── Lock Screen ── -->
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-icon">🛡️</div>
+    <div class="lock-title">Admin Panel</div>
+    <div class="lock-sub">เก่งก่อนเกม · ระบบหลังบ้าน</div>
+    <input type="password" class="lock-input" id="pw-input" placeholder="รหัสผ่าน Admin..." onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="lock-btn" onclick="checkPw()">🔓 เข้าสู่ระบบ</button>
+    <div class="lock-err" id="pw-err">❌ รหัสผ่านไม่ถูกต้อง</div>
+  </div>
+</div>
+
+<!-- ── App ── -->
+<div id="app">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-title">⚙️ Admin Panel</div>
+      <div class="sb-logo-sub">เก่งก่อนเกม · kengkongame.com</div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-sep">Analytics</div>
+      <div class="sb-item active" onclick="showTab('dashboard')"><span class="sb-item-icon">📊</span> Dashboard</div>
+      <div class="sb-item" onclick="showTab('traffic')"><span class="sb-item-icon">📈</span> Traffic รายละเอียด</div>
+      <div class="sb-sep">จัดการ</div>
+      <div class="sb-item" onclick="showTab('api')"><span class="sb-item-icon">🔑</span> API & Cache</div>
+      <div class="sb-item" onclick="showTab('upload')"><span class="sb-item-icon">📤</span> อัปโหลดข้อมูล</div>
+      <div class="sb-item" onclick="showTab('content')"><span class="sb-item-icon">✏️</span> แก้ไขเนื้อหา</div>
+      <div class="sb-sep">ระบบ</div>
+      <div class="sb-item" onclick="showTab('settings')"><span class="sb-item-icon">🛠️</span> ตั้งค่าระบบ</div>
+    </div>
+    <div class="sb-foot">
+      <a href="index.html" class="sb-back">← กลับหน้าหลัก</a>
+    </div>
+  </nav>
+
+  <div class="main-area">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="tab-page active" id="tab-dashboard">
+      <div class="page-hdr">
+        <h1>📊 Dashboard Overview</h1>
+        <p>สถิติรวม · อัปเดตจากข้อมูล localStorage ของผู้เข้าชม</p>
+      </div>
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <!-- Timeline 30 days -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">📅 Traffic 30 วันล่าสุด (Page Views/วัน)</div></div>
+        <div class="card-body">
+          <div class="timeline-bar" id="timeline-30"></div>
+        </div>
+      </div>
+
+      <!-- GA4 section -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">📡 Google Analytics 4</div></div>
+        <div class="card-body">
+          <div class="ga4-box">
+            <h3>🔗 เชื่อมต่อ GA4 แล้ว</h3>
+            <p>ข้อมูล Real-time, Audience, Acquisition และ Behavior ทั้งหมดดูได้ที่ Google Analytics Dashboard<br>รวมถึง รายชั่วโมง รายวัน รายสัปดาห์ รายเดือน รายปี ครบทุก dimension</p>
+            <a href="https://analytics.google.com" target="_blank" class="ga4-link">🚀 เปิด GA4 Dashboard</a>
+          </div>
+          <div style="margin-top:14px">
+            <div class="form-label">Measurement ID ปัจจุบัน</div>
+            <div class="form-input" id="ga4-id-display" style="background:var(--bg4);cursor:default;font-family:monospace;font-size:13px"></div>
+            <div class="form-hint">แก้ไข Measurement ID ได้ที่แท็บ ตั้งค่าระบบ</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick stats table -->
+      <div class="chart-grid">
+        <div class="card">
+          <div class="card-hdr"><div class="card-hdr-title">🌍 ประเทศยอดนิยม</div></div>
+          <div class="card-body" id="dash-country"></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-hdr-title">📱 อุปกรณ์</div></div>
+          <div class="card-body" id="dash-device"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TRAFFIC ═══ -->
+    <div class="tab-page" id="tab-traffic">
+      <div class="page-hdr">
+        <h1>📈 Traffic รายละเอียด</h1>
+        <p>วิเคราะห์การเข้าชมตามช่วงเวลา</p>
+      </div>
+      <div class="time-filter">
+        <button class="tf-btn active" onclick="setFilter('1h',this)">1 ชั่วโมง</button>
+        <button class="tf-btn" onclick="setFilter('24h',this)">24 ชั่วโมง</button>
+        <button class="tf-btn" onclick="setFilter('7d',this)">7 วัน</button>
+        <button class="tf-btn" onclick="setFilter('30d',this)">30 วัน</button>
+        <button class="tf-btn" onclick="setFilter('3m',this)">3 เดือน</button>
+        <button class="tf-btn" onclick="setFilter('1y',this)">1 ปี</button>
+        <button class="tf-btn" onclick="setFilter('all',this)">ทั้งหมด</button>
+      </div>
+      <div class="kpi-grid" id="traffic-kpi"></div>
+      <div class="chart-grid">
+        <div class="card">
+          <div class="card-hdr"><div class="card-hdr-title">🌍 ประเทศ</div></div>
+          <div class="card-body" id="tc-country"></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-hdr-title">📱 อุปกรณ์</div></div>
+          <div class="card-body" id="tc-device"></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-hdr-title">🕐 ชั่วโมงยอดนิยม</div></div>
+          <div class="card-body" id="tc-hour"></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-hdr-title">🌐 แหล่งที่มา (Referrer)</div></div>
+          <div class="card-body" id="tc-ref"></div>
+        </div>
+      </div>
+      <!-- Visit log -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-title">📋 บันทึกการเข้าชม</div>
+          <button class="btn btn-danger" onclick="clearAllData()" style="padding:5px 12px;font-size:11px">🗑 ล้างทั้งหมด</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr><th>#</th><th>วัน-เวลา</th><th>ประเทศ</th><th>อุปกรณ์</th><th>ภาษา</th><th>เวลาที่ใช้</th><th>มาจาก</th></tr>
+            </thead>
+            <tbody id="traffic-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ API & CACHE ═══ -->
+    <div class="tab-page" id="tab-api">
+      <div class="page-hdr">
+        <h1>🔑 API & Cache Management</h1>
+        <p>จัดการ API Key และระบบ Cache ของ step.py</p>
+      </div>
+
+      <!-- API Key -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">🔑 API-Football Key</div></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">API Key (จาก RapidAPI)</label>
+            <input type="password" class="form-input" id="api-key-input" placeholder="ใส่ API Key ที่ได้จาก RapidAPI...">
+            <div class="form-hint">เก็บใน localStorage เฉพาะเครื่องนี้เท่านั้น ปลอดภัย</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Plan</label>
+            <select class="form-input" id="api-plan">
+              <option value="free">Free (100 calls/วัน)</option>
+              <option value="pro" selected>Pro ($19/เดือน · 7,500 calls/วัน)</option>
+              <option value="mega">Mega ($50/เดือน · 50,000 calls/วัน)</option>
+            </select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveApiKey()">💾 บันทึก API Key</button>
+            <button class="btn btn-secondary" onclick="testApiKey()">🔌 ทดสอบ Connection</button>
+            <button class="btn btn-danger" onclick="clearApiKey()">🗑 ลบ Key</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Usage -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">📊 การใช้งาน API วันนี้</div></div>
+        <div class="card-body">
+          <div id="api-usage-bars"></div>
+          <div class="divider"></div>
+          <div class="form-hint">* ข้อมูล usage จริงดูได้ที่ RapidAPI Dashboard</div>
+        </div>
+      </div>
+
+      <!-- Cache Status -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-title">⚡ Cache Status</div>
+          <button class="btn btn-danger" onclick="clearCache()" style="padding:5px 12px;font-size:11px">🗑 ล้าง Cache</button>
+        </div>
+        <div class="card-body" id="cache-status"></div>
+      </div>
+
+      <!-- Cache Settings -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">⚙️ ตั้งค่า Cache</div></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">Cache Duration (นาที)</label>
+            <input type="number" class="form-input" id="cache-duration" value="60" min="5" max="1440">
+            <div class="form-hint">ถ้ามีผู้เข้าชมซ้ำภายใน X นาที ข้อมูลจะไม่ reload ใหม่ (ลด API calls)</div>
+          </div>
+          <button class="btn btn-primary" onclick="saveCacheSettings()">💾 บันทึก</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ UPLOAD ═══ -->
+    <div class="tab-page" id="tab-upload">
+      <div class="page-hdr">
+        <h1>📤 อัปโหลดข้อมูล</h1>
+        <p>อัปเดตไฟล์ step_result.json โดยไม่ต้อง deploy ใหม่ทั้งหมด</p>
+      </div>
+
+      <!-- GitHub API Upload -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">🐙 อัปโหลดผ่าน GitHub API (Auto Deploy)</div></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">GitHub Personal Access Token</label>
+            <input type="password" class="form-input" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
+            <div class="form-hint">สร้างที่ GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → เลือก scope: repo</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Repository (owner/repo)</label>
+            <input type="text" class="form-input" id="gh-repo" value="winggodpartmaker-byte/kengkongame" placeholder="username/repository-name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Branch</label>
+            <input type="text" class="form-input" id="gh-branch" value="main">
+          </div>
+          <div class="divider"></div>
+          <div class="form-group">
+            <label class="form-label">เลือกไฟล์ step_result.json</label>
+            <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="dragOver(event)" ondrop="dropFile(event)">
+              <div class="drop-zone-icon">📁</div>
+              <div class="drop-zone-txt">คลิกเลือกไฟล์ หรือ ลากวางที่นี่</div>
+              <div class="drop-zone-sub">รองรับ .json เท่านั้น</div>
+            </div>
+            <input type="file" id="file-input" accept=".json" style="display:none" onchange="handleFileSelect(this)">
+            <div class="upload-preview" id="upload-preview"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="uploadToGitHub()" id="upload-btn" disabled>📤 อัปโหลดและ Deploy</button>
+            <button class="btn btn-secondary" onclick="previewJson()">👁 Preview ข้อมูล</button>
+          </div>
+          <div id="upload-progress" style="margin-top:12px;display:none">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:6px" id="upload-status">กำลังอัปโหลด...</div>
+            <div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
+              <div id="upload-bar" style="height:100%;width:0%;background:var(--gold);border-radius:3px;transition:.3s"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual instructions -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">📖 วิธีอัปโหลดแบบ Manual</div></div>
+        <div class="card-body">
+          <div style="font-size:12.5px;color:var(--text2);line-height:2">
+            <div>1. รัน <code style="background:var(--bg4);padding:1px 6px;border-radius:4px;color:var(--gold)">python step.py</code> ในเครื่อง</div>
+            <div>2. ไฟล์ <code style="background:var(--bg4);padding:1px 6px;border-radius:4px;color:var(--gold)">step_result.json</code> จะถูกสร้างใน <code style="background:var(--bg4);padding:1px 6px;border-radius:4px;color:var(--gold)">docs/</code></div>
+            <div>3. commit และ push ขึ้น GitHub</div>
+            <div>4. Cloudflare Pages จะ auto-deploy ภายใน 1–3 นาที</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CONTENT ═══ -->
+    <div class="tab-page" id="tab-content">
+      <div class="page-hdr">
+        <h1>✏️ แก้ไขเนื้อหา</h1>
+        <p>จัดการข้อความและเนื้อหาบนเว็บไซต์</p>
+      </div>
+
+      <!-- Announcement Banner -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">📢 ประกาศ / แบนเนอร์บนสุด</div></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">เปิด/ปิดแบนเนอร์</label>
+            <select class="form-input" id="banner-active">
+              <option value="0">ปิด (ไม่แสดง)</option>
+              <option value="1">เปิด (แสดงบนเว็บ)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">ข้อความประกาศ</label>
+            <textarea class="form-input" id="banner-text" rows="2" placeholder="เช่น: ⚠️ ข้อมูลวันนี้อาจล่าช้า เนื่องจากการบำรุงรักษาระบบ"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">สีแบนเนอร์</label>
+            <select class="form-input" id="banner-color">
+              <option value="gold">ทอง (ข้อมูล/ประกาศทั่วไป)</option>
+              <option value="red">แดง (เร่งด่วน)</option>
+              <option value="green">เขียว (ข่าวดี)</option>
+              <option value="blue">น้ำเงิน (อัปเดต)</option>
+            </select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveBanner()">💾 บันทึกและแสดงบนเว็บ</button>
+            <button class="btn btn-secondary" onclick="previewBanner()">👁 Preview</button>
+          </div>
+          <div id="banner-preview" style="display:none;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600"></div>
+        </div>
+      </div>
+
+      <!-- Hero text -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">🏠 ข้อความ Hero (หัวเว็บ)</div></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">Sub-title ใต้หัวเว็บ</label>
+            <textarea class="form-input" id="hero-sub-text" rows="2" placeholder="ดึงข้อมูลจาก: สถิติ H2H · ฟอร์มทีม 5 นัด..."></textarea>
+            <div class="form-hint">ข้อความที่แสดงใต้ชื่อเว็บบน hero section</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveHeroText()">💾 บันทึก</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SETTINGS ═══ -->
+    <div class="tab-page" id="tab-settings">
+      <div class="page-hdr">
+        <h1>🛠️ ตั้งค่าระบบ</h1>
+        <p>การตั้งค่าทั่วไปและความปลอดภัย</p>
+      </div>
+
+      <!-- GA4 ID -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">📡 Google Analytics 4 Measurement ID</div></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">Measurement ID</label>
+            <input type="text" class="form-input" id="ga4-id-input" placeholder="G-XXXXXXXXXX" style="font-family:monospace">
+            <div class="form-hint">ได้จาก Google Analytics → Admin → Data Streams → Web Stream → Measurement ID</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveGa4Id()">💾 บันทึก</button>
+          </div>
+          <div style="margin-top:12px;padding:10px;background:rgba(240,180,41,.08);border-radius:8px;font-size:11.5px;color:var(--text2);border:1px solid rgba(240,180,41,.2)">
+            ⚠️ หลังบันทึก Measurement ID ต้องอัปเดต code ใน index.html, history.html, glossary.html ด้วย โดยแทนที่ <code style="color:var(--gold)">G-XXXXXXXXXX</code> ด้วย ID จริง
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Password -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">🔐 เปลี่ยนรหัสผ่าน Admin</div></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">รหัสผ่านเดิม</label>
+            <input type="password" class="form-input" id="pw-old" placeholder="รหัสผ่านเดิม">
+          </div>
+          <div class="form-group">
+            <label class="form-label">รหัสผ่านใหม่</label>
+            <input type="password" class="form-input" id="pw-new" placeholder="รหัสผ่านใหม่ (อย่างน้อย 8 ตัว)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">ยืนยันรหัสผ่านใหม่</label>
+            <input type="password" class="form-input" id="pw-confirm" placeholder="ยืนยันรหัสผ่านใหม่">
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="changePassword()">🔐 เปลี่ยนรหัสผ่าน</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transfer ownership -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">🔄 ส่งมอบสิทธิ์การบริหาร</div></div>
+        <div class="card-body">
+          <div style="font-size:12.5px;color:var(--text2);line-height:2;margin-bottom:14px">
+            สำหรับส่งมอบเว็บไซต์ให้ผู้ซื้อ/ผู้รับโอน ให้ทำตามขั้นตอนดังนี้:
+          </div>
+          <div style="font-size:12px;color:var(--text2);line-height:2.2">
+            <div>1. เปลี่ยนรหัสผ่าน Admin ด้านบนเป็นรหัสชั่วคราว</div>
+            <div>2. ส่งรหัสผ่านชั่วคราวให้ผู้รับ</div>
+            <div>3. ผู้รับเข้า Admin Panel แล้วเปลี่ยนรหัสผ่านของตัวเอง</div>
+            <div>4. โอน GitHub Repository และ Cloudflare Pages</div>
+            <div>5. โอน Spaceship Domain (kengkongame.com)</div>
+            <div>6. โอน API-Football subscription</div>
+            <div>7. โอน Google Analytics property</div>
+          </div>
+          <div class="divider"></div>
+          <div class="form-group">
+            <label class="form-label">Export ข้อมูล Analytics</label>
+            <button class="btn btn-secondary" onclick="exportData()" style="width:100%">📦 Export ข้อมูลทั้งหมดเป็น JSON</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- System info -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-hdr-title">ℹ️ ข้อมูลระบบ</div></div>
+        <div class="card-body" id="sys-info"></div>
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+</div><!-- /app -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Config ──
+const PASS_KEY = 'kkg_admin_pw';
+const DEFAULT_PASS = 'kengkongame2025';
+const VISITS_KEY = 'kkg_visits';
+const PV_KEY = 'kkg_pv';
+const DPV_KEY = 'kkg_dpv';
+const API_KEY_STORE = 'kkg_api_key';
+const CACHE_DUR_KEY = 'kkg_cache_dur';
+const GA4_KEY = 'kkg_ga4_id';
+const BANNER_KEY = 'kkg_banner';
+
+// ── Auth ──
+function getPass(){return localStorage.getItem(PASS_KEY)||DEFAULT_PASS;}
+function checkPw(){
+  const v=document.getElementById('pw-input').value;
+  if(v===getPass()){
+    document.getElementById('lock-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    sessionStorage.setItem('kkg_admin_auth','1');
+    initApp();
+  } else {
+    const err=document.getElementById('pw-err');
+    err.style.display='block';
+    setTimeout(()=>err.style.display='none',2000);
+  }
+}
+document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
+if(sessionStorage.getItem('kkg_admin_auth')==='1'){
+  document.getElementById('lock-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  setTimeout(initApp,50);
+}
+
+// ── Navigation ──
+function showTab(name){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  const items=document.querySelectorAll('.sb-item');
+  items.forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+name+"'"))b.classList.add('active');});
+  renderTab(name);
+}
+
+// ── Init ──
+function initApp(){
+  renderTab('dashboard');
+  loadSettings();
+}
+
+function renderTab(name){
+  if(name==='dashboard') renderDashboard();
+  if(name==='traffic') renderTraffic('1h');
+  if(name==='api') renderApiCache();
+  if(name==='settings') renderSettings();
+}
+
+// ── Data helpers ──
+function getVisits(){try{return JSON.parse(localStorage.getItem(VISITS_KEY)||'[]');}catch(e){return[];}}
+function getDpv(){try{return JSON.parse(localStorage.getItem(DPV_KEY)||'{}');}catch(e){return{};}}
+
+function filterVisits(visits, period){
+  const now=Date.now();
+  const ms={'1h':3600000,'24h':86400000,'7d':7*86400000,'30d':30*86400000,'3m':90*86400000,'1y':365*86400000};
+  if(period==='all') return visits;
+  return visits.filter(v=>now-v.ts<=ms[period]);
+}
+
+function avgDuration(visits){
+  const withDur=visits.filter(v=>v.duration>0);
+  if(!withDur.length) return '—';
+  const avg=Math.round(withDur.reduce((s,v)=>s+v.duration,0)/withDur.length);
+  return avg>=60?Math.floor(avg/60)+'นาที '+avg%60+'วิ':avg+'วิ';
+}
+
+// ── KPI render ──
+function kpiHTML(val,lbl,sub=''){
+  return`<div class="kpi"><div class="kpi-val">${val}</div><div class="kpi-lbl">${lbl}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}</div>`;
+}
+
+// ── Bar chart ──
+function barChart(data, color='var(--gold)', limit=10){
+  if(!data.length) return '<div class="empty-msg">ไม่มีข้อมูล</div>';
+  const max=data[0][1];
+  return data.slice(0,limit).map(([l,c])=>`
+    <div class="bar-row">
+      <span class="bar-label">${l}</span>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${(c/max*100).toFixed(0)}%;background:${color}"></div></div>
+      <span class="bar-count">${c}</span>
+    </div>`).join('');
+}
+
+function countBy(arr,fn){
+  const m={};arr.forEach(v=>{const k=fn(v);m[k]=(m[k]||0)+1;});
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+}
+
+// ── Dashboard ──
+function renderDashboard(){
+  const visits=getVisits();
+  const dpv=getDpv();
+  const today=new Date().toISOString().slice(0,10);
+  const todayV=visits.filter(v=>v.date===today);
+  const totalPv=parseInt(localStorage.getItem(PV_KEY)||'0');
+  const countries=[...new Set(visits.map(v=>v.country||'?').filter(c=>c!=='...'))];
+
+  document.getElementById('kpi-grid').innerHTML=
+    kpiHTML(visits.length,'📊 Sessions ทั้งหมด')+
+    kpiHTML(totalPv,'👁 Page Views รวม')+
+    kpiHTML(todayV.length,'📅 วันนี้')+
+    kpiHTML(countries.length,'🌍 ประเทศ')+
+    kpiHTML(avgDuration(visits),'⏱ เวลาเฉลี่ย/session')+
+    kpiHTML(visits.length>0?new Date(visits[visits.length-1].ts).toLocaleTimeString('th-TH',{timeZone:'Asia/Bangkok',hour:'2-digit',minute:'2-digit'}):'—','🕐 เข้าชมล่าสุด');
+
+  // 30-day timeline
+  const days=[];
+  for(let i=29;i>=0;i--){const d=new Date(Date.now()-i*86400000);days.push(d.toISOString().slice(0,10));}
+  const maxPv=Math.max(...days.map(d=>dpv[d]||0),1);
+  document.getElementById('timeline-30').innerHTML=days.map(d=>{
+    const v=dpv[d]||0;
+    const h=Math.max(4,Math.round((v/maxPv)*72));
+    const lbl=d.slice(5);
+    return`<div class="tl-col"><div class="tl-bar" style="height:${h}px" title="${d}: ${v} views"></div><div class="tl-lbl">${lbl}</div></div>`;
+  }).join('');
+
+  // GA4 ID display
+  const gid=localStorage.getItem(GA4_KEY)||'G-XXXXXXXXXX';
+  document.getElementById('ga4-id-display').textContent=gid;
+
+  // Charts
+  document.getElementById('dash-country').innerHTML=barChart(countBy(visits,v=>v.country&&v.country!=='...'?v.country:'ไม่ทราบ'),'var(--green)');
+  document.getElementById('dash-device').innerHTML=barChart(countBy(visits,v=>v.device||'Desktop'),'var(--blue)');
+}
+
+// ── Traffic ──
+let _currentFilter='1h';
+function setFilter(f,btn){
+  _currentFilter=f;
+  document.querySelectorAll('.tf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTrafficData(f);
+}
+
+function renderTraffic(f){renderTrafficData(f);}
+
+function renderTrafficData(f){
+  const all=getVisits();
+  const visits=filterVisits(all,f);
+  const totalPv=parseInt(localStorage.getItem(PV_KEY)||'0');
+
+  document.getElementById('traffic-kpi').innerHTML=
+    kpiHTML(visits.length,'📊 Sessions')+
+    kpiHTML(visits.filter(v=>v.date===new Date().toISOString().slice(0,10)).length,'📅 วันนี้')+
+    kpiHTML([...new Set(visits.map(v=>v.country||'?'))].length,'🌍 ประเทศ')+
+    kpiHTML(avgDuration(visits),'⏱ เวลาเฉลี่ย');
+
+  document.getElementById('tc-country').innerHTML=barChart(countBy(visits,v=>v.country&&v.country!=='...'?v.country:'ไม่ทราบ'),'var(--green)');
+  document.getElementById('tc-device').innerHTML=barChart(countBy(visits,v=>v.device||'Desktop'),'var(--blue)');
+  document.getElementById('tc-hour').innerHTML=barChart(countBy(visits,v=>v.hour||'00'),'var(--purple)');
+  document.getElementById('tc-ref').innerHTML=barChart(countBy(visits,v=>{
+    const r=v.ref||'direct';
+    if(r==='direct') return 'Direct';
+    try{return new URL(r).hostname;}catch(e){return r.substring(0,30);}
+  }),'var(--orange)');
+
+  // Table
+  const rev=[...visits].reverse().slice(0,100);
+  document.getElementById('traffic-table').innerHTML=rev.length?rev.map((v,i)=>{
+    const devBadge=v.device==='Mobile'?'b-m':v.device==='Tablet'?'b-t':'b-d';
+    const dur=v.duration>0?(v.duration>=60?Math.floor(v.duration/60)+'ม.'+v.duration%60+'ว':v.duration+'วิ'):'—';
+    const ref=v.ref&&v.ref!=='direct'?(()=>{try{return new URL(v.ref).hostname;}catch(e){return v.ref.substring(0,25);}})():'direct';
+    return`<tr>
+      <td style="color:var(--text3)">${visits.length-i}</td>
+      <td>${v.dt||'-'}</td>
+      <td>🌍 ${v.country&&v.country!=='...'?(v.city?v.city+', ':'')+v.country:'ไม่ทราบ'}</td>
+      <td><span class="badge ${devBadge}">${v.device||'?'}</span></td>
+      <td>${v.lang||'-'}</td>
+      <td>${dur}</td>
+      <td style="font-size:10px;color:var(--text3)">${ref}</td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="7" class="empty-msg">ไม่มีข้อมูลในช่วงเวลานี้</td></tr>';
+}
+
+// ── API & Cache ──
+function renderApiCache(){
+  const key=localStorage.getItem(API_KEY_STORE)||'';
+  if(key){
+    document.getElementById('api-key-input').value=key;
+    document.getElementById('api-key-input').type='password';
+  }
+  const plan=localStorage.getItem('kkg_api_plan')||'pro';
+  document.getElementById('api-plan').value=plan;
+
+  // Cache status
+  const dur=parseInt(localStorage.getItem(CACHE_DUR_KEY)||'60');
+  document.getElementById('cache-duration').value=dur;
+  renderCacheStatus();
+
+  // API usage bar
+  const limits={free:100,pro:7500,mega:50000};
+  const used=parseInt(localStorage.getItem('kkg_api_used_today')||'0');
+  const limit=limits[plan]||7500;
+  const pct=Math.min(100,Math.round(used/limit*100));
+  const color=pct>80?'var(--red)':pct>50?'var(--gold)':'var(--green)';
+  document.getElementById('api-usage-bars').innerHTML=`
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text3);margin-bottom:6px">
+      <span>API Calls วันนี้</span><span style="color:var(--text)">${used.toLocaleString()} / ${limit.toLocaleString()}</span>
+    </div>
+    <div style="height:10px;background:var(--bg4);border-radius:5px;overflow:hidden">
+      <div style="height:100%;width:${pct}%;background:${color};border-radius:5px;transition:.4s"></div>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-top:4px">ใช้ไป ${pct}% ของโควต้าวันนี้ · ดู usage จริงได้ที่ RapidAPI Dashboard</div>`;
+}
+
+function renderCacheStatus(){
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith('kkg_cache_'))keys.push(k);
+  }
+  const dur=parseInt(localStorage.getItem(CACHE_DUR_KEY)||'60');
+  if(!keys.length){
+    document.getElementById('cache-status').innerHTML='<div class="empty-msg">ไม่มีข้อมูล cache ในขณะนี้</div>';
+    return;
+  }
+  document.getElementById('cache-status').innerHTML=keys.map(k=>{
+    const data=JSON.parse(localStorage.getItem(k)||'{}');
+    const age=data.ts?Math.round((Date.now()-data.ts)/60000):null;
+    const expired=age!==null&&age>dur;
+    return`<div class="status-row">
+      <div class="status-dot ${expired?'s-red':'s-green'}"></div>
+      <div class="status-key">${k.replace('kkg_cache_','')}</div>
+      <div class="status-val">${age!==null?age+'นาทีที่แล้ว':'ไม่ทราบ'}</div>
+      <div style="font-size:10px;color:${expired?'var(--red)':'var(--green)'};margin-left:auto">${expired?'หมดอายุ':'ยังใช้ได้'}</div>
+    </div>`;
+  }).join('');
+}
+
+function saveApiKey(){
+  const k=document.getElementById('api-key-input').value.trim();
+  const plan=document.getElementById('api-plan').value;
+  if(!k){toast('กรุณาใส่ API Key','err');return;}
+  localStorage.setItem(API_KEY_STORE,k);
+  localStorage.setItem('kkg_api_plan',plan);
+  toast('✅ บันทึก API Key เรียบร้อย');
+}
+
+function testApiKey(){
+  const k=localStorage.getItem(API_KEY_STORE);
+  if(!k){toast('ยังไม่มี API Key','err');return;}
+  toast('🔌 กำลังทดสอบ... (ต้องรันจาก step.py)','ok');
+}
+
+function clearApiKey(){
+  if(!confirm('ลบ API Key?')) return;
+  localStorage.removeItem(API_KEY_STORE);
+  document.getElementById('api-key-input').value='';
+  toast('🗑 ลบ API Key แล้ว');
+}
+
+function saveCacheSettings(){
+  const v=document.getElementById('cache-duration').value;
+  localStorage.setItem(CACHE_DUR_KEY,v);
+  toast('✅ บันทึกการตั้งค่า Cache แล้ว');
+}
+
+function clearCache(){
+  if(!confirm('ล้าง cache ทั้งหมด?')) return;
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('kkg_cache_'))keys.push(k);}
+  keys.forEach(k=>localStorage.removeItem(k));
+  renderCacheStatus();
+  toast('🗑 ล้าง cache แล้ว '+keys.length+' รายการ');
+}
+
+// ── Upload ──
+let _fileData=null, _fileName=null;
+
+function dragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('drag');}
+function dropFile(e){
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag');
+  const f=e.dataTransfer.files[0];
+  if(f) processFile(f);
+}
+function handleFileSelect(inp){if(inp.files[0])processFile(inp.files[0]);}
+
+function processFile(file){
+  if(!file.name.endsWith('.json')){toast('⚠️ ต้องเป็นไฟล์ .json เท่านั้น','err');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      _fileData=e.target.result;
+      _fileName=file.name;
+      const matches=(data.analyses||[]).length;
+      const preview=document.getElementById('upload-preview');
+      preview.style.display='block';
+      preview.innerHTML=`✅ <strong>${file.name}</strong> · ${(file.size/1024).toFixed(1)} KB · ${matches} แมตช์ · สร้างเมื่อ: ${data.generated||'-'}`;
+      document.getElementById('upload-btn').disabled=false;
+    }catch(err){toast('❌ ไฟล์ JSON ไม่ถูกต้อง','err');}
+  };
+  reader.readAsText(file);
+}
+
+function previewJson(){
+  if(!_fileData){toast('เลือกไฟล์ก่อน','err');return;}
+  const data=JSON.parse(_fileData);
+  const matches=(data.analyses||[]).slice(0,3).map(m=>`${m.home_team||''} vs ${m.away_team||''} (${m.combined_conf||0}%)`).join(', ');
+  toast('📋 '+matches+'...');
+}
+
+async function uploadToGitHub(){
+  const token=document.getElementById('gh-token').value.trim();
+  const repo=document.getElementById('gh-repo').value.trim();
+  const branch=document.getElementById('gh-branch').value.trim()||'main';
+  if(!token){toast('กรุณาใส่ GitHub Token','err');return;}
+  if(!_fileData){toast('กรุณาเลือกไฟล์ก่อน','err');return;}
+
+  const prog=document.getElementById('upload-progress');
+  const statusEl=document.getElementById('upload-status');
+  const bar=document.getElementById('upload-bar');
+  prog.style.display='block';
+  bar.style.width='20%';
+  statusEl.textContent='กำลังตรวจสอบ Repository...';
+
+  try{
+    // Get file SHA (needed for update)
+    const filePath='docs/step_result.json';
+    const shaRes=await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}`,{
+      headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'}
+    });
+    const shaData=await shaRes.json();
+    const sha=shaData.sha||null;
+
+    bar.style.width='50%';
+    statusEl.textContent='กำลังอัปโหลดไฟล์...';
+
+    const content=btoa(unescape(encodeURIComponent(_fileData)));
+    const body={message:`🤖 Update step_result.json — ${new Date().toLocaleString('th-TH',{timeZone:'Asia/Bangkok'})}`,content,branch};
+    if(sha) body.sha=sha;
+
+    const upRes=await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`,{
+      method:'PUT',
+      headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+
+    bar.style.width='100%';
+    if(upRes.ok){
+      statusEl.textContent='✅ อัปโหลดสำเร็จ! Cloudflare Pages กำลัง deploy...';
+      bar.style.background='var(--green)';
+      toast('✅ อัปโหลดสำเร็จ Cloudflare Pages จะ deploy ภายใน 1–3 นาที');
+    } else {
+      const err=await upRes.json();
+      statusEl.textContent='❌ Error: '+(err.message||upRes.status);
+      bar.style.background='var(--red)';
+      toast('❌ อัปโหลดไม่สำเร็จ: '+(err.message||upRes.status),'err');
+    }
+  }catch(e){
+    statusEl.textContent='❌ Error: '+e.message;
+    bar.style.background='var(--red)';
+    toast('❌ '+e.message,'err');
+  }
+}
+
+// ── Content ──
+function loadSettings(){
+  const banner=JSON.parse(localStorage.getItem(BANNER_KEY)||'{"active":0,"text":"","color":"gold"}');
+  document.getElementById('banner-active').value=banner.active;
+  document.getElementById('banner-text').value=banner.text||'';
+  document.getElementById('banner-color').value=banner.color||'gold';
+  const heroSub=localStorage.getItem('kkg_hero_sub')||'';
+  document.getElementById('hero-sub-text').value=heroSub;
+  const ga4=localStorage.getItem(GA4_KEY)||'G-XXXXXXXXXX';
+  document.getElementById('ga4-id-input').value=ga4;
+}
+
+function saveBanner(){
+  const b={active:parseInt(document.getElementById('banner-active').value),text:document.getElementById('banner-text').value,color:document.getElementById('banner-color').value};
+  localStorage.setItem(BANNER_KEY,JSON.stringify(b));
+  toast('✅ บันทึกแบนเนอร์แล้ว');
+}
+
+function previewBanner(){
+  const text=document.getElementById('banner-text').value||'ตัวอย่างข้อความประกาศ';
+  const color=document.getElementById('banner-color').value;
+  const colors={gold:'rgba(240,180,41,.15)',red:'rgba(239,68,68,.15)',green:'rgba(16,185,129,.15)',blue:'rgba(59,130,246,.15)'};
+  const textColors={gold:'#f0b429',red:'#ef4444',green:'#10b981',blue:'#3b82f6'};
+  const p=document.getElementById('banner-preview');
+  p.style.display='block';
+  p.style.background=colors[color]||colors.gold;
+  p.style.color=textColors[color]||textColors.gold;
+  p.textContent=text;
+}
+
+function saveHeroText(){
+  const t=document.getElementById('hero-sub-text').value;
+  localStorage.setItem('kkg_hero_sub',t);
+  toast('✅ บันทึก Hero text แล้ว');
+}
+
+// ── Settings ──
+function saveGa4Id(){
+  const id=document.getElementById('ga4-id-input').value.trim();
+  if(!id.startsWith('G-')){toast('⚠️ Measurement ID ต้องขึ้นต้นด้วย G-','err');return;}
+  localStorage.setItem(GA4_KEY,id);
+  document.getElementById('ga4-id-display').textContent=id;
+  toast('✅ บันทึก GA4 ID แล้ว · อย่าลืมอัปเดตใน HTML files ด้วย');
+}
+
+function changePassword(){
+  const old=document.getElementById('pw-old').value;
+  const nw=document.getElementById('pw-new').value;
+  const cf=document.getElementById('pw-confirm').value;
+  if(old!==getPass()){toast('❌ รหัสผ่านเดิมไม่ถูกต้อง','err');return;}
+  if(nw.length<8){toast('❌ รหัสผ่านใหม่ต้องมีอย่างน้อย 8 ตัว','err');return;}
+  if(nw!==cf){toast('❌ รหัสผ่านใหม่ไม่ตรงกัน','err');return;}
+  localStorage.setItem(PASS_KEY,nw);
+  ['pw-old','pw-new','pw-confirm'].forEach(id=>document.getElementById(id).value='');
+  toast('✅ เปลี่ยนรหัสผ่านสำเร็จ');
+}
+
+function renderSettings(){
+  const lsSize=new Blob(Object.keys(localStorage).map(k=>localStorage.getItem(k)||'')).size;
+  document.getElementById('sys-info').innerHTML=`
+    <div class="status-row"><div class="status-dot s-green"></div><span class="status-key">เว็บไซต์</span><span class="status-val">kengkongame.com</span></div>
+    <div class="status-row"><div class="status-dot s-green"></div><span class="status-key">Hosting</span><span class="status-val">Cloudflare Pages (ฟรี)</span></div>
+    <div class="status-row"><div class="status-dot s-green"></div><span class="status-key">Domain</span><span class="status-val">Spaceship.com</span></div>
+    <div class="status-row"><div class="status-dot s-green"></div><span class="status-key">GA4 ID</span><span class="status-val">${localStorage.getItem(GA4_KEY)||'ยังไม่ได้ตั้งค่า'}</span></div>
+    <div class="status-row"><div class="status-dot ${localStorage.getItem(API_KEY_STORE)?'s-green':'s-red'}"></div><span class="status-key">API-Football Key</span><span class="status-val">${localStorage.getItem(API_KEY_STORE)?'มี Key แล้ว':'ยังไม่มี'}</span></div>
+    <div class="status-row"><div class="status-dot s-green"></div><span class="status-key">Analytics Records</span><span class="status-val">${getVisits().length} sessions</span></div>
+    <div class="status-row"><div class="status-dot s-green"></div><span class="status-key">localStorage ใช้ไป</span><span class="status-val">${(lsSize/1024).toFixed(1)} KB</span></div>
+  `;
+  loadSettings();
+}
+
+function exportData(){
+  const data={visits:getVisits(),dpv:getDpv(),pv:localStorage.getItem(PV_KEY),exported:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='kengkongame_analytics_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();URL.revokeObjectURL(url);
+  toast('✅ Export สำเร็จ');
+}
+
+function clearAllData(){
+  if(!confirm('ล้างข้อมูล analytics ทั้งหมด? ไม่สามารถกู้คืนได้')) return;
+  localStorage.removeItem(VISITS_KEY);
+  localStorage.removeItem(PV_KEY);
+  localStorage.removeItem(DPV_KEY);
+  renderTrafficData(_currentFilter);
+  toast('🗑 ล้างข้อมูลแล้ว');
+}
+
+// ── Toast ──
+let _toastTimer;
+function toast(msg, type='ok'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className='toast t-'+type+' show';
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>el.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>
